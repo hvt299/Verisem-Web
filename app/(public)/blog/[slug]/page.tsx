@@ -10,7 +10,7 @@ import PublicHeader from '@/components/layout/PublicHeader';
 import PublicFooter from '@/components/layout/PublicFooter';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ROUTES } from '@/constants/routes';
-import { blogService, BlogPost, BLOG_CATEGORY_LABELS, formatBlogDate } from '@/features/blog/blog.service';
+import { blogService, BlogPost, BLOG_CATEGORY_LABELS, getBlogCategoryStyle, formatBlogDate } from '@/features/blog/blog.service';
 
 export default function BlogDetailPage() {
     const params = useParams();
@@ -77,7 +77,7 @@ export default function BlogDetailPage() {
                     <ChevronLeft className="w-4 h-4" /> Quay lại Cẩm nang
                 </Link>
 
-                <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-wider rounded-lg mb-4">
+                <span className={`inline-block px-3 py-1 ${getBlogCategoryStyle(post.category).badge} text-xs font-black uppercase tracking-wider rounded-lg mb-4`}>
                     {BLOG_CATEGORY_LABELS[post.category] ?? post.category}
                 </span>
 

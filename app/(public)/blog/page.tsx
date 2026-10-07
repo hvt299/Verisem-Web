@@ -8,7 +8,7 @@ import PublicHeader from '@/components/layout/PublicHeader';
 import PublicFooter from '@/components/layout/PublicFooter';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ROUTES } from '@/constants/routes';
-import { blogService, BlogPost, BlogCategory, BLOG_CATEGORY_LABELS, getBlogExcerpt, formatBlogDate } from '@/features/blog/blog.service';
+import { blogService, BlogPost, BlogCategory, BLOG_CATEGORY_LABELS, getBlogCategoryStyle, getBlogExcerpt, formatBlogDate } from '@/features/blog/blog.service';
 
 const POSTS_PER_PAGE = 9;
 
@@ -28,7 +28,7 @@ function BlogThumbnail({ post, iconClassName }: { post: BlogPost; iconClassName:
         );
     }
     return (
-        <div className="absolute inset-0 bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+        <div className={`absolute inset-0 bg-linear-to-br ${getBlogCategoryStyle(post.category).gradient} flex items-center justify-center`}>
             <BookOpen className={`${iconClassName} text-white/50 group-hover:scale-110 transition-transform duration-500`} />
         </div>
     );
@@ -188,7 +188,7 @@ export default function BlogPage() {
                                     </div>
                                     <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <span className="px-3 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-wider rounded-lg">
+                                            <span className={`px-3 py-1 ${getBlogCategoryStyle(featuredPost.category).badge} text-xs font-black uppercase tracking-wider rounded-lg`}>
                                                 {BLOG_CATEGORY_LABELS[featuredPost.category] ?? featuredPost.category}
                                             </span>
                                         </div>
@@ -218,7 +218,7 @@ export default function BlogPage() {
 
                                     <div className="p-6 md:p-8 flex flex-col flex-1">
                                         <div className="mb-4">
-                                            <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-black uppercase tracking-wider rounded-lg">
+                                            <span className={`px-3 py-1 ${getBlogCategoryStyle(post.category).badge} text-xs font-black uppercase tracking-wider rounded-lg`}>
                                                 {BLOG_CATEGORY_LABELS[post.category] ?? post.category}
                                             </span>
                                         </div>

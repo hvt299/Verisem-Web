@@ -22,6 +22,35 @@ export const BLOG_CATEGORY_LABELS: Record<BlogCategory, string> = {
     hr_corner: 'Góc HR',
 };
 
+// Màu riêng cho từng danh mục: nền thumbnail (gradient) và nhãn danh mục
+export const BLOG_CATEGORY_STYLES: Record<BlogCategory, { gradient: string; badge: string }> = {
+    interview: {
+        gradient: 'from-blue-500 to-indigo-600',
+        badge: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300',
+    },
+    cv_writing: {
+        gradient: 'from-emerald-400 to-teal-600',
+        badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300',
+    },
+    career_path: {
+        gradient: 'from-amber-400 to-orange-500',
+        badge: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300',
+    },
+    hr_corner: {
+        gradient: 'from-rose-400 to-fuchsia-600',
+        badge: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300',
+    },
+};
+
+const DEFAULT_CATEGORY_STYLE = {
+    gradient: 'from-slate-400 to-slate-600',
+    badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+};
+
+export function getBlogCategoryStyle(category: string) {
+    return BLOG_CATEGORY_STYLES[category as BlogCategory] ?? DEFAULT_CATEGORY_STYLE;
+}
+
 export const blogService = {
     async getPublicBlogs(category?: BlogCategory, limit: number = 200): Promise<BlogPost[]> {
         const params: any = { limit };
