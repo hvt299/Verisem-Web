@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Headset, Mail, Phone, MapPin, Send, ChevronDown, ChevronUp, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { Headset, Mail, Phone, MapPin, Send, ChevronDown, MessageSquare, CheckCircle2 } from 'lucide-react';
 
 import PublicHeader from '@/components/layout/PublicHeader';
 import PublicFooter from '@/components/layout/PublicFooter';
@@ -137,27 +137,46 @@ export default function SupportPage() {
                             <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">Câu hỏi thường gặp</h2>
                         </div>
                         <div className="space-y-4">
-                            {FAQS.map((faq, index) => (
-                                <div key={index} className="bg-white dark:bg-slate-900/20 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-colors">
-                                    <button
-                                        onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                                        aria-expanded={openFaq === index}
-                                        className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {FAQS.map((faq, index) => {
+                                const isOpen = openFaq === index;
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`rounded-2xl border transition-all duration-300 ${isOpen
+                                            ? 'bg-white dark:bg-slate-900/60 border-blue-200 dark:border-blue-500/30 shadow-md shadow-blue-500/5'
+                                            : 'bg-white dark:bg-slate-900/20 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                                            }`}
                                     >
-                                        <span className="font-bold text-slate-800 dark:text-slate-200 pr-4">{faq.question}</span>
-                                        {openFaq === index ? (
-                                            <ChevronUp className="w-5 h-5 text-blue-500 shrink-0" />
-                                        ) : (
-                                            <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
-                                        )}
-                                    </button>
-                                    {openFaq === index && (
-                                        <div className="px-6 pb-6 text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
-                                            {faq.answer}
+                                        <button
+                                            id={`faq-question-${index}`}
+                                            onClick={() => setOpenFaq(isOpen ? null : index)}
+                                            aria-expanded={isOpen}
+                                            aria-controls={`faq-answer-${index}`}
+                                            className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        >
+                                            <span className={`font-bold transition-colors ${isOpen ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                {faq.question}
+                                            </span>
+                                            <span className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen ? 'bg-blue-600 text-white rotate-180' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                                                <ChevronDown className="w-4 h-4" />
+                                            </span>
+                                        </button>
+                                        <div
+                                            id={`faq-answer-${index}`}
+                                            role="region"
+                                            aria-labelledby={`faq-question-${index}`}
+                                            inert={!isOpen}
+                                            className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                                        >
+                                            <div className="overflow-hidden">
+                                                <p className="mx-6 mb-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm leading-7 font-medium">
+                                                    {faq.answer}
+                                                </p>
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 
