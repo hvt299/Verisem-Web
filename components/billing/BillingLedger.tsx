@@ -7,6 +7,19 @@ interface BillingLedgerProps {
     isLoading: boolean;
 }
 
+const ACTION_LABELS: [string, string][] = [
+    ['PURCHASE_', 'Mua gói: '],
+    ['ADMIN_GRANT_', 'Admin cấp gói: '],
+    ['REFUND_', 'Hoàn credit: '],
+    ['UPGRADE_', 'Nâng cấp gói: '],
+];
+
+const formatAction = (actionType: string = '') => {
+    if (actionType === 'FREE_PLAN_CREDITS') return 'Credit gói Miễn phí';
+    const match = ACTION_LABELS.find(([prefix]) => actionType.startsWith(prefix));
+    return match ? match[1] + actionType.slice(match[0].length) : actionType;
+};
+
 export default function BillingLedger({ transactions, isLoading }: BillingLedgerProps) {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
@@ -39,7 +52,7 @@ export default function BillingLedger({ transactions, isLoading }: BillingLedger
                                             {new Date(tx.created_at).toLocaleString('vi-VN')}
                                         </td>
                                         <td className="p-4 text-sm font-bold text-slate-800 dark:text-white">
-                                            {tx.action_type.replace('UPGRADE_', 'Nâng cấp gói: ')}
+                                            {formatAction(tx.action_type)}
                                         </td>
                                         <td className="p-4 text-center">
                                             <span className={`px-2 py-1 rounded-md text-xs font-black ${isAddition ? 'bg-success-50 text-success-600 dark:bg-success-500/10' : 'bg-error-50 text-error-600 dark:bg-error-500/10'}`}>

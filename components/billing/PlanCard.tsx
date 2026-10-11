@@ -15,7 +15,7 @@ interface PlanCardProps {
 export default function PlanCard({ plan, isCurrentPlan, isProcessing, onSubscribe, customButtonText }: PlanCardProps) {
     const tierColors = getTierBadgeConfig(plan.tier_level || 0);
     const isElevated = plan.tier_level >= 2;
-    const isTopup = plan.billing_cycle_days === 0 && plan.current_price > 0;
+    const isTopup = plan.plan_type ? plan.plan_type === 'topup' : plan.billing_cycle_days === 0 && plan.current_price > 0;
 
     return (
         <div className={cn(

@@ -16,6 +16,7 @@ import { ROUTES } from '@/constants/routes';
 
 import PlanCard from '@/components/billing/PlanCard';
 import CheckoutModal from '@/components/billing/CheckoutModal';
+import DowngradeBlockedModal, { DowngradeBlockedInfo, isDowngradeBlocked } from '@/components/billing/DowngradeBlockedModal';
 
 export default function PricingPage() {
     const { isAuthenticated, user } = useAuthStore();
@@ -30,6 +31,7 @@ export default function PricingPage() {
     const [checkoutData, setCheckoutData] = useState<any>(null);
     const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
     const [processingPlanCode, setProcessingPlanCode] = useState<string | null>(null);
+    const [downgradeBlocked, setDowngradeBlocked] = useState<DowngradeBlockedInfo | null>(null);
 
     const { data: plansRes, isLoading } = useQuery({
         queryKey: ['subscription-plans', audience],
@@ -61,7 +63,12 @@ export default function PricingPage() {
             setCheckoutData(res.data);
             setIsCheckoutModalOpen(true);
         } catch (error: any) {
-            toast.error(error.response?.data?.detail || 'Không thể tạo phiên thanh toán.');
+            const detail = error.response?.data?.detail;
+            if (isDowngradeBlocked(detail)) {
+                setDowngradeBlocked(detail);
+            } else {
+                toast.error(typeof detail === 'string' ? detail : 'Không thể tạo phiên thanh toán.');
+            }
         } finally {
             setProcessingPlanCode(null);
         }
@@ -137,15 +144,15 @@ export default function PricingPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch justify-center">
                         {plans.filter((plan: any) => {
-                            if (plan.billing_cycle_days === 0 && plan.current_price === 0) {
-                                return cycleFilter === 'monthly' || cycleFilter === 'yearly';
-                            }
+                            const isTopup = plan.plan_type === 'topup';
+                            if (cycleFilter === 'topup') return isTopup;
+                            if (isTopup) return false;
+                            if (plan.billing_cycle_days === 0 && plan.current_price === 0) return true;
                             if (cycleFilter === 'monthly') return plan.billing_cycle_days === 30;
                             if (cycleFilter === 'yearly') return plan.billing_cycle_days === 365;
-                            if (cycleFilter === 'topup') return plan.billing_cycle_days === 0 && plan.current_price > 0;
                             return true;
                         }).map((plan: any) => {
-                            const isTopup = plan.billing_cycle_days === 0 && plan.current_price > 0;
+                            const isTopup = plan.plan_type === 'topup';
                             const isCurrentPlan = !isTopup && myPlan?.data?.current_plan_code === plan.plan_code;
 
                             return (
@@ -177,11 +184,12 @@ export default function PricingPage() {
 
             <PublicFooter />
 
+            <DowngradeBlockedModal info={downgradeBlocked} onClose={() => setDowngradeBlocked(null)} />
+
             <CheckoutModal
                 isOpen={isCheckoutModalOpen}
                 onClose={() => setIsCheckoutModalOpen(false)}
                 checkoutData={checkoutData}
-                initialCredits={myPlan?.data?.credits_remaining || 0}
                 onSuccess={() => {
                     setIsCheckoutModalOpen(false);
                     queryClient.invalidateQueries({ queryKey: ['my-subscription'] });

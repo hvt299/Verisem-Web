@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { adminService } from '@/features/admin/admin.service';
-import { Search, Loader2, Edit, Trash2, ChevronLeft, ChevronRight, X, Filter } from 'lucide-react';
+import { Search, Loader2, Edit, Trash2, ChevronLeft, ChevronRight, X, Filter, Gift } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminSubscriptionsPage() {
@@ -23,6 +23,10 @@ export default function AdminSubscriptionsPage() {
     
     const [editingPlan, setEditingPlan] = useState<any>(null);
     const [isSaving, setIsSaving] = useState(false);
+
+    const emptyGrantForm = { email: '', plan_code: '', days: '', note: '' };
+    const [grantForm, setGrantForm] = useState<typeof emptyGrantForm | null>(null);
+    const [isGranting, setIsGranting] = useState(false);
 
     const fetchPlans = async () => {
         try {
@@ -60,6 +64,9 @@ export default function AdminSubscriptionsPage() {
                 badge: editingPlan.badge,
                 display_order: Number(editingPlan.display_order),
                 tier_level: Number(editingPlan.tier_level),
+                plan_type: editingPlan.plan_type || 'subscription',
+                credits_granted: Number(editingPlan.credits_granted || 0),
+                credit_validity_days: editingPlan.credit_validity_days === '' || editingPlan.credit_validity_days == null ? null : Number(editingPlan.credit_validity_days),
                 original_price: Number(editingPlan.original_price),
                 current_price: Number(editingPlan.current_price),
                 display_features: Array.isArray(editingPlan.display_features) ? editingPlan.display_features : editingPlan.display_features.split('\n').map((s: string) => s.trim()).filter(Boolean)
@@ -72,6 +79,26 @@ export default function AdminSubscriptionsPage() {
             toast.error('Lỗi khi cập nhật gói cước');
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleGrant = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!grantForm) return;
+        setIsGranting(true);
+        try {
+            const res = await adminService.grantSubscription({
+                email: grantForm.email.trim(),
+                plan_code: grantForm.plan_code,
+                days: grantForm.days === '' ? null : Number(grantForm.days),
+                note: grantForm.note.trim() || undefined
+            });
+            toast.success(res.message || 'Đã cấp gói thành công');
+            setGrantForm(null);
+        } catch (error: any) {
+            toast.error(error.response?.data?.detail || 'Lỗi khi cấp gói');
+        } finally {
+            setIsGranting(false);
         }
     };
 
@@ -109,6 +136,9 @@ export default function AdminSubscriptionsPage() {
                     </h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Cấu hình thông tin các gói dịch vụ (Billing).</p>
                 </div>
+                <button onClick={() => setGrantForm(emptyGrantForm)} className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-primary-600 hover:bg-primary-700 transition-colors shadow-sm">
+                    <Gift className="w-4 h-4" /> Cấp gói thủ công
+                </button>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -306,6 +336,24 @@ export default function AdminSubscriptionsPage() {
                                         <input type="number" value={editingPlan.tier_level} onChange={e => setEditingPlan({...editingPlan, tier_level: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" required />
                                     </div>
 
+                                    <div className="space-y-2 col-span-2 md:col-span-1">
+                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Loại gói</label>
+                                        <select value={editingPlan.plan_type || 'subscription'} onChange={e => setEditingPlan({...editingPlan, plan_type: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white">
+                                            <option value="subscription">Thuê bao theo kỳ</option>
+                                            <option value="topup">Gói lẻ (mua credit)</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2 col-span-2 md:col-span-1">
+                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Số credit được cộng</label>
+                                        <input type="number" min="0" value={editingPlan.credits_granted ?? 0} onChange={e => setEditingPlan({...editingPlan, credits_granted: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" required />
+                                    </div>
+                                    {editingPlan.plan_type === 'topup' && (
+                                        <div className="space-y-2 col-span-2">
+                                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Hạn dùng credit (ngày)</label>
+                                            <input type="number" min="1" value={editingPlan.credit_validity_days ?? ''} onChange={e => setEditingPlan({...editingPlan, credit_validity_days: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" placeholder="Để trống = không hết hạn" />
+                                        </div>
+                                    )}
+
                                     <div className="space-y-2 col-span-2">
                                         <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Các tính năng nổi bật (Mỗi dòng 1 tính năng)</label>
                                         <textarea value={editingPlan.display_features} onChange={e => setEditingPlan({...editingPlan, display_features: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white min-h-[120px]" placeholder="VD: Mở khóa kho CV cao cấp..." />
@@ -326,7 +374,59 @@ export default function AdminSubscriptionsPage() {
                     </div>
                 </div>
             )}
+            {grantForm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
+                        <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+                            <h2 className="text-xl font-bold text-slate-800 dark:text-white">Cấp gói thủ công</h2>
+                            <button onClick={() => setGrantForm(null)} className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-full transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+                            <form id="grant-plan-form" onSubmit={handleGrant} className="space-y-5">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Email tài khoản</label>
+                                    <input type="email" value={grantForm.email} onChange={e => setGrantForm({...grantForm, email: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" placeholder="Email HR (cấp cho cả công ty) hoặc Ứng viên" required />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Gói cước</label>
+                                    <select value={grantForm.plan_code} onChange={e => setGrantForm({...grantForm, plan_code: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" required>
+                                        <option value="">-- Chọn gói --</option>
+                                        {plans.map(p => (
+                                            <option key={p.plan_code} value={p.plan_code}>
+                                                [{p.target_audience === 'hr' ? 'Doanh nghiệp' : 'Ứng viên'}] {p.name} ({p.plan_code}){!p.is_active ? ' - Đã ẩn' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Số ngày sử dụng</label>
+                                    <input type="number" min="0" value={grantForm.days} onChange={e => setGrantForm({...grantForm, days: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" placeholder="Để trống = theo chu kỳ của gói, 0 = vĩnh viễn" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Ghi chú</label>
+                                    <input type="text" value={grantForm.note} onChange={e => setGrantForm({...grantForm, note: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 text-sm font-medium dark:text-white" placeholder="VD: Tặng khách hàng, bù sự cố thanh toán..." />
+                                </div>
+                                <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+                                    Gói mới sẽ thay thế gói hiện tại của tài khoản và cộng thêm credit theo cấu hình gói. Thao tác được ghi vào Audit Log.
+                                </p>
+                            </form>
+                        </div>
+
+                        <div className="p-6 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50">
+                            <button type="button" onClick={() => setGrantForm(null)} className="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                Hủy bỏ
+                            </button>
+                            <button type="submit" form="grant-plan-form" disabled={isGranting} className="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50 transition-colors flex items-center gap-2">
+                                {isGranting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
+                                Cấp gói
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
-

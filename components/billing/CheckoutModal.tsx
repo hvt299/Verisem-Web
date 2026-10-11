@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X, Copy, Download, Loader2, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, Copy, Download, Loader2, CheckCircle2, FlaskConical } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { subscriptionService } from '@/features/subscription/subscription.service';
 
@@ -10,49 +10,62 @@ interface CheckoutModalProps {
     onClose: () => void;
     onSuccess: () => void;
     checkoutData: any;
-    initialCredits: number;
 }
 
-export default function CheckoutModal({ isOpen, onClose, onSuccess, checkoutData, initialCredits }: CheckoutModalProps) {
-    // 10 phút = 600 giây
-    const [timeLeft, setTimeLeft] = useState(600);
-    const [isDownloading, setIsDownloading] = useState(false);
+// Bật nút giả lập thanh toán cho môi trường Dev/Test (Backend cũng phải bật ENABLE_PAYMENT_SIMULATION)
+const IS_PAYMENT_SIMULATION_ENABLED = process.env.NEXT_PUBLIC_ENABLE_PAYMENT_SIMULATION === 'true';
+const DEFAULT_TTL_SECONDS = 600;
 
-    // Xử lý đếm ngược và tự động đóng
+const getSecondsLeft = (expiresAt?: string) => {
+    if (!expiresAt) return DEFAULT_TTL_SECONDS;
+    return Math.max(0, Math.floor((new Date(expiresAt).getTime() - Date.now()) / 1000));
+};
+
+export default function CheckoutModal({ isOpen, onClose, onSuccess, checkoutData }: CheckoutModalProps) {
+    const [timeLeft, setTimeLeft] = useState(DEFAULT_TTL_SECONDS);
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [isSimulating, setIsSimulating] = useState(false);
+
+    // Giữ callback mới nhất trong ref để effect không bị chạy lại (reset timer) mỗi khi component cha re-render
+    const onCloseRef = useRef(onClose);
+    const onSuccessRef = useRef(onSuccess);
     useEffect(() => {
-        if (!isOpen) return;
-        setTimeLeft(600); // Reset timer khi mở
+        onCloseRef.current = onClose;
+        onSuccessRef.current = onSuccess;
+    });
+
+    const orderCode: string | undefined = checkoutData?.order_code;
+    const expiresAt: string | undefined = checkoutData?.expires_at;
+
+    // Đếm ngược theo expires_at của đơn hàng (server)
+    useEffect(() => {
+        if (!isOpen || !orderCode) return;
+        setTimeLeft(getSecondsLeft(expiresAt));
 
         const timer = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    toast.error('Đã hết thời gian thanh toán. Vui lòng tạo lại mã QR mới.');
-                    onClose();
-                    return 0;
-                }
-                return prev - 1;
-            });
+            const secondsLeft = getSecondsLeft(expiresAt);
+            setTimeLeft(secondsLeft);
+            if (secondsLeft <= 0) {
+                clearInterval(timer);
+                toast.error('Đã hết thời gian thanh toán. Vui lòng tạo lại mã QR mới.');
+                onCloseRef.current();
+            }
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [isOpen, onClose]);
+    }, [isOpen, orderCode, expiresAt]);
 
-    // Polling: Kiểm tra trạng thái thanh toán mỗi 5 giây
+    // Polling: Kiểm tra trạng thái đơn hàng mỗi 5 giây
     useEffect(() => {
-        if (!isOpen) return;
+        if (!isOpen || !orderCode) return;
 
         const pollTimer = setInterval(async () => {
             try {
-                // Gọi API lấy thông tin plan/credit mới nhất
-                const res = await subscriptionService.getMyPlan();
-                const currentCredits = res.data?.credits_remaining || 0;
-
-                // Nếu credit tăng lên (Webhook Sepay đã xử lý xong), báo thành công
-                if (currentCredits > initialCredits) {
+                const res = await subscriptionService.getOrder(orderCode);
+                if (res.data?.status === 'paid') {
                     clearInterval(pollTimer);
                     toast.success('Thanh toán thành công! Hệ thống đã cập nhật gói cước.');
-                    onSuccess();
+                    onSuccessRef.current();
                 }
             } catch (error) {
                 console.error("Lỗi khi kiểm tra giao dịch:", error);
@@ -60,7 +73,7 @@ export default function CheckoutModal({ isOpen, onClose, onSuccess, checkoutData
         }, 5000);
 
         return () => clearInterval(pollTimer);
-    }, [isOpen, initialCredits, onSuccess]);
+    }, [isOpen, orderCode]);
 
     if (!isOpen || !checkoutData) return null;
 
@@ -92,6 +105,19 @@ export default function CheckoutModal({ isOpen, onClose, onSuccess, checkoutData
             toast.error('Lỗi khi tải ảnh QR');
         } finally {
             setIsDownloading(false);
+        }
+    };
+
+    const handleSimulatePayment = async () => {
+        try {
+            setIsSimulating(true);
+            await subscriptionService.simulatePayment(checkoutData.order_code);
+            toast.success('[Giả lập] Thanh toán thành công! Hệ thống đã cập nhật gói cước.');
+            onSuccess();
+        } catch (error: any) {
+            toast.error(error.response?.data?.detail || 'Giả lập thanh toán thất bại');
+        } finally {
+            setIsSimulating(false);
         }
     };
 
@@ -135,6 +161,17 @@ export default function CheckoutModal({ isOpen, onClose, onSuccess, checkoutData
                         <div className="mt-6 flex items-center gap-2 text-sm font-medium text-slate-500">
                             Trạng thái: <Loader2 className="w-4 h-4 animate-spin text-primary-500" /> <span className="animate-pulse">Đang chờ thanh toán...</span>
                         </div>
+
+                        {IS_PAYMENT_SIMULATION_ENABLED && checkoutData.order_code && (
+                            <button
+                                onClick={handleSimulatePayment}
+                                disabled={isSimulating}
+                                className="mt-4 flex items-center gap-2 px-4 py-2 border border-dashed border-amber-400 text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/10 hover:bg-amber-100 dark:hover:bg-amber-900/20 font-bold rounded-xl transition-colors text-xs disabled:opacity-50"
+                            >
+                                {isSimulating ? <Loader2 className="w-4 h-4 animate-spin" /> : <FlaskConical className="w-4 h-4" />}
+                                [DEV] Giả lập thanh toán thành công
+                            </button>
+                        )}
                     </div>
 
                     {/* Cột Phải: Chuyển khoản thủ công */}

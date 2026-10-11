@@ -93,6 +93,10 @@ export const adminService = {
         const response = await apiClient.delete(`/admin/subscriptions/plans/${planId}`);
         return response.data;
     },
+    async grantSubscription(data: { email: string; plan_code: string; days?: number | null; note?: string }) {
+        const response = await apiClient.post('/admin/subscriptions/grant', data);
+        return response.data;
+    },
     async getCoverLetters(params?: any) {
         const response = await apiClient.get('/admin/cover-letters', { params });
         return response.data.data || response.data;

@@ -9,8 +9,18 @@ import { useSubscriptionPlans } from '@/hooks/useSubscriptionPlans';
 import { subscriptionService } from '@/features/subscription/subscription.service';
 import { useAuthStore } from '@/store/useAuthStore';
 import CheckoutModal from '@/components/billing/CheckoutModal';
+import DowngradeBlockedModal, { DowngradeBlockedInfo, isDowngradeBlocked } from '@/components/billing/DowngradeBlockedModal';
 import PlanCard from '@/components/billing/PlanCard';
 import BillingLedger from '@/components/billing/BillingLedger';
+import OrderHistory from '@/components/billing/OrderHistory';
+
+const CREDIT_SOURCE_LABELS: Record<string, string> = {
+    subscription: 'credit theo gói',
+    topup: 'credit mua lẻ',
+    admin: 'credit được tặng',
+    free: 'credit miễn phí',
+    legacy: 'credit cũ',
+};
 
 export default function HrBillingPage() {
     const queryClient = useQueryClient();
@@ -22,13 +32,21 @@ export default function HrBillingPage() {
         queryFn: () => subscriptionService.getTransactions()
     });
 
+    const { data: ordersRes, isLoading: isOrdersLoading } = useQuery({
+        queryKey: ['orders'],
+        queryFn: () => subscriptionService.getOrders(),
+    });
+
     const planInfo = myPlanRes?.data;
     const plans = plansRes?.data || [];
     const transactions = txRes?.data || [];
+    const orders = ordersRes?.data || [];
+    const creditBreakdown: any[] = planInfo?.credits?.breakdown || [];
 
     const [checkoutData, setCheckoutData] = useState<any>(null);
     const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
     const [processingPlanCode, setProcessingPlanCode] = useState<string | null>(null);
+    const [downgradeBlocked, setDowngradeBlocked] = useState<DowngradeBlockedInfo | null>(null);
 
     if (isMyPlanLoading || isPlansLoading) {
         return (
@@ -49,7 +67,12 @@ export default function HrBillingPage() {
             setCheckoutData(res.data);
             setIsCheckoutModalOpen(true);
         } catch (error: any) {
-            toast.error(error.response?.data?.detail || 'Không thể tạo phiên thanh toán.');
+            const detail = error.response?.data?.detail;
+            if (isDowngradeBlocked(detail)) {
+                setDowngradeBlocked(detail);
+            } else {
+                toast.error(typeof detail === 'string' ? detail : 'Không thể tạo phiên thanh toán.');
+            }
         } finally {
             setProcessingPlanCode(null);
         }
@@ -92,6 +115,18 @@ export default function HrBillingPage() {
                             <Zap className="w-8 h-8 text-amber-500" fill="currentColor" />
                             <h2 className="text-3xl font-black text-slate-800 dark:text-white">{planInfo?.credits_remaining || 0}</h2>
                         </div>
+                        {creditBreakdown.length > 0 && (
+                            <ul className="mt-3 space-y-1">
+                                {creditBreakdown.map((item: any) => (
+                                    <li key={item.grant_id} className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                                        <span className="font-bold text-slate-700 dark:text-slate-300">{item.remaining}</span>{' '}
+                                        {CREDIT_SOURCE_LABELS[item.source] || item.source}
+                                        {' · '}
+                                        {item.expires_at ? `hết hạn ${new Date(item.expires_at).toLocaleDateString('vi-VN')}` : 'không hết hạn'}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </div>
@@ -99,7 +134,7 @@ export default function HrBillingPage() {
             {/* LƯỚI GÓI CƯỚC */}
             <div id="pricing-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {plans.map((plan: any) => {
-                    const isTopup = plan.billing_cycle_days === 0 && plan.current_price > 0;
+                    const isTopup = plan.plan_type === 'topup';
                     const isCurrentPlan = !isTopup && planInfo?.current_plan_code === plan.plan_code;
 
                     return (
@@ -115,18 +150,23 @@ export default function HrBillingPage() {
                 })}
             </div>
 
+            {/* LỊCH SỬ ĐƠN HÀNG */}
+            <OrderHistory orders={orders} isLoading={isOrdersLoading} />
+
             {/* SỔ CÁI GIAO DỊCH */}
             <BillingLedger transactions={transactions} isLoading={isTxLoading} />
+
+            <DowngradeBlockedModal info={downgradeBlocked} onClose={() => setDowngradeBlocked(null)} />
 
             <CheckoutModal
                 isOpen={isCheckoutModalOpen}
                 onClose={() => setIsCheckoutModalOpen(false)}
                 checkoutData={checkoutData}
-                initialCredits={planInfo?.credits_remaining || 0}
                 onSuccess={() => {
                     setIsCheckoutModalOpen(false);
                     queryClient.invalidateQueries({ queryKey: ['my-subscription'] });
                     queryClient.invalidateQueries({ queryKey: ['transactions'] });
+                    queryClient.invalidateQueries({ queryKey: ['orders'] });
                 }}
             />
         </div>
