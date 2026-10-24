@@ -7,12 +7,13 @@ import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
 
 import { ROUTES } from '@/constants/routes';
+import { useTranslation } from '@/store/useLanguageStore';
 import { LANGUAGES } from './PublicHeader';
 
 export default function PublicFooter() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    const [language, setLanguage] = useState<'VI' | 'EN'>('VI');
+    const { language, setLanguage, t } = useTranslation();
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
     const languageRef = useRef<HTMLDivElement>(null);
@@ -47,10 +48,10 @@ export default function PublicFooter() {
     };
 
     return (
-        <footer className="border-t border-slate-200 bg-white px-6 pb-10 pt-20 font-sans transition-colors dark:border-slate-800 dark:bg-[#0a0a0a]">
-            <div className="mx-auto mb-16 grid max-w-7xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
-                {/* Brand */}
-                <div className="sm:col-span-2 lg:col-span-2">
+        <footer className="border-t border-slate-200 bg-white px-4 sm:px-6 pb-10 pt-16 sm:pt-20 font-sans transition-colors dark:border-slate-800 dark:bg-slate-950">
+            <div className="mx-auto mb-14 grid max-w-7xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+                {/* Brand (5 cột trên Desktop, full trên mobile) */}
+                <div className="sm:col-span-2 lg:col-span-5 space-y-4">
                     <button
                         type="button"
                         onClick={() =>
@@ -59,8 +60,8 @@ export default function PublicFooter() {
                                 behavior: 'smooth',
                             })
                         }
-                        className="group mb-6 flex w-fit items-center gap-2"
-                        aria-label="Về đầu trang"
+                        className="group flex w-fit items-center gap-2 cursor-pointer"
+                        aria-label={t('common.footer.back_to_top', undefined, 'Về đầu trang')}
                     >
                         <div className="relative flex h-10 w-10 items-center justify-center">
                             <div className="absolute inset-0 rounded-xl bg-blue-500/20 blur-md transition-all duration-500 group-hover:bg-blue-500/35 group-hover:blur-lg" />
@@ -76,132 +77,109 @@ export default function PublicFooter() {
                         </div>
 
                         <span className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
-                            ATS
+                            VERI
                             <span className="text-blue-600 transition-colors duration-300 group-hover:text-blue-500 dark:text-blue-400 dark:group-hover:text-blue-300">
-                                SYSTEM
+                                SEM
                             </span>
                         </span>
                     </button>
 
-                    <p className="max-w-sm text-sm font-medium leading-relaxed text-slate-500 dark:text-slate-400">
-                        Nền tảng Quản trị Tuyển dụng Ứng dụng Trí tuệ Nhân tạo.
-                        Giải pháp tối ưu giúp doanh nghiệp tìm đúng người, và
-                        ứng viên tìm đúng việc chỉ trong chớp mắt.
+                    <p className="max-w-md text-sm font-medium leading-relaxed text-slate-500 dark:text-slate-400">
+                        {t('common.footer.tagline', undefined, 'Nền tảng Quản trị Tuyển dụng Ứng dụng Trí tuệ Nhân tạo. Giải pháp tối ưu giúp doanh nghiệp tìm đúng người, và ứng viên tìm đúng việc chỉ trong chớp mắt.')}
                     </p>
                 </div>
 
-                {/* Candidate */}
-                <div>
-                    <h4 className="mb-5 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                        Dành cho Ứng viên
-                    </h4>
+                {/* 3 Cột Liên kết: Responsive dạng Grid 2 cột trên Mobile nhỏ, 3 cột trên Tablet/Desktop */}
+                <div className="sm:col-span-2 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+                    {/* Candidate */}
+                    <div>
+                        <h4 className="mb-4 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">{t('common.footer.candidates_title', undefined, 'Dành cho Ứng viên')}</h4>
 
-                    <ul className="space-y-3.5 text-sm font-medium text-slate-500 dark:text-slate-400">
-                        <li>
-                            <Link
-                                href={ROUTES.PUBLIC_JOBS}
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Việc làm mới nhất
-                            </Link>
-                        </li>
+                        <ul className="space-y-3 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+                            <li>
+                                <Link
+                                    href={ROUTES.PUBLIC_JOBS}
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.latest_jobs', undefined, 'Việc làm mới nhất')}</Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                href={ROUTES.PUBLIC_COMPANIES}
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Danh sách công ty
-                            </Link>
-                        </li>
+                            <li>
+                                <Link
+                                    href={ROUTES.PUBLIC_COMPANIES}
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.company_directory', undefined, 'Danh sách công ty')}</Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                href={ROUTES.BLOG}
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Cẩm nang nghề nghiệp
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+                            <li>
+                                <Link
+                                    href={ROUTES.BLOG}
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.career_guide', undefined, 'Cẩm nang nghề nghiệp')}</Link>
+                            </li>
+                        </ul>
+                    </div>
 
-                {/* Business */}
-                <div>
-                    <h4 className="mb-5 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                        Doanh nghiệp
-                    </h4>
+                    {/* Business */}
+                    <div>
+                        <h4 className="mb-4 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">{t('common.footer.business_title', undefined, 'Doanh nghiệp')}</h4>
 
-                    <ul className="space-y-3.5 text-sm font-medium text-slate-500 dark:text-slate-400">
-                        <li>
-                            <Link
-                                href="/features"
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Sản phẩm & Tính năng
-                            </Link>
-                        </li>
+                        <ul className="space-y-3 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+                            <li>
+                                <Link
+                                    href="/features"
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.products_features', undefined, 'Sản phẩm & Tính năng')}</Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                href={ROUTES.PRICING}
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Bảng giá dịch vụ
-                            </Link>
-                        </li>
+                            <li>
+                                <Link
+                                    href={ROUTES.PRICING}
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.pricing_plans', undefined, 'Bảng giá dịch vụ')}</Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                href={ROUTES.SUPPORT}
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Hỗ trợ khách hàng
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+                            <li>
+                                <Link
+                                    href={ROUTES.SUPPORT}
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.customer_support', undefined, 'Hỗ trợ khách hàng')}</Link>
+                            </li>
+                        </ul>
+                    </div>
 
-                {/* About */}
-                <div>
-                    <h4 className="mb-5 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                        Về ATS System
-                    </h4>
+                    {/* About */}
+                    <div className="col-span-2 sm:col-span-1">
+                        <h4 className="mb-4 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">{t('common.footer.about_title', undefined, 'Về Verisem')}</h4>
 
-                    <ul className="space-y-3.5 text-sm font-medium text-slate-500 dark:text-slate-400">
-                        <li>
-                            <Link
-                                href={ROUTES.ABOUT}
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Về chúng tôi
-                            </Link>
-                        </li>
+                        <ul className="space-y-3 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+                            <li>
+                                <Link
+                                    href={ROUTES.ABOUT}
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.about_us', undefined, 'Về chúng tôi')}</Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                href="/terms"
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Điều khoản dịch vụ
-                            </Link>
-                        </li>
+                            <li>
+                                <Link
+                                    href="/terms"
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.terms_of_service', undefined, 'Điều khoản dịch vụ')}</Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                href="/privacy"
-                                className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
-                            >
-                                Chính sách bảo mật
-                            </Link>
-                        </li>
-                    </ul>
+                            <li>
+                                <Link
+                                    href="/privacy"
+                                    className="inline-block transition-all hover:translate-x-1 hover:text-blue-600 dark:hover:text-blue-400"
+                                >{t('common.footer.privacy_policy', undefined, 'Chính sách bảo mật')}</Link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             {/* Bottom Bar */}
             <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 border-t border-slate-100 pt-8 text-xs font-medium text-slate-400 dark:border-slate-800 dark:text-slate-500 md:flex-row">
-                <p>© 2026 ATS System. Bản quyền đã được bảo hộ.</p>
+                <p>{t('common.footer.copyright', undefined, '© 2026 Verisem. Bản quyền đã được bảo hộ.')}</p>
 
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
                     {/* Social */}
@@ -248,8 +226,8 @@ export default function PublicFooter() {
                                     ? 'bg-slate-100 text-blue-600 dark:bg-slate-800 dark:text-blue-400'
                                     : 'text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-blue-400'
                                 }`}
-                            title="Chọn ngôn ngữ"
-                            aria-label="Chọn ngôn ngữ"
+                            title={t('common.header.aria.select_language', undefined, 'Chọn ngôn ngữ')}
+                            aria-label={t('common.header.aria.select_language', undefined, 'Chọn ngôn ngữ')}
                             aria-expanded={isLanguageOpen}
                         >
                             <img
@@ -314,8 +292,8 @@ export default function PublicFooter() {
                                 )
                             }
                             className="flex h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-blue-400"
-                            aria-label="Chuyển đổi giao diện"
-                            title="Chuyển đổi giao diện"
+                            aria-label={t('common.header.aria.toggle_theme', undefined, 'Chuyển đổi giao diện')}
+                            title={t('common.header.aria.toggle_theme', undefined, 'Chuyển đổi giao diện')}
                         >
                             {theme === 'dark' ? (
                                 <Sun className="h-4.5 w-4.5" />

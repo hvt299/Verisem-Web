@@ -14,11 +14,13 @@ import { INDUSTRIES } from '@/constants/job.constants';
 import { COMPANY_SIZES } from '@/constants/company.constants';
 import { ROUTES } from '@/constants/routes';
 import { applicationService } from '@/features/application/application.service';
+import { useTranslation } from '@/store/useLanguageStore';
 
 export default function PublicCompanyDetailPage() {
     const params = useParams();
     const router = useRouter();
     const { isAuthenticated, user, savedCompanyIds, toggleSavedCompany } = useAuthStore();
+    const { t } = useTranslation();
     const [company, setCompany] = useState<Company | null>(null);
     const [companyJobs, setCompanyJobs] = useState<Job[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +33,7 @@ export default function PublicCompanyDetailPage() {
         e.stopPropagation();
 
         if (!user || user.role !== 'applicant') {
-            toast.error('Vui lòng đăng nhập với tư cách ứng viên để theo dõi công ty!');
+            toast.error(t('companies.details.follow_applicant_only', undefined, 'Vui lòng đăng nhập với tư cách ứng viên để theo dõi công ty!'));
             return;
         }
 
@@ -42,14 +44,14 @@ export default function PublicCompanyDetailPage() {
         try {
             if (isSaved) {
                 await applicationService.unsaveCompany(company.id);
-                toast.success('Đã bỏ theo dõi công ty.');
+                toast.success(t('companies.details.unfollow_success', undefined, 'Đã bỏ theo dõi công ty.'));
             } else {
                 await applicationService.saveCompany(company.id);
-                toast.success('Đã theo dõi công ty thành công.');
+                toast.success(t('companies.details.follow_success', undefined, 'Đã theo dõi công ty thành công.'));
             }
         } catch (error) {
             toggleSavedCompany(company.id);
-            toast.error('Có lỗi xảy ra khi theo dõi công ty.');
+            toast.error(t('companies.details.follow_error', undefined, 'Có lỗi xảy ra khi theo dõi công ty.'));
         }
     };
 
@@ -60,9 +62,9 @@ export default function PublicCompanyDetailPage() {
         const link = `${window.location.origin}${ROUTES.PUBLIC_COMPANY_DETAIL(company.id)}`;
         try {
             await navigator.clipboard.writeText(link);
-            toast.success('Đã sao chép link công ty!');
+            toast.success(t('companies.details.copy_link_success', undefined, 'Đã sao chép link công ty!'));
         } catch {
-            toast.error('Không thể sao chép liên kết');
+            toast.error(t('companies.details.copy_link_error', undefined, 'Không thể sao chép liên kết'));
         }
     };
 
@@ -90,7 +92,7 @@ export default function PublicCompanyDetailPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#05070b] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
                 <PublicHeader isScrolled={isScrolled} isAuthenticated={isAuthenticated} user={user} />
                 <div className="flex-1 flex flex-col items-center justify-center px-4">
                     <div className="flex flex-col items-center justify-center">
@@ -98,7 +100,7 @@ export default function PublicCompanyDetailPage() {
                             <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-xl animate-pulse" />
                             <Loader2 className="relative w-12 h-12 animate-spin text-blue-600 dark:text-blue-400" />
                         </div>
-                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Đang tải hồ sơ doanh nghiệp...</p>
+                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{t('common.status.loading') || 'Đang tải hồ sơ doanh nghiệp...'}</p>
                     </div>
                 </div>
             </div>
@@ -112,7 +114,7 @@ export default function PublicCompanyDetailPage() {
     const companyLocation = company.location ? company.location.country && company.location.country !== 'Việt Nam' ? Array.from(new Set([company.location.street_address, company.location.country].filter(Boolean))).join(', ') : Array.from(new Set([company.location.street_address, company.location.ward_name, company.location.district_name, company.location.province_name].filter(Boolean))).join(', ') : '';
 
     return (
-        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#05070b] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
             <PublicHeader isScrolled={isScrolled} isAuthenticated={isAuthenticated} user={user} />
 
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-28 pb-20 animate-in fade-in duration-500">
@@ -123,7 +125,7 @@ export default function PublicCompanyDetailPage() {
                     <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-primary-200 dark:group-hover:border-primary-800 transition-colors">
                         <ChevronLeft className="w-4 h-4" />
                     </span>
-                    Danh sách công ty
+                    {t('companies.title') || 'Danh sách công ty'}
                 </button>
 
                 <div className="relative mb-8 overflow-hidden rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/20">
@@ -158,11 +160,11 @@ export default function PublicCompanyDetailPage() {
                                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
                                         <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-black text-slate-600 dark:text-slate-300">
                                             <Star className={`w-4 h-4 ${company.avg_rating > 0 ? 'text-amber-500 fill-amber-500' : 'text-slate-400 dark:text-slate-600'}`} />
-                                            {company.avg_rating > 0 ? `${company.avg_rating.toFixed(1)} (${company.review_count})` : 'Chưa đánh giá'}
+                                            {company.avg_rating > 0 ? `${company.avg_rating.toFixed(1)} (${company.review_count})` : (t('companies.card.not_rated') || 'Chưa đánh giá')}
                                         </span>
                                         <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-black text-slate-600 dark:text-slate-300">
                                             <Eye className="w-4 h-4" />
-                                            {(company.view_count || 0).toLocaleString('vi-VN')} lượt xem
+                                            {(company.view_count || 0).toLocaleString('vi-VN')} {t('jobs.details.views')?.toLowerCase() || 'lượt xem'}
                                         </span>
                                     </div>
                                 </div>
@@ -171,11 +173,11 @@ export default function PublicCompanyDetailPage() {
                             <div className="flex flex-row gap-2 w-full lg:w-auto">
                                 <button onClick={handleSaveCompany} className={`flex-1 lg:flex-none flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-3.5 rounded-xl font-black border transition-all whitespace-nowrap ${isSaved ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 border-rose-200 dark:border-rose-500/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 border-slate-200 dark:border-slate-700 hover:border-rose-200 dark:hover:border-rose-500/20'}`}>
                                     <Heart className={`w-4 h-4 shrink-0 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
-                                    {isSaved ? 'Đã lưu' : 'Lưu'}
+                                    {isSaved ? (t('common.actions.saved') || 'Đã lưu') : (t('common.actions.save') || 'Lưu')}
                                 </button>
                                 <button onClick={handleShare} className="flex-1 lg:flex-none flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-3.5 rounded-xl font-black bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 transition-all whitespace-nowrap">
                                     <Share2 className="w-4 h-4" />
-                                    Chia sẻ
+                                    {t('common.actions.share') || 'Chia sẻ'}
                                 </button>
                             </div>
                         </div>
@@ -184,43 +186,47 @@ export default function PublicCompanyDetailPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-7 lg:gap-8">
                     <div className="lg:col-span-2 space-y-7 h-fit">
-                        {company.gallery_urls && company.gallery_urls.length > 0 && (
-                            <section className="overflow-hidden rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
-                                <div className="px-6 md:px-8 pt-6 md:pt-7">
-                                    <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-                                        <h3 className="flex items-center gap-2.5 text-base md:text-lg font-black text-slate-900 dark:text-white">
-                                            <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-500/10 text-rose-500">
-                                                <ImageIcon className="w-5 h-5" />
-                                            </span>
-                                            Không gian làm việc
-                                        </h3>
-                                        <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{company.gallery_urls.length} ảnh</span>
-                                    </div>
-                                </div>
-
-                                <div className="p-6 md:p-8">
-                                    <div className={`grid gap-3 ${company.gallery_urls.length >= 3 ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
-                                        <div className="relative col-span-2 md:col-span-2 row-span-2 h-64 md:h-80 overflow-hidden rounded-2xl cursor-pointer bg-slate-100 dark:bg-slate-800 group">
-                                            <img src={company.gallery_urls[0]} alt="Văn phòng" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                            <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-60 group-hover:opacity-20 transition-opacity" />
+                        {(() => {
+                            const validGallery = (company.gallery_urls || []).filter((u: string) => Boolean(u && u.trim()));
+                            if (validGallery.length === 0) return null;
+                            return (
+                                <section className="overflow-hidden rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
+                                    <div className="px-6 md:px-8 pt-6 md:pt-7">
+                                        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                                            <h3 className="flex items-center gap-2.5 text-base md:text-lg font-black text-slate-900 dark:text-white">
+                                                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
+                                                    <ImageIcon className="w-5 h-5" />
+                                                </span>
+                                                {t('companies.detail.workspace') || 'Không gian làm việc'}
+                                            </h3>
+                                            <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{t('companies.details.photos_count', { count: validGallery.length }, `${validGallery.length} ảnh`)}</span>
                                         </div>
-                                        {company.gallery_urls.slice(1, 3).map((url, idx) => (
-                                            <div key={idx} className="hidden md:block h-30 md:h-38.5 overflow-hidden rounded-2xl cursor-pointer bg-slate-100 dark:bg-slate-800 group">
-                                                <img src={url} alt={`Gallery ${idx + 2}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                            </div>
-                                        ))}
                                     </div>
-                                </div>
-                            </section>
-                        )}
+
+                                    <div className="p-6 md:p-8">
+                                        <div className={`grid gap-3 ${validGallery.length >= 3 ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
+                                            <div className="relative col-span-2 md:col-span-2 row-span-2 h-64 md:h-80 overflow-hidden rounded-2xl cursor-pointer bg-slate-100 dark:bg-slate-800 group">
+                                                <img src={validGallery[0]} alt={t('companies.details.office_photo', undefined, 'Văn phòng')} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                                <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-60 group-hover:opacity-20 transition-opacity" />
+                                            </div>
+                                            {validGallery.slice(1, 3).map((url: string, idx: number) => (
+                                                <div key={idx} className="hidden md:block h-30 md:h-38.5 overflow-hidden rounded-2xl cursor-pointer bg-slate-100 dark:bg-slate-800 group">
+                                                    <img src={url} alt={`Gallery ${idx + 2}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </section>
+                            );
+                        })()}
 
                         {company.benefits && company.benefits.length > 0 && (
                             <section className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
                                 <div className="flex items-center gap-2.5 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-                                    <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-500">
+                                    <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                         <Zap className="w-5 h-5" />
                                     </span>
-                                    <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white">Phúc lợi dành cho bạn</h3>
+                                    <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white">{t('companies.detail.benefits') || 'Phúc lợi dành cho bạn'}</h3>
                                 </div>
                                 <div className="flex flex-wrap gap-2.5">
                                     {company.benefits.map((benefit: string, idx: number) => (
@@ -235,38 +241,38 @@ export default function PublicCompanyDetailPage() {
 
                         <section className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
                             <div className="flex items-center gap-2.5 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-                                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-500">
+                                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                     <FileText className="w-5 h-5" />
                                 </span>
-                                <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white">Về chúng tôi</h3>
+                                <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white">{t('companies.detail.about_us') || 'Về chúng tôi'}</h3>
                             </div>
                             {company.description ? (
                                 <div className="prose prose-slate dark:prose-invert max-w-none text-sm md:text-base text-slate-600 dark:text-slate-300 leading-loose" dangerouslySetInnerHTML={{ __html: company.description }} />
                             ) : (
                                 <div className="py-12 px-5 text-center rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700">
                                     <FileText className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 italic font-medium">Doanh nghiệp chưa cập nhật thông tin giới thiệu chi tiết.</p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 italic font-medium">{t('companies.detail.about_empty') || 'Doanh nghiệp chưa cập nhật thông tin giới thiệu chi tiết.'}</p>
                                 </div>
                             )}
                         </section>
 
                         <section className="p-6 md:p-8 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
                             <div className="flex items-center gap-2.5 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-                                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500">
+                                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                     <CheckCircle2 className="w-5 h-5" />
                                 </span>
-                                <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white">Thông tin pháp lý</h3>
+                                <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white">{t('companies.detail.legal_info') || 'Thông tin pháp lý'}</h3>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-                                    <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Mã số thuế</p>
-                                    <p className="font-black text-slate-800 dark:text-slate-200">{company.tax_code || 'Đang cập nhật'}</p>
+                                    <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.tax_code') || 'Mã số thuế'}</p>
+                                    <p className="font-black text-slate-800 dark:text-slate-200">{company.tax_code || (t('companies.card.updating') || 'Đang cập nhật')}</p>
                                 </div>
                                 <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100 dark:border-emerald-500/10">
-                                    <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Trạng thái định danh</p>
+                                    <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.identity_status') || 'Trạng thái định danh'}</p>
                                     <p className="flex items-center gap-1.5 font-black text-emerald-600 dark:text-emerald-400">
                                         <ShieldCheck className="w-4 h-4" />
-                                        Đã xác minh (KYC)
+                                        {t('companies.card.verified') || 'Đã xác minh (KYC)'}
                                     </p>
                                 </div>
                             </div>
@@ -276,10 +282,10 @@ export default function PublicCompanyDetailPage() {
                     <aside className="lg:sticky lg:top-28 space-y-7 h-fit">
                         <section className="p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
                             <div className="flex items-center gap-2.5 mb-5 pb-4 border-b border-slate-100 dark:border-slate-800">
-                                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-500">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                     <Building2 className="w-4 h-4" />
                                 </span>
-                                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Tổng quan</h3>
+                                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">{t('companies.detail.overview') || 'Tổng quan'}</h3>
                             </div>
 
                             <div className="space-y-5">
@@ -289,7 +295,7 @@ export default function PublicCompanyDetailPage() {
                                             <Briefcase className="w-4 h-4" />
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Lĩnh vực hoạt động</p>
+                                            <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.industry') || 'Lĩnh vực hoạt động'}</p>
                                             <div className="flex flex-wrap gap-1.5">
                                                 {(company.industries || []).map((ind: string, idx: number) => (
                                                     <span key={idx} className="px-2 py-1 rounded-lg border bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-600 dark:text-slate-300">{INDUSTRIES.find((item) => item.value === ind)?.label || ind}</span>
@@ -305,8 +311,8 @@ export default function PublicCompanyDetailPage() {
                                             <Users className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="mb-0.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Quy mô công ty</p>
-                                            <p className="font-black text-sm text-slate-700 dark:text-slate-200">{COMPANY_SIZES.find((size) => size.value === company.size)?.label || 'Đang cập nhật'}</p>
+                                            <p className="mb-0.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.company_size') || 'Quy mô công ty'}</p>
+                                            <p className="font-black text-sm text-slate-700 dark:text-slate-200">{COMPANY_SIZES.find((size) => size.value === company.size)?.label || (t('companies.card.updating') || 'Đang cập nhật')}</p>
                                         </div>
                                     </div>
                                 )}
@@ -317,7 +323,7 @@ export default function PublicCompanyDetailPage() {
                                             <Globe className="w-4 h-4" />
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="mb-0.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Website</p>
+                                            <p className="mb-0.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.website') || 'Website'}</p>
                                             <a href={company.website} target="_blank" rel="noopener noreferrer" className="block text-sm font-black text-blue-600 dark:text-blue-400 hover:underline line-clamp-1">{company.website.replace(/^https?:\/\//, '')}</a>
                                         </div>
                                     </div>
@@ -329,11 +335,15 @@ export default function PublicCompanyDetailPage() {
                                             <MapPin className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Trụ sở chính</p>
+                                            <p className="mb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.headquarters') || 'Trụ sở chính'}</p>
                                             <p className="text-sm font-medium leading-relaxed text-slate-700 dark:text-slate-300">{companyLocation}</p>
-                                            <button className="flex items-center gap-1 mt-2 text-xs font-black text-blue-600 dark:text-blue-400 hover:underline">
+                                            <button
+                                                type="button"
+                                                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(companyLocation)}`, '_blank')}
+                                                className="flex items-center gap-1 mt-2 text-xs font-black text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                                            >
                                                 <Map className="w-3 h-3" />
-                                                Xem bản đồ
+                                                {t('companies.detail.view_map', undefined, 'Xem bản đồ')}
                                             </button>
                                         </div>
                                     </div>
@@ -345,7 +355,7 @@ export default function PublicCompanyDetailPage() {
                                             <Calendar className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="mb-0.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Thành viên từ</p>
+                                            <p className="mb-0.5 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.detail.member_since', undefined, 'Ngày gia nhập')}</p>
                                             <p className="text-sm font-black text-slate-700 dark:text-slate-200">{new Date(company.created_at).toLocaleDateString('vi-VN')}</p>
                                         </div>
                                     </div>
@@ -353,7 +363,7 @@ export default function PublicCompanyDetailPage() {
 
                                 {company.social_links && (company.social_links.facebook || company.social_links.linkedin || company.social_links.youtube) && (
                                     <div className="pt-4 mt-1 border-t border-slate-100 dark:border-slate-800">
-                                        <p className="mb-3 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Mạng xã hội</p>
+                                        <p className="mb-3 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">{t('companies.details.social_media', undefined, 'Mạng xã hội')}</p>
                                         <div className="flex items-center gap-2.5">
                                             {company.social_links.facebook && (
                                                 <a href={company.social_links.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-transparent hover:border-blue-200 dark:hover:border-blue-500/20 transition-all" title="Facebook">
@@ -379,10 +389,10 @@ export default function PublicCompanyDetailPage() {
                         <section className="p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl dark:shadow-black/10">
                             <div className="flex items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-100 dark:border-slate-800">
                                 <div className="flex items-center gap-2">
-                                    <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-500">
+                                    <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                         <Zap className="w-4 h-4" />
                                     </span>
-                                    <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">Đang tuyển</h3>
+                                    <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">{t('companies.detail.open_jobs', { count: companyJobs.length }) || 'Đang tuyển'}</h3>
                                 </div>
                                 <span className="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-black text-slate-500 dark:text-slate-400">{companyJobs.length}</span>
                             </div>
@@ -395,17 +405,17 @@ export default function PublicCompanyDetailPage() {
                                             <div className="flex flex-col gap-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
                                                 <span className="flex items-center gap-1.5">
                                                     <MapPin className="w-3.5 h-3.5 shrink-0" />
-                                                    {job.location?.province_name || 'Toàn quốc'}
+                                                    {job.location?.province_name || (t('common.status.nationwide') || 'Toàn quốc')}
                                                 </span>
                                                 <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                                                     <DollarSign className="w-3.5 h-3.5 shrink-0" />
-                                                    Thỏa thuận
+                                                    {t('jobs.salary.negotiable') || 'Thỏa thuận'}
                                                 </span>
                                             </div>
                                         </div>
                                     ))}
                                     {companyJobs.length > 3 && (
-                                        <button className="w-full py-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-black text-xs transition-colors">Xem tất cả {companyJobs.length} vị trí</button>
+                                        <button className="w-full py-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-black text-xs transition-colors">{t('common.actions.view_more') || 'Xem tất cả'} ({companyJobs.length})</button>
                                     )}
                                 </div>
                             ) : (
@@ -413,7 +423,7 @@ export default function PublicCompanyDetailPage() {
                                     <div className="flex items-center justify-center w-12 h-12 mx-auto mb-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-300 dark:text-slate-600">
                                         <Briefcase className="w-5 h-5" />
                                     </div>
-                                    <p className="text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">Chưa có chiến dịch tuyển dụng nào đang mở.</p>
+                                    <p className="text-xs leading-relaxed font-medium text-slate-500 dark:text-slate-400">{t('companies.detail.no_open_jobs') || 'Chưa có chiến dịch tuyển dụng nào đang mở.'}</p>
                                 </div>
                             )}
                         </section>

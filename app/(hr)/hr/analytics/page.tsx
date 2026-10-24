@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useHRViewStore } from '@/store/useHRViewStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { TrendingUp, Filter, Loader2, Activity , Database }  from 'lucide-react';
+import { TrendingUp, Filter, Loader2, Activity, Database, Cloud, BarChart2 } from 'lucide-react';
 import ProFeatureLock from '@/components/shared/ProFeatureLock';
 import { useRouter } from 'next/navigation';
 import apiClient from '@/lib/api-client';
@@ -18,8 +18,7 @@ export default function AnalyticsPage() {
     const { user } = useAuthStore();
     const router = useRouter();
     // LƯU Ý: CẤM XÓA VĨNH VIỄN ĐOẠN KIỂM TRA GÓI
-    const { isPro: realIsPro, isLoading: isCreditsLoading } = useCredits();
-    const isPro = realIsPro;
+    const { subscription, isLoading: isCreditsLoading } = useCredits();
 
     const { data: plansRes } = useSubscriptionPlans('hr');
 
@@ -28,11 +27,18 @@ export default function AnalyticsPage() {
     );
 
     const unlockPlanName = unlockPlan?.name || 'Pro';
-    const unlockTierConfig = getTierBadgeConfig(unlockPlan?.tier_level || 3);
+    const requiredTierLevel = unlockPlan?.tier_level ?? 2;
+    const unlockTierConfig = getTierBadgeConfig(requiredTierLevel);
+
+    // Mở khóa nếu: Là Admin, hoặc tier_level >= requiredTierLevel (ngang bằng hoặc cao hơn), hoặc có feature can_export_analytics
+    const currentTierLevel = subscription?.tier_level ?? 0;
+    const hasAnalyticsFeature = subscription?.features?.can_export_analytics === true;
+    const isPro = subscription?.entity_type === 'admin' || currentTierLevel >= requiredTierLevel || hasAnalyticsFeature;
 
     const [data, setData] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [days, setDays] = useState(30);
+    const [skillsViewMode, setSkillsViewMode] = useState<'cloud' | 'bar'>('cloud');
 
     useEffect(() => {
         if (!user?.company_id || hrViewMode === 'MEMBER' || isCreditsLoading) return;
@@ -81,7 +87,17 @@ export default function AnalyticsPage() {
     const scoreData = data?.ai_score_distribution || [];
     const trendData = data?.applications_trend || [];
     const expData = data?.experience_distribution || [];
-    const skillsData = data?.skills_word_cloud || [];
+    const rawSkillsData = data?.skills_word_cloud || [];
+    const skillsData = (Array.isArray(rawSkillsData) ? rawSkillsData : []).map((item: any) => {
+        let text = item?.text;
+        if (typeof text === 'object' && text !== null) {
+            text = text.name || text.skill || String(text);
+        }
+        return {
+            text: String(text || '').trim(),
+            value: Number(item?.value || 0)
+        };
+    }).filter((s: any) => s.text && s.value > 0);
     const heatmapData = data?.apply_time_heatmap || [];
     const sourceData = data?.source_roi || [];
     const timeToHireData = data?.time_to_hire || [];
@@ -309,22 +325,100 @@ export default function AnalyticsPage() {
 
                     {/* BIỂU ĐỒ 8: WORD CLOUD KỸ NĂNG */}
                     <div className="bg-card-bg rounded-2xl p-6 border border-border shadow-sm flex flex-col h-full">
-                        <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h3 className="font-bold text-text text-lg">Top Kỹ năng (Word Cloud)</h3>
                                 <p className="text-sm font-medium text-text-muted mt-1">Tần suất kỹ năng xuất hiện trong CV</p>
                             </div>
+                            <div className="flex items-center p-1 bg-surface border border-border rounded-xl">
+                                <button
+                                    onClick={() => setSkillsViewMode('cloud')}
+                                    className={`p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-bold cursor-pointer ${
+                                        skillsViewMode === 'cloud'
+                                            ? 'bg-primary-600 text-white shadow-xs'
+                                            : 'text-text-muted hover:text-text'
+                                    }`}
+                                    title="Dạng đám mây từ khóa (Word Cloud)"
+                                >
+                                    <Cloud className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setSkillsViewMode('bar')}
+                                    className={`p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-bold cursor-pointer ${
+                                        skillsViewMode === 'bar'
+                                            ? 'bg-primary-600 text-white shadow-xs'
+                                            : 'text-text-muted hover:text-text'
+                                    }`}
+                                    title="Dạng biểu đồ cột (Bar Chart)"
+                                >
+                                    <BarChart2 className="w-4 h-4" />
+                                </button>
+                            </div>
                         </div>
-                        <div className="h-72 w-full mt-auto">
-                            {skillsData.length > 0 ? (<ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={skillsData} layout="vertical" margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--color-border)" opacity={0.5} />
-                                    <XAxis type="number" hide />
-                                    <YAxis dataKey="text" type="category" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 12, fontWeight: 600 }} width={80} />
-                                    <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-card-bg)', boxShadow: 'var(--shadow-dropdown)', fontWeight: 'bold', color: 'var(--color-text)' }}  itemStyle={{ color: "var(--color-text)", fontWeight: "bold" }} />
-                                    <Bar dataKey="value" name="Tần suất" radius={[0, 4, 4, 0]} barSize={20} fill="var(--color-primary-500)" />
-                                </BarChart>
-                            </ResponsiveContainer>) : (<ChartEmptyState icon={<Database className="w-6 h-6" />} title="Chưa có dữ liệu" description="Chưa có từ khóa kỹ năng." />)}
+                        <div className="h-72 w-full mt-auto relative flex items-center justify-center">
+                            {skillsData.length > 0 ? (
+                                skillsViewMode === 'cloud' ? (
+                                    <div className="w-full h-full flex flex-wrap items-center justify-center content-center gap-2.5 p-3 overflow-y-auto">
+                                        {(() => {
+                                            const maxVal = Math.max(...skillsData.map((s: any) => s.value), 1);
+                                            const minVal = Math.min(...skillsData.map((s: any) => s.value), 1);
+                                            const range = Math.max(maxVal - minVal, 1);
+                                            
+                                            const colorSchemes = [
+                                                'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-500/10 dark:text-blue-300 dark:border-blue-500/20 hover:border-blue-400',
+                                                'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-300 dark:border-indigo-500/20 hover:border-indigo-400',
+                                                'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-500/10 dark:text-violet-300 dark:border-violet-500/20 hover:border-violet-400',
+                                                'bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-300 dark:border-cyan-500/20 hover:border-cyan-400',
+                                                'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20 hover:border-emerald-400',
+                                                'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20 hover:border-amber-400',
+                                                'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/20 hover:border-rose-400',
+                                            ];
+
+                                            return skillsData.map((skill: any, idx: number) => {
+                                                const weight = (skill.value - minVal) / range;
+                                                const scheme = colorSchemes[idx % colorSchemes.length];
+                                                
+                                                let sizeClass = 'text-xs font-semibold py-1 px-2.5';
+                                                if (weight >= 0.75) {
+                                                    sizeClass = 'text-base font-black py-2 px-4 shadow-sm';
+                                                } else if (weight >= 0.4) {
+                                                    sizeClass = 'text-sm font-bold py-1.5 px-3';
+                                                }
+
+                                                return (
+                                                    <div
+                                                        key={`skill-${idx}`}
+                                                        className={`inline-flex items-center gap-1.5 rounded-xl border transition-all duration-200 cursor-default hover:scale-105 select-none ${sizeClass} ${scheme}`}
+                                                        title={`${skill.text}: ${skill.value} ứng viên sở hữu kỹ năng này`}
+                                                    >
+                                                        <span>{skill.text}</span>
+                                                        <span className="text-[10px] opacity-75 font-mono px-1 rounded bg-black/5 dark:bg-white/10">
+                                                            {skill.value}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            });
+                                        })()}
+                                    </div>
+                                ) : (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={skillsData} layout="vertical" margin={{ top: 0, right: 35, left: 10, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--color-border)" opacity={0.5} />
+                                            <XAxis type="number" hide />
+                                            <YAxis dataKey="text" type="category" axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 11, fontWeight: 600 }} className="text-slate-600 dark:text-slate-300" width={90} />
+                                            <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '12px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-card-bg)', boxShadow: 'var(--shadow-dropdown)', fontWeight: 'bold', color: 'var(--color-text)' }} itemStyle={{ color: "var(--color-text)", fontWeight: "bold" }} />
+                                            <Bar dataKey="value" name="Tần suất" radius={[0, 4, 4, 0]} barSize={18} fill="var(--color-primary-500)">
+                                                {skillsData.map((_: any, index: number) => {
+                                                    const barColors = ['#3b82f6', '#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
+                                                    return <Cell key={`bar-cell-${index}`} fill={barColors[index % barColors.length]} />;
+                                                })}
+                                            </Bar>
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                )
+                            ) : (
+                                <ChartEmptyState icon={<Database className="w-6 h-6" />} title="Chưa có dữ liệu" description="Chưa có từ khóa kỹ năng từ CV ứng tuyển." />
+                            )}
                         </div>
                     </div>
                 </div>

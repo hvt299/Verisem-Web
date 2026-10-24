@@ -19,7 +19,7 @@ export default function OrderHistory({ orders, isLoading }: OrderHistoryProps) {
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
             <div className="p-6 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
-                    <Receipt className="w-5 h-5 text-primary-500" /> Lịch sử Đơn hàng
+                    <Receipt className="w-5 h-5 text-primary-500" /> Lịch sử Giao dịch
                 </h3>
             </div>
             <div className="overflow-x-auto">
@@ -61,7 +61,7 @@ export default function OrderHistory({ orders, isLoading }: OrderHistoryProps) {
                                 );
                             })
                         ) : (
-                            <tr><td colSpan={5} className="p-8 text-center text-slate-500 font-medium">Chưa có đơn hàng nào.</td></tr>
+                            <tr><td colSpan={5} className="p-8 text-center text-slate-500 font-medium">Chưa có giao dịch nào phát sinh.</td></tr>
                         )}
                     </tbody>
                 </table>

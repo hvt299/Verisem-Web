@@ -11,6 +11,7 @@ interface AvatarUploadProps {
     onChange: (url: string) => void;
     size?: 'sm' | 'md' | 'lg' | 'xl';
     className?: string;
+    fallbackName?: string;
 }
 
 const SIZE_MAP = {
@@ -20,7 +21,7 @@ const SIZE_MAP = {
     xl: 'w-32 h-32'
 };
 
-export default function AvatarUpload({ value, onChange, size = 'xl', className = '' }: AvatarUploadProps) {
+export default function AvatarUpload({ value, onChange, size = 'xl', className = '', fallbackName }: AvatarUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,15 +61,17 @@ export default function AvatarUpload({ value, onChange, size = 'xl', className =
     };
 
     const containerSize = SIZE_MAP[size];
+    const displayAvatar = value || (fallbackName ? `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=0284c7&color=fff&bold=true` : undefined);
 
     return (
         <div className={`relative group inline-block ${containerSize} ${className}`}>
             <div className={`relative w-full h-full rounded-full overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center ${isUploading ? 'opacity-60' : ''}`}>
-                {value ? (
+                {displayAvatar ? (
                     <Image
-                        src={value}
+                        src={displayAvatar}
                         alt="Avatar"
                         fill
+                        unoptimized
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-cover"
                     />

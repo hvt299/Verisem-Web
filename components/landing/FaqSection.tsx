@@ -3,24 +3,26 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-
-const FAQS = [
-    {
-        q: 'Hệ thống AI chấm điểm dựa trên tiêu chí nào?',
-        a: 'AI của chúng tôi phân tích dựa trên 4 trọng số: Kỹ năng chuyên môn, Ngữ nghĩa văn cảnh (NLP), Kinh nghiệm làm việc và Trình độ học vấn.',
-    },
-    {
-        q: 'Dữ liệu CV của tôi có được bảo mật không?',
-        a: 'Tuyệt đối. Chúng tôi sử dụng mã hóa AES-256 cho dữ liệu lưu trữ và TLS 1.3 cho dữ liệu truyền tải. Hồ sơ chỉ được chia sẻ khi bạn ứng tuyển.',
-    },
-    {
-        q: 'Làm sao để đăng ký tài khoản Doanh nghiệp?',
-        a: 'Doanh nghiệp cần cung cấp Mã số thuế và Giấy phép kinh doanh. Đội ngũ Admin sẽ kiểm duyệt (KYC) trong vòng 24h làm việc.',
-    },
-];
+import { useTranslation } from '@/store/useLanguageStore';
 
 export default function FaqSection() {
+    const { t } = useTranslation();
     const [activeFaq, setActiveFaq] = useState<number | null>(0);
+
+    const faqs = [
+        {
+            q: t('landing.faq.q1', undefined, 'Hệ thống AI chấm điểm dựa trên tiêu chí nào?'),
+            a: t('landing.faq.a1', undefined, 'AI của chúng tôi phân tích dựa trên 4 trọng số: Kỹ năng chuyên môn, Ngữ nghĩa văn cảnh (NLP), Kinh nghiệm làm việc và Trình độ học vấn.'),
+        },
+        {
+            q: t('landing.faq.q2', undefined, 'Dữ liệu CV của tôi có được bảo mật không?'),
+            a: t('landing.faq.a2', undefined, 'Tuyệt đối. Chúng tôi sử dụng mã hóa AES-256 cho dữ liệu lưu trữ và TLS 1.3 cho dữ liệu truyền tải. Hồ sơ chỉ được chia sẻ khi bạn ứng tuyển.'),
+        },
+        {
+            q: t('landing.faq.q3', undefined, 'Làm sao để đăng ký tài khoản Doanh nghiệp?'),
+            a: t('landing.faq.a3', undefined, 'Doanh nghiệp cần cung cấp Mã số thuế và Giấy phép kinh doanh. Đội ngũ Admin sẽ kiểm duyệt (KYC) trong vòng 24h làm việc.'),
+        },
+    ];
 
     return (
         <section
@@ -52,7 +54,7 @@ export default function FaqSection() {
                         className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1.5 text-xs font-bold text-slate-500 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400"
                     >
                         <HelpCircle className="h-3.5 w-3.5 text-primary-500" />
-                        Giải đáp thắc mắc
+                        {t('landing.faq.badge', undefined, 'Giải đáp thắc mắc')}
                     </motion.div>
 
                     <motion.h2
@@ -62,7 +64,7 @@ export default function FaqSection() {
                         transition={{ duration: 0.5, delay: 0.05 }}
                         className="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl"
                     >
-                        Câu hỏi thường gặp
+                        {t('landing.faq.title', undefined, 'Câu hỏi thường gặp')}
                     </motion.h2>
 
                     <motion.p
@@ -72,8 +74,7 @@ export default function FaqSection() {
                         transition={{ duration: 0.45, delay: 0.1 }}
                         className="mx-auto mt-4 max-w-xl text-sm font-medium leading-6 text-slate-500 dark:text-slate-400 sm:text-base"
                     >
-                        Những thông tin quan trọng về AI, bảo mật dữ liệu và
-                        quy trình sử dụng hệ thống.
+                        {t('landing.faq.subtitle', undefined, 'Những thông tin quan trọng về AI, bảo mật dữ liệu và quy trình sử dụng hệ thống.')}
                     </motion.p>
                 </div>
 
@@ -92,7 +93,7 @@ export default function FaqSection() {
                     }}
                     className="space-y-3"
                 >
-                    {FAQS.map((faq, i) => {
+                    {faqs.map((faq, i) => {
                         const isActive = activeFaq === i;
 
                         return (
@@ -210,8 +211,7 @@ export default function FaqSection() {
                     transition={{ duration: 0.5, delay: 0.35 }}
                     className="mt-8 text-center text-xs font-medium text-slate-400 dark:text-slate-500"
                 >
-                    Chưa tìm thấy câu trả lời bạn cần? Đội ngũ hỗ trợ luôn sẵn
-                    sàng giải đáp.
+                    {t('landing.faq.hint', undefined, 'Chưa tìm thấy câu trả lời bạn cần? Đội ngũ hỗ trợ luôn sẵn sàng giải đáp.')}
                 </motion.p>
             </div>
         </section>

@@ -2,42 +2,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { useTranslation } from '@/store/useLanguageStore';
 import { BrainCircuit, FileSearch, Zap, ShieldCheck, CheckCircle2, Search, Cpu, LockKeyhole, ScanText } from 'lucide-react';
-
-const FEATURES = [
-    {
-        id: 'ai',
-        icon: BrainCircuit,
-        title: 'Ma trận chấm điểm AI',
-        short: 'Chấm điểm CV bằng AI',
-        desc: 'Phân tích CV đa chiều bằng AI, đối chiếu trực tiếp với yêu cầu công việc và đưa ra điểm số khách quan.',
-        color: 'blue',
-    },
-    {
-        id: 'anti',
-        icon: FileSearch,
-        title: 'Phát hiện gian lận từ khóa',
-        short: 'Kiểm tra độ tin cậy CV',
-        desc: 'Tự động phát hiện hồ sơ cố tình nhồi nhét từ khóa, font chữ trắng hoặc nội dung tàng hình để thao túng kết quả.',
-        color: 'violet',
-    },
-    {
-        id: 'parsing',
-        icon: Zap,
-        title: 'Bóc tách CV thông minh',
-        short: 'Phân tích CV tự động',
-        desc: 'Đọc và bóc tách chính xác thông tin Học vấn, Kinh nghiệm và Kỹ năng từ file PDF hoặc DOCX chỉ trong vài giây.',
-        color: 'amber',
-    },
-    {
-        id: 'security',
-        icon: ShieldCheck,
-        title: 'Bảo mật dữ liệu',
-        short: 'An toàn & riêng tư',
-        desc: 'Dữ liệu ứng viên và doanh nghiệp được bảo vệ bằng nhiều lớp mã hóa cùng cơ chế kiểm soát truy cập chặt chẽ.',
-        color: 'emerald',
-    },
-];
 
 const colorMap = {
     blue: {
@@ -76,11 +42,12 @@ const fade: Variants = {
 };
 
 function ScoringAnimation() {
+    const { t } = useTranslation();
     const criteria = [
-        ['Kỹ năng', 96],
-        ['Ngữ nghĩa', 93],
-        ['Kinh nghiệm', 91],
-        ['Học vấn', 88],
+        [t('landing.features.scoring_skills', undefined, 'Kỹ năng'), 96],
+        [t('landing.features.scoring_semantics', undefined, 'Ngữ nghĩa'), 93],
+        [t('landing.features.scoring_experience', undefined, 'Kinh nghiệm'), 91],
+        [t('landing.features.scoring_education', undefined, 'Học vấn'), 88],
     ];
 
     return (
@@ -117,7 +84,7 @@ function ScoringAnimation() {
                             />
 
                             <p className="text-[10px] font-black uppercase tracking-widest text-blue-500">
-                                AI đang phân tích
+                                {t('landing.features.scoring_scanning', undefined, 'AI đang phân tích')}
                             </p>
                         </div>
 
@@ -249,7 +216,7 @@ function ScoringAnimation() {
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
 
                         <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                            Hồ sơ rất phù hợp
+                            {t('landing.features.scoring_matched', undefined, 'Hồ sơ rất phù hợp')}
                         </span>
                     </div>
 
@@ -286,6 +253,7 @@ function ScoringAnimation() {
 }
 
 function AntiStuffingAnimation() {
+    const { t } = useTranslation();
     const keywords = ['React', 'Next.js', 'AI', 'Leadership', 'Python'];
 
     return (
@@ -304,10 +272,10 @@ function AntiStuffingAnimation() {
 
                     <div>
                         <p className="text-sm font-bold text-slate-800 dark:text-white">
-                            Phân tích từ khóa
+                            {t('landing.features.fraud_step', undefined, 'Phân tích từ khóa')}
                         </p>
                         <p className="text-xs text-slate-400">
-                            Đang kiểm tra CV...
+                            {t('landing.features.checking_cv', undefined, 'Đang kiểm tra CV...')}
                         </p>
                     </div>
                 </div>
@@ -342,11 +310,11 @@ function AntiStuffingAnimation() {
                 >
                     <div className="flex items-center gap-2 text-sm font-bold text-red-600 dark:text-red-400">
                         <FileSearch className="h-4 w-4" />
-                        Phát hiện nhồi nhét từ khóa
+                        {t('landing.features.anti_detected', undefined, 'Phát hiện nhồi nhét từ khóa')}
                     </div>
 
                     <p className="mt-1 text-xs text-red-500/80">
-                        Độ tin cậy: 98.7%
+                        {t('landing.features.anti_confidence', undefined, 'Độ tin cậy: 98.7%')}
                     </p>
                 </motion.div>
             </div>
@@ -355,6 +323,7 @@ function AntiStuffingAnimation() {
 }
 
 function ParsingAnimation() {
+    const { t } = useTranslation();
     return (
         <div className="relative flex min-h-65 items-center justify-center sm:min-h-80">
             <motion.div
@@ -398,9 +367,9 @@ function ParsingAnimation() {
 
                 <div className="mt-4 grid grid-cols-3 gap-2">
                     {[
-                        ['Kỹ năng', '12'],
-                        ['Kinh nghiệm', '7 năm'],
-                        ['Học vấn', 'MBA'],
+                        [t('landing.features.parsing_skills', undefined, 'Kỹ năng'), '12'],
+                        [t('landing.features.parsing_experience', undefined, 'Kinh nghiệm'), t('landing.features.parsing_exp_value', undefined, '7 năm')],
+                        [t('landing.features.parsing_education', undefined, 'Học vấn'), 'MBA'],
                     ].map(([label, value], i) => (
                         <motion.div
                             key={label}
@@ -427,6 +396,7 @@ function ParsingAnimation() {
 }
 
 function SecurityAnimation() {
+    const { t } = useTranslation();
     return (
         <div className="relative flex min-h-65 items-center justify-center sm:min-h-80">
             <motion.div
@@ -465,7 +435,7 @@ function SecurityAnimation() {
                 </motion.div>
 
                 <div className="mt-8 grid w-full grid-cols-3 gap-2">
-                    {['Đã mã hóa', 'Riêng tư', 'Được bảo vệ'].map((item, i) => (
+                    {[t('landing.features.sec_encrypted', undefined, 'Đã mã hóa'), t('landing.features.sec_private', undefined, 'Riêng tư'), t('landing.features.sec_protected', undefined, 'Được bảo vệ')].map((item, i) => (
                         <motion.div
                             key={item}
                             className="rounded-lg border border-emerald-100 bg-white px-2 py-3 text-center shadow-sm dark:border-emerald-500/20 dark:bg-slate-900"
@@ -502,14 +472,52 @@ function FeatureAnimation({ id }: { id: string }) {
 }
 
 export default function FeaturesSection() {
-    const [active, setActive] = useState(FEATURES[0]);
+    const { t } = useTranslation();
+
+    const featuresList = [
+        {
+            id: 'ai',
+            icon: BrainCircuit,
+            title: t('landing.features.ai_title', undefined, 'Ma trận chấm điểm AI'),
+            short: t('landing.features.ai_short', undefined, 'Chấm điểm CV bằng AI'),
+            desc: t('landing.features.ai_desc', undefined, 'Phân tích CV đa chiều bằng AI, đối chiếu trực tiếp với yêu cầu công việc và đưa ra điểm số khách quan.'),
+            color: 'blue' as const,
+        },
+        {
+            id: 'anti',
+            icon: FileSearch,
+            title: t('landing.features.anti_title', undefined, 'Phát hiện gian lận từ khóa'),
+            short: t('landing.features.anti_short', undefined, 'Kiểm tra độ tin cậy CV'),
+            desc: t('landing.features.anti_desc', undefined, 'Tự động phát hiện hồ sơ cố tình nhồi nhét từ khóa, font chữ trắng hoặc nội dung tàng hình để thao túng kết quả.'),
+            color: 'violet' as const,
+        },
+        {
+            id: 'parsing',
+            icon: Zap,
+            title: t('landing.features.parsing_title', undefined, 'Bóc tách CV thông minh'),
+            short: t('landing.features.parsing_short', undefined, 'Phân tích CV tự động'),
+            desc: t('landing.features.parsing_desc', undefined, 'Đọc và bóc tách chính xác thông tin Học vấn, Kinh nghiệm và Kỹ năng từ file PDF hoặc DOCX chỉ trong vài giây.'),
+            color: 'amber' as const,
+        },
+        {
+            id: 'security',
+            icon: ShieldCheck,
+            title: t('landing.features.security_title', undefined, 'Bảo mật dữ liệu'),
+            short: t('landing.features.security_short', undefined, 'An toàn & riêng tư'),
+            desc: t('landing.features.security_desc', undefined, 'Dữ liệu ứng viên và doanh nghiệp được bảo vệ bằng nhiều lớp mã hóa cùng cơ chế kiểm soát truy cập chặt chẽ.'),
+            color: 'emerald' as const,
+        },
+    ];
+
+    const [activeId, setActiveId] = useState('ai');
+    const active = featuresList.find(f => f.id === activeId) || featuresList[0];
 
     const styles = colorMap[active.color as keyof typeof colorMap];
 
     return (
         <section
             id="features"
-            className="relative scroll-mt-20 overflow-hidden bg-slate-50 px-3 py-14 transition-colors dark:bg-[#070707] sm:px-5 sm:py-16 md:px-6 md:py-24 lg:py-28"
+            className="relative scroll-mt-20 overflow-hidden bg-slate-50 px-3 pt-14 pb-12 sm:px-5 sm:pt-16 sm:pb-14 md:px-6 md:pt-20 md:pb-16 lg:pt-24 lg:pb-16 transition-colors dark:bg-slate-950"
         >
             <div className="pointer-events-none absolute inset-0">
                 <motion.div
@@ -551,10 +559,10 @@ export default function FeaturesSection() {
                         variants={fade}
                         className="text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl"
                     >
-                        Tuyển dụng.
+                        {t('landing.features.title_part1', undefined, 'Tuyển dụng.')}
                         <span className="text-slate-400 dark:text-slate-500">
                             {' '}
-                            Nhưng thông minh hơn.
+                            {t('landing.features.title_highlight', undefined, 'Nhưng thông minh hơn.')}
                         </span>
                     </motion.h2>
 
@@ -562,9 +570,7 @@ export default function FeaturesSection() {
                         variants={fade}
                         className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-slate-500 dark:text-slate-300 sm:text-base md:mt-4 md:text-lg"
                     >
-                        Hệ thống ATS giúp tự động hóa quy trình tuyển dụng,
-                        đánh giá ứng viên khách quan và tiết kiệm đến 80% thời
-                        gian sàng lọc.
+                        {t('landing.features.subtitle', undefined, 'Hệ thống Verisem giúp tự động hóa quy trình tuyển dụng, đánh giá ứng viên khách quan và tiết kiệm đến 80% thời gian sàng lọc.')}
                     </motion.p>
                 </motion.div>
 
@@ -580,12 +586,12 @@ export default function FeaturesSection() {
                     <div className="border-b border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50 lg:border-b-0 lg:border-r lg:p-4">
                         <div className="mb-3 px-2 py-2">
                             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
-                                Năng lực hệ thống
+                                {t('landing.features.system_capabilities', undefined, 'Năng lực hệ thống')}
                             </p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:flex lg:flex-col">
-                            {FEATURES.map((feature) => {
+                            {featuresList.map((feature) => {
                                 const Icon = feature.icon;
                                 const isActive = active.id === feature.id;
                                 const itemStyles =
@@ -596,7 +602,7 @@ export default function FeaturesSection() {
                                 return (
                                     <button
                                         key={feature.id}
-                                        onClick={() => setActive(feature)}
+                                        onClick={() => setActiveId(feature.id)}
                                         className={`group relative flex w-full items-center gap-2 rounded-xl border p-2.5 text-left transition-all duration-300 sm:gap-3 sm:p-3 ${isActive
                                             ? itemStyles.active
                                             : 'border-transparent text-slate-500 hover:border-slate-200 hover:bg-white dark:text-slate-400 dark:hover:border-slate-700 dark:hover:bg-slate-900'
@@ -670,7 +676,7 @@ export default function FeaturesSection() {
 
                                         <div className="mt-7 flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
                                             <Cpu className="h-4 w-4" />
-                                            Phân tích tự động bằng AI
+                                            {t('landing.features.auto_ai_analysis', undefined, 'Phân tích tự động bằng AI')}
                                         </div>
                                     </motion.div>
                                 </AnimatePresence>

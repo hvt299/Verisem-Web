@@ -8,6 +8,7 @@ import { UserRole } from '@/types';
 import { ROLES } from '@/constants/user.constants';
 import { companyService } from '@/features/company/company.service';
 import ProfileForm from '@/components/shared/ProfileForm';
+import { cn } from '@/utils/utils';
 
 export default function AdminSettingsPage() {
     const { user } = useAuthStore();
@@ -111,14 +112,24 @@ function AdminManagementSection({ currentUser }: { currentUser: any }) {
     }, [search, roleFilter]);
 
     const filtered = users.filter(u => {
-        const matchSearch = u.email?.toLowerCase().includes(search.toLowerCase()) || u.full_name?.toLowerCase().includes(search.toLowerCase());
+        const query = search.trim().toLowerCase();
+        const matchSearch = !query || 
+            (Boolean(u.email) && u.email.toLowerCase().includes(query)) || 
+            (Boolean(u.full_name) && u.full_name.toLowerCase().includes(query));
         const matchRole = roleFilter === 'All' || u.role === roleFilter;
-        return matchSearch && matchRole;
+        return Boolean(matchSearch && matchRole);
     });
 
     // Tính toán Paginated Data
     const paginatedUsers = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
     const totalPages = Math.ceil(filtered.length / pageSize);
+
+    const getVisiblePages = (current: number, total: number) => {
+        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+        if (current <= 3) return [1, 2, 3, 4, '...', total];
+        if (current >= total - 2) return [1, '...', total - 3, total - 2, total - 1, total];
+        return [1, '...', current - 1, current, current + 1, '...', total];
+    };
 
     return (
         <div className="space-y-6 animate-in fade-in">
@@ -134,12 +145,15 @@ function AdminManagementSection({ currentUser }: { currentUser: any }) {
                         value={roleFilter}
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
-                        <option value="All">Tất cả Quyền</option>
-                        {ROLES.map((r) => (
-                            <option key={r.value} value={r.value}>
-                                {r.label}
-                            </option>
-                        ))}
+                        <option value="All">Tất cả Quyền ({users.length})</option>
+                        {ROLES.map((r) => {
+                            const count = users.filter((u) => u.role === r.value).length;
+                            return (
+                                <option key={r.value} value={r.value}>
+                                    {r.label} ({count})
+                                </option>
+                            );
+                        })}
                     </select>
                 </div>
             </div>
@@ -207,24 +221,47 @@ function AdminManagementSection({ currentUser }: { currentUser: any }) {
                     <div className="text-center py-16 text-slate-400 text-sm font-medium">Không tìm thấy người dùng nào khớp với từ khóa.</div>
                 )}
 
-                {/* UI PHÂN TRANG */}
+                {/* UI PHÂN TRANG GỌN GÀNG (SMART PAGINATION WITH ELLIPSIS) */}
                 {!isLoading && totalPages > 1 && (
-                    <div className="flex items-center justify-between p-6 border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/20 mt-auto">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/20 mt-auto">
                         <p className="text-sm font-medium text-slate-500">
-                            Hiển thị <span className="font-bold text-slate-800 dark:text-white">{(currentPage - 1) * pageSize + 1}</span> đến <span className="font-bold text-slate-800 dark:text-white">{Math.min(currentPage * pageSize, filtered.length)}</span> kết quả
+                            Hiển thị <span className="font-bold text-slate-800 dark:text-white">{(currentPage - 1) * pageSize + 1}</span> đến <span className="font-bold text-slate-800 dark:text-white">{Math.min(currentPage * pageSize, filtered.length)}</span> trong số <span className="font-bold text-slate-800 dark:text-white">{filtered.length}</span> kết quả
                         </p>
                         <div className="flex items-center gap-2">
-                            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50 transition-colors shadow-sm">
+                            <button
+                                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                disabled={currentPage === 1}
+                                className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50 transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed"
+                                title="Trang trước"
+                            >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <div className="flex items-center gap-1">
-                                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                                    <button key={page} onClick={() => setCurrentPage(page)} className={`w-9 h-9 rounded-lg text-sm font-bold transition-colors shadow-sm ${currentPage === page ? 'bg-primary-600 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700'}`}>
+                                {getVisiblePages(currentPage, totalPages).map((page, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                                        disabled={page === '...'}
+                                        className={cn(
+                                            "w-9 h-9 rounded-lg text-sm font-bold transition-colors",
+                                            page !== '...' ? "shadow-sm cursor-pointer" : "text-slate-400 bg-transparent cursor-default",
+                                            currentPage === page
+                                                ? "bg-primary-600 text-white"
+                                                : page !== '...'
+                                                ? "text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                                                : ""
+                                        )}
+                                    >
                                         {page}
                                     </button>
                                 ))}
                             </div>
-                            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50 transition-colors shadow-sm">
+                            <button
+                                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                disabled={currentPage === totalPages}
+                                className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50 transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed"
+                                title="Trang sau"
+                            >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
                         </div>

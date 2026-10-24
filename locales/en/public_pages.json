@@ -1,0 +1,345 @@
+{
+  "about": {
+    "hero": {
+      "badge": "About Us",
+      "title_prefix": "About",
+      "title_brand": "Verisem",
+      "desc": "Applying Natural Language Processing (NLP) and vector mathematics to modern recruitment, connecting candidates and companies with transparent, data-driven precision."
+    },
+    "story": {
+      "badge": "Project Origin",
+      "title": "Built to Solve Real-World Hiring Challenges",
+      "p1": "In traditional recruitment, HR teams face hundreds of resumes across fragmented formats. Manual screening is time-consuming and prone to missing qualified talent simply because phrasing does not strictly match keywords in the job description (JD).",
+      "p2": "For job seekers, submitting applications without knowing skill alignment against enterprise requirements often results in uncertainty and discouraging response rates.",
+      "p3": "Verisem was created to solve these challenges through practical technology: accurate document parsing, standardized domain-specific skill taxonomies, and semantic similarity scoring via Cosine Similarity vector algorithms."
+    },
+    "stats": {
+      "match_rate": "Accurate Match Rate",
+      "candidates": "Candidate Profiles",
+      "companies": "Partner Companies",
+      "uptime": "System Uptime"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "desc": "To deliver an objective, transparent, and scientifically grounded profile evaluation platform for the modern workforce. Empowering candidates to identify skill gaps and helping employers drastically minimize screening costs and time."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "desc": "Continuously refining our normalized skill dictionary and semantic embedding models to become the premier intelligent ATS ecosystem for tech talent and enterprises globally."
+    },
+    "values": {
+      "title": "Core Values",
+      "subtitle": "The technical and ethical principles guiding every feature built on the Verisem platform.",
+      "speed_title": "Speed & Practicality",
+      "speed_desc": "Automating resume parsing and preliminary screening with NLP algorithms, saving recruiters dozens of manual review hours per hiring cycle.",
+      "transparent_title": "Transparent & Evidence-Based",
+      "transparent_desc": "Every compatibility score is derived from direct cross-examination between skills, experience in the CV and requirement benchmarks in the JD.",
+      "technical_title": "Technical Rigor",
+      "technical_desc": "No artificial marketing hype. We focus strictly on optimizing Vector Cosine Similarity algorithms and industry-standard skill taxonomies.",
+      "user_first_title": "Real Human Impact",
+      "user_first_desc": "Technology serves as an intelligent assistant helping candidates self-diagnose competencies and enabling employers to discover top potential objectively."
+    }
+  },
+  "features": {
+    "hero": {
+      "title_prefix": "Products &",
+      "title_highlight": "Features",
+      "desc": "Explore Verisem's core NLP technology and vector matching engine. Simplifying recruitment, boosting precision, and connecting the right talent with the ideal role."
+    },
+    "modules": {
+      "m1_title": "Resume Parsing & Standardization (CV Parsing)",
+      "m1_desc": "Advanced document extraction algorithms supporting PDF and DOCX formats. Automatically structures education, career history, and classifies skills against technical dictionaries, normalizing lexical variations (e.g., React, ReactJS, and React.js resolve to a single canonical term).",
+      "m1_highlight": "Automated PDF & DOCX document processing",
+      "m2_title": "Vector Semantic Matching (Cosine Similarity)",
+      "m2_desc": "Converts resume content and job descriptions into high-dimensional semantic text embeddings. Evaluates multi-dimensional cosine angles combined with weighted skill matrices to produce accurate compatibility scores (0 - 100%), transcending mechanical keyword counting.",
+      "m2_highlight": "Mathematically rigorous semantic matching",
+      "m3_title": "Self-Scoring & Skill Gap Analysis",
+      "m3_desc": "Enables candidates to pre-evaluate resumes against target job descriptions prior to official submission. Visualizes matched skills, missing competencies, and actionable recommendations to optimize application competitiveness.",
+      "m3_highlight": "Clear insights into strengths & skill gaps",
+      "m4_title": "Comprehensive Hiring Pipeline Management",
+      "m4_desc": "Unified employer dashboard to track applicants across hiring milestones: Applied, Screened, Interview, Offered, or Rejected. Features multi-criteria filtering by official administrative locations, work arrangements (Remote/On-site/Hybrid), and salary brackets.",
+      "m4_highlight": "Saves 70% of preliminary screening time",
+      "m5_title": "Data Privacy & Private CV Repository",
+      "m5_desc": "Personal documents stored in the candidate library remain completely confidential. Employers can only view full contact details and download original resumes if and only if the candidate explicitly applies to their active job posting.",
+      "m5_highlight": "Candidates retain full data ownership",
+      "m6_title": "Automated Credit & Payment System",
+      "m6_desc": "Transparent credit quota system for AI tasks (scoring, extraction). Integrated with instant QR bank transfers and automated webhook synchronization, provisioning subscription plans and credits 24/7 without manual approval delays.",
+      "m6_highlight": "Instant VietQR activation & provisioning"
+    },
+    "cta": {
+      "title": "Ready to Experience Verisem?",
+      "desc": "Create a free account today to benchmark your competency profile or publish hiring campaigns in minutes.",
+      "btn_register": "Create Free Account",
+      "btn_pricing": "View Pricing Plans"
+    }
+  },
+  "terms": {
+    "hero": {
+      "title_prefix": "Terms of",
+      "title_highlight": "Service",
+      "desc": "Guidelines, rights, and contractual terms governing your use of the Verisem recruitment and evaluation platform."
+    },
+    "toc_title": "Table of Contents",
+    "s1": {
+      "title": "1. Acceptance of Terms",
+      "p1": "By creating an account, accessing, or utilizing any feature of the Verisem platform, you acknowledge that you have read, understood, and agreed to be legally bound by these Terms of Service.",
+      "p2": "If you do not agree with any provision of these terms, please discontinue using our services and contact our support team for clarification."
+    },
+    "s2": {
+      "title": "2. Service Description & Technology",
+      "intro": "Verisem provides an intelligent recruitment platform powered by Natural Language Processing (NLP) and vector semantic matching algorithms (Cosine Similarity). The platform serves two primary user categories:",
+      "applicant_label": "For Job Applicants:",
+      "applicant_desc": "Provides a private CV repository, location-based job search with standardized administrative divisions, and a self-scoring simulator to analyze matched vs. missing skills against specific job descriptions.",
+      "employer_label": "For Employers:",
+      "employer_desc": "Offers job posting tools, candidate intake pipelines, stage progression tracking, and automated semantic compatibility scores for swift preliminary screening."
+    },
+    "s3": {
+      "title": "3. User Responsibilities",
+      "sub1_title": "3.1. Accuracy of Information",
+      "sub1_desc": "Candidates warrant that all information provided in resumes (work history, skills, credentials) is truthful and accurate. Employers warrant that job advertisements represent genuine vacancies, free from misleading terms or labor compliance violations.",
+      "sub2_title": "3.2. Account Security",
+      "sub2_desc": "Users are responsible for safeguarding login credentials and session tokens. Sharing accounts with unauthorized third parties is strictly prohibited."
+    },
+    "s4": {
+      "title": "4. Plans, Quotas & Billing",
+      "p1": "The system provides periodic recurring plans (Monthly / Annual) and on-demand AI Credit top-up packs. Payments are processed securely via automated VietQR bank transfer webhooks.",
+      "p2": "While an active plan remains valid, user protection rules apply: users can upgrade to higher tiers or add credits, but downgrades to lower tiers are restricted until the active billing cycle expires."
+    },
+    "s5": {
+      "title": "5. Intellectual Property",
+      "p1": "Users retain full intellectual ownership of all personal CVs and uploaded documents. Verisem is granted processing rights solely for text extraction, skill normalization, and score computation.",
+      "p2": "Source code, matching algorithms, industry skill taxonomies, user interface designs, and the Verisem brand remain the exclusive property of the platform developer."
+    },
+    "s6": {
+      "title": "6. Limitation of Liability",
+      "note_title": "Advisory Nature of AI Scores:",
+      "note_desc": "Compatibility ratings generated by Verisem algorithms are mathematical estimates derived from textual cross-analysis. These scores serve as decision-support metrics for preliminary filtering and do not constitute an absolute guarantee of professional competency or hiring outcomes. Final recruitment decisions rest solely with the interview process between employer and candidate."
+    }
+  },
+  "privacy": {
+    "hero": {
+      "title_prefix": "Privacy",
+      "title_highlight": "Policy",
+      "desc": "Our commitment to transparency, data protection, and user confidentiality across the Verisem platform."
+    },
+    "toc_title": "Table of Contents",
+    "s1": {
+      "title": "1. Data Collection",
+      "intro": "We only collect information strictly necessary to deliver core platform functionalities:",
+      "item1_label": "User Accounts:",
+      "item1_desc": "Full name, account email address, and securely hashed passwords.",
+      "item2_label": "Candidate Documents:",
+      "item2_desc": "PDF or DOCX resume files explicitly uploaded to the candidate's personal repository.",
+      "item3_label": "Employer Data:",
+      "item3_desc": "Company name, tax code, corporate website, brand logo, and job description texts.",
+      "item4_label": "Billing Records:",
+      "item4_desc": "Order identifiers and VietQR transaction metadata for payment verification and auditing."
+    },
+    "s2": {
+      "title": "2. Data Processing & NLP Algorithms",
+      "p1": "Uploaded resumes are processed by secure text-extraction algorithms to identify educational background, work experience, and technical competencies.",
+      "p2": "Extracted text is transformed into high-dimensional vector embeddings to compute Cosine Similarity distances against job specifications. All calculations execute securely on Verisem internal servers; we strictly never sell or trade candidate profile data with third parties."
+    },
+    "s3": {
+      "title": "3. Transparent Data Sharing Mechanism",
+      "note_title": "Active Application Principle:",
+      "note_desc": "A candidate's resume and contact information are only transferred to an employer when the candidate deliberately clicks \"Apply\" for that specific job posting. Prior to applying, no employer can search, browse, or download your private CV files from the repository."
+    },
+    "s4": {
+      "title": "4. Data Storage & Security",
+      "p1": "User passwords are encrypted using one-way bcrypt hashing before storage. All communications between browser and servers are secured via standard HTTPS encryption.",
+      "p2": "Strict Role-Based Access Control (RBAC) ensures users can only access data within their explicit authorization scope."
+    },
+    "s5": {
+      "title": "5. User Control & Rights",
+      "intro": "You retain full control over your personal data on Verisem:",
+      "item1": "Modify or permanently delete CV versions from your personal library at any time.",
+      "item2": "Request account information updates or corrections via Settings or the Online Support center.",
+      "item3": "Withdraw job applications or request direct technical assistance through our Support portal."
+    }
+  },
+  "support": {
+    "hero": {
+      "title_prefix": "Support",
+      "title_highlight": "Center",
+      "desc": "Find quick answers to common questions or submit a direct ticket to the Verisem engineering team."
+    },
+    "faq_title": "Frequently Asked Questions",
+    "faqs": [
+      {
+        "q": "How does Verisem score resumes?",
+        "a": "The platform utilizes Natural Language Processing (NLP) to parse and understand your resume, converting content into high-dimensional text vectors. AI algorithms then calculate Cosine Similarity between your resume vector and the job description vector to provide an accurate compatibility rating, eliminating rigid keyword counting."
+      },
+      {
+        "q": "Is my personal information kept confidential?",
+        "a": "Absolutely. Your data is encrypted and securely stored. Resumes are only disclosed to an employer when you explicitly submit an application for their open position. We strictly adhere to our published Privacy Policy."
+      },
+      {
+        "q": "How can an employer verify their company account (KYC)?",
+        "a": "Employers must provide a valid Tax Identification Number and an image of their Business Registration Certificate in Account Settings. Our moderation team verifies credentials against national registries within 2-4 business hours."
+      },
+      {
+        "q": "How many resumes can I store in my library?",
+        "a": "Standard candidate accounts (Free) can upload and maintain up to 5 distinct resume versions to tailor applications for different professional specializations."
+      }
+    ],
+    "form": {
+      "title": "Submit a Support Ticket",
+      "desc": "Fill out the form below and our dedicated support engineers will respond promptly.",
+      "full_name": "Full Name",
+      "email": "Email Address",
+      "category": "Topic",
+      "category_placeholder": "-- Select support topic --",
+      "category_tech": "Technical Support / Bug Report",
+      "category_billing": "Billing & Subscriptions",
+      "category_kyc": "Business Verification (KYC)",
+      "category_other": "General Inquiries",
+      "subject": "Subject",
+      "subject_placeholder": "Brief summary of your issue...",
+      "description": "Detailed Description",
+      "description_placeholder": "Please provide comprehensive details regarding your inquiry...",
+      "submit_btn": "Submit Request",
+      "submitting_btn": "Submitting...",
+      "success_title": "Request Submitted Successfully",
+      "ticket_number_label": "Ticket Reference:",
+      "response_notice": "Our support team will review and reply via email to",
+      "new_ticket_btn": "Submit Another Request",
+      "error_required": "Please complete all required fields.",
+      "error_invalid": "Invalid submission data. Please verify your email address and input fields.",
+      "success_toast": "Support request submitted successfully!"
+    },
+    "cards": {
+      "phone_title": "Call Our Hotline",
+      "phone_desc": "Rapid assistance during business hours",
+      "email_title": "Send an Email",
+      "email_desc": "Response guaranteed within 24 hours",
+      "office_title": "Headquarters",
+      "office_desc": "Floor 7, Verisem Tower Building",
+      "office_city": "Da Nang, Vietnam"
+    },
+    "ticket_no_id_error": "Support request submitted successfully, but no Ticket ID was received."
+  },
+  "pricing": {
+    "hero": {
+      "title_prefix": "Pricing",
+      "title_highlight": "Plans",
+      "desc": "Smart investment to optimize recruitment costs and accelerate career growth with Verisem AI."
+    },
+    "audience": {
+      "hr": "Employers",
+      "applicant": "Candidates"
+    },
+    "cycles": {
+      "monthly": "Monthly Plan",
+      "yearly": "Annual Plan",
+      "save_20": "Save 20%",
+      "topup": "AI Credit Packs"
+    },
+    "loading": "Loading pricing plans...",
+    "btn_select": "Choose This Plan",
+    "btn_start": "Get Started",
+    "custom": {
+      "title": "Need a Custom Enterprise Solution?",
+      "desc": "Large-scale hiring demands or custom API limits? Our enterprise consulting team is ready to design a tailored package for your organization.",
+      "btn": "Contact Enterprise Sales"
+    },
+    "downgrade_blocked": "Cannot downgrade to Free plan while current plan is still active.",
+    "free_active_default": "Free plan is active by default.",
+    "checkout_error": "Could not create checkout session."
+  },
+  "blog": {
+    "hero": {
+      "title_prefix": "Career",
+      "title_highlight": "Guide",
+      "desc": "Discover ATS-optimized resume guidelines, in-depth interview strategies, and emerging AI recruitment insights."
+    },
+    "status": {
+      "all_articles": "All Articles",
+      "count_label": "{count} articles",
+      "reset_filters": "Reset Filters",
+      "clear_filters_btn": "Clear filters & view all",
+      "loading": "Loading career guide...",
+      "error_title": "Unable to Load Articles",
+      "error_desc": "Our system encountered an error connecting to data services. Please try again shortly.",
+      "empty_title": "No Articles Published Yet",
+      "empty_desc": "New professional career guides are currently being finalized by our editorial team.",
+      "not_found_title": "No Matching Articles Found",
+      "not_found_desc": "Try adjusting your search query or clearing some filter criteria to discover more articles.",
+      "featured_badge": "Featured Article",
+      "read_now": "Explore Now →",
+      "minutes_read": "{minutes} min read",
+      "prev_page": "Previous",
+      "next_page": "Next"
+    },
+    "search": {
+      "placeholder": "Search articles, career advice, technical skills, ATS tips...",
+      "clear_keyword": "Clear keyword",
+      "all_categories": "All Topics",
+      "select_category": "Select topic...",
+      "filters_btn": "Filters",
+      "view_grid": "Grid View",
+      "view_list": "List View",
+      "deep_filters": "Advanced Filters",
+      "applying_count": "({count} criteria applied)",
+      "clear_all": "Clear All",
+      "category_title": "Categories",
+      "trending_tags": "Trending Topics",
+      "all_tags": "All Topics",
+      "reading_time": "Reading Time",
+      "time_all": "Any Duration",
+      "time_under_5": "< 5 mins",
+      "time_5_10": "5 - 10 mins",
+      "time_over_10": "> 10 mins",
+      "sort_by": "Sort By",
+      "sort_latest": "Latest",
+      "sort_popular": "Most Popular",
+      "sort_time_asc": "Duration: Short to Long",
+      "sort_time_desc": "Duration: Long to Short"
+    },
+    "cta": {
+      "title": "Score Your Resume with Verisem AI",
+      "desc": "Evaluate JD compatibility and optimize ATS keywords in under 10 seconds.",
+      "explore_jobs": "Explore Jobs Now",
+      "register_free": "Sign Up for Free"
+    },
+    "toc": {
+      "title": "Table of Contents"
+    },
+    "card": {
+      "toast_saved": "Article saved to your reading list!",
+      "toast_unmarked": "Article removed from reading list.",
+      "toast_copied": "Article link copied!",
+      "toast_copy_error": "Unable to copy link",
+      "bookmark": "Bookmark article",
+      "unbookmark": "Remove bookmark",
+      "share": "Share article",
+      "read": "Read"
+    },
+    "detail": {
+      "back_to_blog": "Back to Career Guide",
+      "bookmark": "Bookmark",
+      "bookmarked": "Saved",
+      "share": "Share",
+      "trending": "Trending",
+      "views": "{count} views",
+      "published_on": "Published:",
+      "key_takeaways": "Key Takeaways",
+      "related_tags": "Related Topics:",
+      "prev_post": "Previous Article",
+      "next_post": "Next Article",
+      "related_title": "Related Articles",
+      "view_more_category": "View more in category →",
+      "most_read": "Most Popular",
+      "toast_copied": "Article link copied to clipboard!",
+      "toast_copy_error": "Unable to copy link.",
+      "toast_bookmarked": "Article saved to your reading list!",
+      "toast_unbookmarked": "Article removed from reading list.",
+      "loading_detail": "Loading article content...",
+      "unbookmark": "Remove Bookmark",
+      "share_title": "Copy share link",
+      "print_title": "Print article"
+    },
+    "min_read": "m read",
+    "views": "views"
+  }
+}

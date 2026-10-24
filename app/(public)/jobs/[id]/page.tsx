@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import PublicHeader from '@/components/layout/PublicHeader';
 import PublicFooter from '@/components/layout/PublicFooter';
 import JobCard from '@/components/jobs/JobCard';
+import PromoBanner from '@/components/ads/PromoBanner';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUIStore } from '@/store/useUIStore';
 import { formatSalaryRange, getDeadlineCountdown } from '@/utils/format';
@@ -18,12 +19,14 @@ import { INDUSTRIES } from '@/constants/job.constants';
 import { COMPANY_SIZES } from '@/constants/company.constants';
 import { ROUTES } from '@/constants/routes';
 import { applicationService } from '@/features/application/application.service';
+import { useTranslation } from '@/store/useLanguageStore';
 
 export default function PublicJobDetailPage() {
     const params = useParams();
     const router = useRouter();
     const { isAuthenticated, user, savedJobIds, toggleSavedJob } = useAuthStore();
     const { openApplyModal } = useUIStore();
+    const { t } = useTranslation();
 
     const [job, setJob] = useState<Job | null>(null);
     const [company, setCompany] = useState<Company | null>(null);
@@ -72,7 +75,7 @@ export default function PublicJobDetailPage() {
         e.stopPropagation();
 
         if (!user || user.role !== 'applicant') {
-            toast.error('Vui lòng đăng nhập với tư cách ứng viên để lưu việc làm!');
+            toast.error(t('jobs.save_job_applicant_only', undefined, 'Vui lòng đăng nhập với tư cách ứng viên để lưu việc làm!'));
             return;
         }
 
@@ -83,27 +86,27 @@ export default function PublicJobDetailPage() {
         try {
             if (isSaved) {
                 await applicationService.unsaveJob(job.id);
-                toast.success('Đã bỏ lưu việc làm.');
+                toast.success(t('jobs.unsave_job_success', undefined, 'Đã bỏ lưu việc làm.'));
             } else {
                 await applicationService.saveJob(job.id);
-                toast.success('Đã lưu việc làm thành công.');
+                toast.success(t('jobs.save_job_success', undefined, 'Đã lưu việc làm thành công.'));
             }
         } catch (error) {
             toggleSavedJob(job.id);
-            toast.error('Có lỗi xảy ra khi lưu việc làm.');
+            toast.error(t('jobs.save_job_error', undefined, 'Có lỗi xảy ra khi lưu việc làm.'));
         }
     };
 
     const handleApplyClick = () => {
         if (user && user.role !== 'applicant') {
-            toast.error('Tài khoản Nhà tuyển dụng không thể ứng tuyển. Vui lòng đổi tài khoản!', { id: 'role_error' });
+            toast.error(t('jobs.hr_cannot_apply', undefined, 'Tài khoản Nhà tuyển dụng không thể ứng tuyển. Vui lòng đổi tài khoản!'), { id: 'role_error' });
             return;
         }
 
         if (job?.id && job?.title) {
             openApplyModal(job.id, job.title);
         } else {
-            toast.error('Dữ liệu công việc chưa sẵn sàng, vui lòng thử lại!', { id: 'data_error' });
+            toast.error(t('jobs.job_data_not_ready', undefined, 'Dữ liệu công việc chưa sẵn sàng, vui lòng thử lại!'), { id: 'data_error' });
         }
     };
 
@@ -116,19 +119,19 @@ export default function PublicJobDetailPage() {
         const link = `${window.location.origin}${ROUTES.PUBLIC_JOB_DETAIL(job.id)}`;
 
         navigator.clipboard.writeText(link)
-            .then(() => toast.success('Đã sao chép link công việc!'))
-            .catch(() => toast.error('Không thể sao chép liên kết.'));
+            .then(() => toast.success(t('jobs.details.copy_link_success', undefined, 'Đã sao chép link công việc!')))
+            .catch(() => toast.error(t('jobs.details.copy_link_error', undefined, 'Không thể sao chép liên kết.')));
     };
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#050505]">
+            <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
                 <PublicHeader isScrolled={isScrolled} isAuthenticated={isAuthenticated} user={user} />
                 <div className="flex-1 flex flex-col items-center justify-center text-primary-500">
                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-500/10 mb-4">
                         <Loader2 className="w-8 h-8 animate-spin" />
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400 font-semibold">Đang tải thông tin việc làm...</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-semibold">{t('jobs.loading_jobs', undefined, 'Đang tải thông tin việc làm...')}</p>
                 </div>
             </div>
         );
@@ -140,12 +143,12 @@ export default function PublicJobDetailPage() {
 
     const isExpired = Boolean(job.deadline && new Date(job.deadline).getTime() < Date.now());
     const viewCount = Number(job.view_count || 0);
-    const companySize = COMPANY_SIZES.find((size) => size.value === company?.size)?.label || 'Đang cập nhật';
-    const industryLabel = INDUSTRIES.find((item) => item.value === job.industry)?.label || job.industry || 'Đang cập nhật';
-    const locationLabel = job.location?.country && job.location.country !== 'Việt Nam' ? job.location.country : [job.location?.district_name, job.location?.province_name].filter(Boolean).join(', ') || 'Toàn quốc';
+    const companySize = COMPANY_SIZES.find((size) => size.value === company?.size)?.label || (t('companies.card.updating') || 'Đang cập nhật');
+    const industryLabel = INDUSTRIES.find((item) => item.value === job.industry)?.label || job.industry || (t('companies.card.updating') || 'Đang cập nhật');
+    const locationLabel = job.location?.country && job.location.country !== 'Việt Nam' ? job.location.country : [job.location?.district_name, job.location?.province_name].filter(Boolean).join(', ') || (t('common.status.nationwide') || 'Toàn quốc');
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#050505] flex flex-col transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
             <PublicHeader isScrolled={isScrolled} isAuthenticated={isAuthenticated} user={user} />
 
             <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 w-full pt-28 pb-24 font-sans animate-in fade-in duration-500">
@@ -153,7 +156,7 @@ export default function PublicJobDetailPage() {
                     <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-primary-200 dark:group-hover:border-primary-800 transition-colors">
                         <ChevronLeft className="w-4 h-4" />
                     </span>
-                    Danh sách việc làm
+                    {t('jobs.title') || 'Danh sách việc làm'}
                 </button>
 
                 <section className="relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-4xl shadow-sm mb-8">
@@ -167,22 +170,22 @@ export default function PublicJobDetailPage() {
                                     {job.is_hot && (
                                         <span className="inline-flex items-center gap-1.5 bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[11px] font-black px-3 py-1.5 rounded-full border border-orange-100 dark:border-orange-500/20 uppercase tracking-wide">
                                             <Flame className="w-3.5 h-3.5" />
-                                            Việc làm Hot
+                                            {t('jobs.filters.hot_jobs') || 'Việc làm Hot'}
                                         </span>
                                     )}
 
                                     {isExpired && (
-                                        <span className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[11px] font-black px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 uppercase tracking-wide">Đã hết hạn</span>
+                                        <span className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[11px] font-black px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 uppercase tracking-wide">{t('jobs.details.expired') || 'Đã hết hạn'}</span>
                                     )}
 
                                     <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-500/10 px-3 py-1.5 rounded-full border border-primary-100 dark:border-primary-500/20">
                                         <CalendarDays className="w-3.5 h-3.5" />
-                                        Đăng ngày {new Date(job.created_at || Date.now()).toLocaleDateString('vi-VN')}
+                                        {t('jobs.details.posted_at', { date: new Date(job.created_at || Date.now()).toLocaleDateString('vi-VN') }) || `Đăng ngày ${new Date(job.created_at || Date.now()).toLocaleDateString('vi-VN')}`}
                                     </span>
 
                                     <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
                                         <Eye className="w-3.5 h-3.5" />
-                                        {viewCount.toLocaleString('vi-VN')} lượt xem
+                                        {viewCount.toLocaleString('vi-VN')} {t('jobs.details.views')?.toLowerCase() || 'lượt xem'}
                                     </span>
                                 </div>
 
@@ -193,11 +196,11 @@ export default function PublicJobDetailPage() {
                                         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                                             <Building2 className="w-4 h-4" />
                                         </span>
-                                        {job.company_name || 'Công ty Ẩn danh'}
+                                        {job.company_name || t('companies.anonymous') || 'Công ty Ẩn danh'}
                                     </span>
 
                                     <span className="flex items-center gap-2.5" title={[job.location?.street_address, job.location?.ward_name, job.location?.district_name, job.location?.province_name].filter(Boolean).join(', ') || ''}>
-                                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-500/10 text-rose-500">
+                                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                                             <MapPin className="w-4 h-4" />
                                         </span>
                                         {locationLabel}
@@ -213,20 +216,20 @@ export default function PublicJobDetailPage() {
                             </div>
 
                             <div className="hidden lg:flex flex-col gap-3 shrink-0 w-52">
-                                <button onClick={handleApplyClick} disabled={isExpired} className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-black rounded-xl flex items-center justify-center gap-2 shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-0.5">
+                                <button onClick={handleApplyClick} disabled={isExpired} className="w-full py-4 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white font-black rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5">
                                     <UploadCloud className="w-5 h-5" />
-                                    {isExpired ? 'Đã hết hạn' : 'Ứng tuyển ngay'}
+                                    {isExpired ? (t('jobs.details.expired') || 'Đã hết hạn') : (t('jobs.details.apply_button') || 'Ứng tuyển ngay')}
                                 </button>
 
                                 <div className="flex gap-2">
                                     <button type="button" onClick={handleSaveJob} className={`flex-1 py-3 bg-slate-50 dark:bg-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 border transition-colors whitespace-nowrap ${isSaved ? 'text-rose-600 border-rose-200 dark:border-rose-500/20 bg-rose-50 dark:bg-rose-500/10' : 'text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 border-slate-200 dark:border-slate-700'}`}>
                                         <Heart className={`w-4 h-4 shrink-0 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
-                                        {isSaved ? 'Đã lưu' : 'Lưu'}
+                                        {isSaved ? (t('common.actions.saved') || 'Đã lưu') : (t('common.actions.save') || 'Lưu')}
                                     </button>
 
                                     <button type="button" onClick={handleShare} className="flex-1 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-500/10 text-slate-600 dark:text-slate-300 hover:text-primary-600 font-bold rounded-xl flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 transition-colors whitespace-nowrap">
                                         <Share2 className="w-4 h-4 shrink-0" />
-                                        Chia sẻ
+                                        {t('common.actions.share') || 'Chia sẻ'}
                                     </button>
                                 </div>
                             </div>
@@ -237,7 +240,7 @@ export default function PublicJobDetailPage() {
                         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                             <span className="inline-flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-amber-500" />
-                                Cơ hội việc làm dành cho ứng viên phù hợp
+                                {t('jobs.details.opportunity_tag') || 'Cơ hội việc làm dành cho ứng viên phù hợp'}
                             </span>
 
                             {!isExpired && job.deadline && (
@@ -257,10 +260,10 @@ export default function PublicJobDetailPage() {
                                 {job.description && (
                                     <div>
                                         <h3 className="text-lg font-black text-slate-800 dark:text-white mb-5 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-500/10 text-primary-500">
+                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                                 <FileText className="w-5 h-5" />
                                             </span>
-                                            Mô tả công việc
+                                            {t('jobs.details.description') || 'Mô tả công việc'}
                                         </h3>
                                         <div className="prose prose-slate dark:prose-invert max-w-none text-[15px] md:text-base text-slate-600 dark:text-slate-300 leading-8" dangerouslySetInnerHTML={{ __html: job.description }} />
                                     </div>
@@ -269,10 +272,10 @@ export default function PublicJobDetailPage() {
                                 {job.requirements && (
                                     <div>
                                         <h3 className="text-lg font-black text-slate-800 dark:text-white mb-5 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-500/10 text-rose-500">
+                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                                 <CheckCircle2 className="w-5 h-5" />
                                             </span>
-                                            Yêu cầu ứng viên
+                                            {t('jobs.details.requirements') || 'Yêu cầu ứng viên'}
                                         </h3>
                                         <div className="prose prose-slate dark:prose-invert max-w-none text-[15px] md:text-base text-slate-600 dark:text-slate-300 leading-8" dangerouslySetInnerHTML={{ __html: job.requirements }} />
                                     </div>
@@ -281,10 +284,10 @@ export default function PublicJobDetailPage() {
                                 {job.benefits && (
                                     <div>
                                         <h3 className="text-lg font-black text-slate-800 dark:text-white mb-5 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500">
+                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                                 <Star className="w-5 h-5" />
                                             </span>
-                                            Quyền lợi & Chế độ
+                                            {t('jobs.details.benefits') || 'Quyền lợi & Chế độ'}
                                         </h3>
                                         <div className="prose prose-slate dark:prose-invert max-w-none text-[15px] md:text-base text-slate-600 dark:text-slate-300 leading-8" dangerouslySetInnerHTML={{ __html: job.benefits }} />
                                     </div>
@@ -293,10 +296,10 @@ export default function PublicJobDetailPage() {
                                 {job.other_info && (
                                     <div>
                                         <h3 className="text-lg font-black text-slate-800 dark:text-white mb-5 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-500">
+                                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                                 <FileText className="w-5 h-5" />
                                             </span>
-                                            Thông tin khác
+                                            {t('jobs.details.other_info') || 'Thông tin khác'}
                                         </h3>
                                         <div className="prose prose-slate dark:prose-invert max-w-none text-[15px] md:text-base text-slate-600 dark:text-slate-300 leading-8" dangerouslySetInnerHTML={{ __html: job.other_info }} />
                                     </div>
@@ -304,29 +307,29 @@ export default function PublicJobDetailPage() {
 
                                 <div>
                                     <h3 className="text-lg font-black text-slate-800 dark:text-white mb-5 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-500/10 text-primary-500">
+                                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                             <MapPin className="w-5 h-5" />
                                         </span>
-                                        Địa điểm và Thời gian
+                                        {t('jobs.details.location_and_time') || 'Địa điểm và Thời gian'}
                                     </h3>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
                                             <p className="font-black text-slate-800 dark:text-white mb-2 flex items-center gap-2">
-                                                <MapPin className="w-4 h-4 text-rose-500" />
-                                                Địa điểm làm việc
+                                                <MapPin className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                                                {t('jobs.details.location') || 'Địa điểm làm việc'}
                                             </p>
                                             <p className="text-slate-600 dark:text-slate-400 text-sm leading-6">
-                                                {job.location?.country && job.location.country !== 'Việt Nam' ? [job.location.street_address, job.location.country].filter(Boolean).join(', ') : [job.location?.street_address, job.location?.ward_name, job.location?.district_name, job.location?.province_name].filter(Boolean).join(', ') || 'Chưa cập nhật chi tiết'}
+                                                {job.location?.country && job.location.country !== 'Việt Nam' ? [job.location.street_address, job.location.country].filter(Boolean).join(', ') : [job.location?.street_address, job.location?.ward_name, job.location?.district_name, job.location?.province_name].filter(Boolean).join(', ') || t('jobs.details.location_unspecified', undefined, 'Chưa cập nhật chi tiết')}
                                             </p>
                                         </div>
 
                                         <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800">
                                             <p className="font-black text-slate-800 dark:text-white mb-2 flex items-center gap-2">
-                                                <Clock className="w-4 h-4 text-amber-500" />
-                                                Thời gian làm việc
+                                                <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                                                {t('jobs.details.working_hours') || 'Thời gian làm việc'}
                                             </p>
-                                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-6">{job.working_hours || 'Theo quy định của công ty'}</p>
+                                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-6">{job.working_hours || t('jobs.details.standard_hours', undefined, 'Theo quy định của công ty')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -338,14 +341,14 @@ export default function PublicJobDetailPage() {
                                 <div className="flex items-end justify-between gap-4 mb-6">
                                     <div>
                                         <div className="flex items-center gap-2 mb-1">
-                                            <Briefcase className="w-5 h-5 text-primary-500" />
-                                            <span className="text-xs font-black text-primary-600 dark:text-primary-400 uppercase tracking-wider">Có thể bạn quan tâm</span>
+                                            <Briefcase className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                            <span className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider">{t('jobs.details.recommended') || 'Có thể bạn quan tâm'}</span>
                                         </div>
-                                        <h2 className="text-2xl font-black text-slate-800 dark:text-white">Việc làm liên quan</h2>
+                                        <h2 className="text-2xl font-black text-slate-800 dark:text-white">{t('jobs.details.related_jobs') || 'Việc làm liên quan'}</h2>
                                     </div>
 
                                     <button type="button" onClick={() => router.push(ROUTES.PUBLIC_JOBS)} className="hidden sm:flex items-center gap-1.5 text-sm font-bold text-primary-600 hover:text-primary-700 dark:text-primary-400">
-                                        Xem tất cả
+                                        {t('common.actions.view_more') || 'Xem tất cả'}
                                         <ArrowUpRight className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -379,9 +382,9 @@ export default function PublicJobDetailPage() {
                                     </Link>
 
                                     <div className="flex-1 min-w-0 pt-1">
-                                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Nhà tuyển dụng</span>
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">{t('jobs.details.employer') || 'Nhà tuyển dụng'}</span>
                                         <Link href={ROUTES.PUBLIC_COMPANY_DETAIL(job.company_id)} className="block font-black text-lg text-slate-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 line-clamp-2 transition-colors leading-tight mt-1">
-                                            {company?.name || job.company_name || 'Đang cập nhật'}
+                                            {company?.name || job.company_name || t('jobs.details.updating', undefined, 'Đang cập nhật')}
                                         </Link>
                                     </div>
                                 </div>
@@ -392,7 +395,7 @@ export default function PublicJobDetailPage() {
                                             <Users className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">Quy mô</p>
+                                            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-0.5">{t('companies.card.size') || 'Quy mô'}</p>
                                             <p className="text-sm text-slate-700 dark:text-slate-200 font-bold">{companySize}</p>
                                         </div>
                                     </div>
@@ -403,7 +406,7 @@ export default function PublicJobDetailPage() {
                                         </div>
 
                                         <div className="min-w-0">
-                                            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Lĩnh vực hoạt động</p>
+                                            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">{t('companies.detail.industry') || 'Lĩnh vực hoạt động'}</p>
 
                                             {company?.industries && company.industries.length > 0 ? (
                                                 <div className="flex flex-wrap gap-1.5">
@@ -414,7 +417,7 @@ export default function PublicJobDetailPage() {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <p className="text-sm font-bold text-slate-600 dark:text-slate-300">Đang cập nhật ngành nghề</p>
+                                                <p className="text-sm font-bold text-slate-600 dark:text-slate-300">{t('companies.card.updating') || 'Đang cập nhật'}</p>
                                             )}
                                         </div>
                                     </div>
@@ -428,7 +431,7 @@ export default function PublicJobDetailPage() {
                                         )}
 
                                         <Link href={ROUTES.PUBLIC_COMPANY_DETAIL(job.company_id)} className="flex items-center gap-1.5 text-xs font-black text-blue-600 dark:text-blue-400 hover:underline ml-auto bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-lg">
-                                            Hồ sơ công ty
+                                            {t('jobs.details.company_profile') || 'Hồ sơ công ty'}
                                             <ExternalLink className="w-3.5 h-3.5" />
                                         </Link>
                                     </div>
@@ -438,31 +441,31 @@ export default function PublicJobDetailPage() {
 
                         <div className="bg-white dark:bg-slate-900 p-6 rounded-4xl border border-slate-200 dark:border-slate-800 shadow-sm">
                             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-2">
-                                <h3 className="font-black text-slate-800 dark:text-white uppercase tracking-wider text-sm">Thông tin chung</h3>
-                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-500/10 text-primary-500">
+                                <h3 className="font-black text-slate-800 dark:text-white uppercase tracking-wider text-sm">{t('jobs.details.general_info') || 'Thông tin chung'}</h3>
+                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
                                     <Briefcase className="w-3.5 h-3.5" />
                                 </span>
                             </div>
 
                             <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                                <InfoRow icon={<Briefcase />} label="Ngành nghề" value={industryLabel} />
-                                <InfoRow icon={<Briefcase />} label="Cấp bậc" value={job.job_level} />
-                                <InfoRow icon={<Clock />} label="Hình thức" value={`${job.work_mode} - ${job.employment_type}`} />
-                                <InfoRow icon={<Timer />} label="Kinh nghiệm" value={job.min_yoe ? `Tối thiểu ${job.min_yoe} năm` : 'Không yêu cầu'} />
-                                <InfoRow icon={<GraduationCap />} label="Học vấn" value={job.education?.min_level || 'Không yêu cầu'} />
-                                <InfoRow icon={<Users />} label="Số lượng tuyển" value={job.headcount ? `${job.headcount} người` : 'Không giới hạn'} />
-                                <InfoRow icon={<UserCheck />} label="Giới tính" value={job.gender_requirement || 'Không yêu cầu'} />
-                                <InfoRow icon={<Timer />} label="Thử việc" value={job.probation_period || 'Theo quy định'} />
+                                <InfoRow icon={<Briefcase />} label={t('jobs.details.industry') || 'Ngành nghề'} value={industryLabel} />
+                                <InfoRow icon={<Briefcase />} label={t('jobs.levels.label') || 'Cấp bậc'} value={job.job_level} />
+                                <InfoRow icon={<Clock />} label={t('jobs.work_modes.label') || 'Hình thức'} value={`${job.work_mode} - ${job.employment_type}`} />
+                                <InfoRow icon={<Timer />} label={t('jobs.details.experience') || 'Kinh nghiệm'} value={job.min_yoe ? (t('jobs.details.experience_min', { years: job.min_yoe }) || `Tối thiểu ${job.min_yoe} năm`) : (t('jobs.details.experience_none') || 'Không yêu cầu')} />
+                                <InfoRow icon={<GraduationCap />} label={t('jobs.details.education') || 'Học vấn'} value={job.education?.min_level || (t('jobs.details.experience_none') || 'Không yêu cầu')} />
+                                <InfoRow icon={<Users />} label={t('jobs.details.headcount') || 'Số lượng tuyển'} value={job.headcount ? `${job.headcount} ${t('common.roles.applicant')?.toLowerCase() || 'người'}` : (t('jobs.details.deadline_unlimited') || 'Không giới hạn')} />
+                                <InfoRow icon={<UserCheck />} label={t('jobs.details.gender') || 'Giới tính'} value={job.gender_requirement || (t('jobs.details.experience_none') || 'Không yêu cầu')} />
+                                <InfoRow icon={<Timer />} label={t('jobs.details.probation') || 'Thử việc'} value={job.probation_period || 'Theo quy định'} />
 
                                 <div className="flex justify-between items-start gap-4 py-3.5 text-sm">
                                     <span className="text-slate-500 flex items-center gap-2 shrink-0">
                                         <CalendarDays className="w-4 h-4" />
-                                        Hạn nộp
+                                        {t('jobs.details.deadline') || 'Hạn nộp'}
                                     </span>
 
                                     <div className="text-right">
                                         <div className={`font-bold ${isExpired ? 'text-rose-500' : 'text-slate-800 dark:text-slate-200'}`}>
-                                            {job.deadline ? new Date(job.deadline).toLocaleDateString('vi-VN') : 'Không thời hạn'}
+                                            {job.deadline ? new Date(job.deadline).toLocaleDateString('vi-VN') : (t('jobs.details.deadline_unlimited') || 'Không thời hạn')}
                                         </div>
 
                                         {!isExpired && job.deadline && (
@@ -476,7 +479,7 @@ export default function PublicJobDetailPage() {
                                 <div className="flex justify-between items-center gap-4 py-3.5 text-sm">
                                     <span className="text-slate-500 flex items-center gap-2">
                                         <Eye className="w-4 h-4" />
-                                        Lượt xem
+                                        {t('jobs.details.views') || 'Lượt xem'}
                                     </span>
                                     <span className="font-black text-slate-800 dark:text-slate-200">{viewCount.toLocaleString('vi-VN')}</span>
                                 </div>
@@ -485,16 +488,26 @@ export default function PublicJobDetailPage() {
 
                         <div className="bg-white dark:bg-slate-900 p-6 rounded-4xl border border-slate-200 dark:border-slate-800 shadow-sm">
                             <h3 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-500/10">
-                                    <Zap className="w-4 h-4 text-amber-500" />
+                                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
+                                    <Zap className="w-4 h-4" />
                                 </span>
-                                Tiêu chí chuyên môn
+                                {t('jobs.details.skill_criteria') || 'Tiêu chí chuyên môn'}
                             </h3>
 
-                            {job.required_skills && job.required_skills.length > 0 && <SkillGroup title="Kỹ năng bắt buộc" skills={job.required_skills} variant="required" />}
-                            {job.preferred_skills && job.preferred_skills.length > 0 && <SkillGroup title="Điểm cộng (Ưu tiên)" skills={job.preferred_skills} variant="preferred" />}
-                            {job.languages && job.languages.length > 0 && <SkillGroup title="Ngoại ngữ" skills={job.languages} variant="language" />}
-                            {job.required_certifications && job.required_certifications.length > 0 && <SkillGroup title="Chứng chỉ yêu cầu" skills={job.required_certifications} variant="certification" />}
+                            {job.required_skills && job.required_skills.length > 0 && <SkillGroup title={t('jobs.details.skills_required') || 'Kỹ năng bắt buộc'} skills={job.required_skills} variant="required" />}
+                            {job.preferred_skills && job.preferred_skills.length > 0 && <SkillGroup title={t('jobs.details.skills_preferred') || 'Điểm cộng (Ưu tiên)'} skills={job.preferred_skills} variant="preferred" />}
+                            {job.languages && job.languages.length > 0 && <SkillGroup title={t('jobs.details.languages') || 'Ngoại ngữ'} skills={job.languages} variant="language" />}
+                            {job.required_certifications && job.required_certifications.length > 0 && <SkillGroup title={t('jobs.details.certifications') || 'Chứng chỉ yêu cầu'} skills={job.required_certifications} variant="certification" />}
+                        </div>
+                        <div className="mt-6">
+                            <PromoBanner
+                                variant="right-rail"
+                                title={t('common.promo.cv_scoring_title', undefined, 'Chấm điểm mức độ tương thích CV')}
+                                description={t('common.promo.cv_scoring_desc', undefined, 'Ứng dụng công nghệ AI ATS để phân tích sự phù hợp giữa hồ sơ của bạn và vị trí này.')}
+                                badge="AI Scoring"
+                                ctaText={t('common.promo.cv_scoring_cta', undefined, 'Đánh giá CV ngay')}
+                                ctaLink="/applicant/profile"
+                            />
                         </div>
                     </aside>
                 </div>
@@ -509,13 +522,13 @@ export default function PublicJobDetailPage() {
                     <Share2 className="w-5 h-5" />
                 </button>
 
-                <button onClick={handleApplyClick} disabled={isExpired} className="flex-1 h-12 bg-primary-600 hover:bg-primary-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-black rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20 transition-all">
+                <button onClick={handleApplyClick} disabled={isExpired} className="flex-1 h-12 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-black rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all">
                     <Send className="w-5 h-5" />
-                    {isExpired ? 'Đã hết hạn' : 'Ứng tuyển ngay'}
+                    {isExpired ? (t('jobs.details.expired') || 'Đã hết hạn') : (t('jobs.details.apply_button') || 'Ứng tuyển ngay')}
                 </button>
             </div>
 
-            <div className="lg:hidden h-24 bg-slate-50 dark:bg-[#050505]" />
+            <div className="lg:hidden h-24 bg-slate-50 dark:bg-slate-950" />
             <PublicFooter />
         </div>
     );
@@ -528,7 +541,7 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
                 <span className="text-slate-400 [&>svg]:w-4 [&>svg]:h-4">{icon}</span>
                 {label}
             </span>
-            <span className="font-bold text-slate-800 dark:text-slate-200 text-right max-w-[58%]">{value || 'Đang cập nhật'}</span>
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-right max-w-[58%]">{value || 'N/A'}</span>
         </div>
     );
 }

@@ -9,6 +9,7 @@ import { useSubscriptionPlans } from '@/hooks/useSubscriptionPlans';
 import { subscriptionService } from '@/features/subscription/subscription.service';
 import CheckoutModal from '@/components/billing/CheckoutModal';
 import DowngradeBlockedModal, { DowngradeBlockedInfo, isDowngradeBlocked } from '@/components/billing/DowngradeBlockedModal';
+
 import BillingLedger from '@/components/billing/BillingLedger';
 import OrderHistory from '@/components/billing/OrderHistory';
 import PlanCard from '@/components/billing/PlanCard';
@@ -25,6 +26,7 @@ export default function ApplicantBillingPage() {
     const queryClient = useQueryClient();
     const { data: myPlanRes, isLoading: isMyPlanLoading } = useSubscription();
     const { data: plansRes, isLoading: isPlansLoading } = useSubscriptionPlans('applicant');
+
     const { data: txRes, isLoading: isTxLoading } = useQuery({
         queryKey: ['transactions'],
         queryFn: () => subscriptionService.getTransactions(),
@@ -37,14 +39,17 @@ export default function ApplicantBillingPage() {
 
     const planInfo = myPlanRes?.data;
     const plans = plansRes?.data || [];
-    const transactions = txRes?.data || [];
     const orders = ordersRes?.data || [];
+    const transactions = txRes?.data || [];
     const creditBreakdown: any[] = planInfo?.credits?.breakdown || [];
 
     const [checkoutData, setCheckoutData] = useState<any>(null);
     const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
     const [processingPlanCode, setProcessingPlanCode] = useState<string | null>(null);
     const [downgradeBlocked, setDowngradeBlocked] = useState<DowngradeBlockedInfo | null>(null);
+    const [cycleFilter, setCycleFilter] = useState<'monthly' | 'yearly' | 'topup'>('monthly');
+
+    const currentPlanTier = plans.find((p: any) => p.plan_code === planInfo?.current_plan_code)?.tier_level ?? (planInfo?.tier_level || 0);
 
     if (isMyPlanLoading || isPlansLoading) {
         return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600" /></div>;
@@ -52,6 +57,16 @@ export default function ApplicantBillingPage() {
 
     const handleSubscribe = async (plan: any) => {
         if (plan.current_price === 0) {
+            if (currentPlanTier > 0) {
+                setDowngradeBlocked({
+                    code: 'PLAN_DOWNGRADE_BLOCKED',
+                    message: 'Không thể hạ cấp về gói Miễn phí do gói hiện tại vẫn còn hạn sử dụng.',
+                    current_plan: planInfo?.current_plan,
+                    current_period_end: planInfo?.period_end,
+                    target_plan: plan.name,
+                });
+                return;
+            }
             toast.error('Gói miễn phí đã được kích hoạt mặc định.');
             return;
         }
@@ -124,11 +139,63 @@ export default function ApplicantBillingPage() {
                 </div>
             </div>
 
+            {/* BỘ LỌC CHU KỲ / LOẠI GÓI (Đồng bộ với /pricing) */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+                <div>
+                    <h3 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Chọn gói dịch vụ phù hợp</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Mở rộng cơ hội trúng tuyển và tối ưu CV cùng công nghệ AI hàng đầu.</p>
+                </div>
+                <div className="inline-flex items-center p-1 bg-white/90 dark:bg-slate-900/90 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs backdrop-blur-md">
+                    <button
+                        onClick={() => setCycleFilter('monthly')}
+                        className={`px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-xl font-bold transition-all cursor-pointer ${
+                            cycleFilter === 'monthly'
+                                ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200/70 dark:border-blue-800/70 shadow-2xs'
+                                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 border border-transparent'
+                        }`}
+                    >
+                        Gói Tháng
+                    </button>
+                    <button
+                        onClick={() => setCycleFilter('yearly')}
+                        className={`px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-xl font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                            cycleFilter === 'yearly'
+                                ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200/70 dark:border-blue-800/70 shadow-2xs'
+                                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 border border-transparent'
+                        }`}
+                    >
+                        <span>Gói Năm</span>
+                        <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
+                            Tiết kiệm 20%
+                        </span>
+                    </button>
+                    <button
+                        onClick={() => setCycleFilter('topup')}
+                        className={`px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-xl font-bold transition-all cursor-pointer ${
+                            cycleFilter === 'topup'
+                                ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200/70 dark:border-blue-800/70 shadow-2xs'
+                                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 border border-transparent'
+                        }`}
+                    >
+                        Nạp Lẻ Credit AI
+                    </button>
+                </div>
+            </div>
+
             {/* LƯỚI GÓI CƯỚC */}
-            <div id="pricing-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {plans.map((plan: any) => {
+            <div id="pricing-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
+                {plans.filter((plan: any) => {
+                    const isTopup = plan.plan_type === 'topup';
+                    if (cycleFilter === 'topup') return isTopup;
+                    if (isTopup) return false;
+                    if (plan.billing_cycle_days === 0 && plan.current_price === 0) return true;
+                    if (cycleFilter === 'monthly') return plan.billing_cycle_days === 30;
+                    if (cycleFilter === 'yearly') return plan.billing_cycle_days === 365;
+                    return true;
+                }).map((plan: any) => {
                     const isTopup = plan.plan_type === 'topup';
                     const isCurrentPlan = !isTopup && planInfo?.current_plan_code === plan.plan_code;
+                    const isDowngrade = !isTopup && !isCurrentPlan && currentPlanTier > 0 && (plan.tier_level || 0) < currentPlanTier;
 
                     return (
                         <PlanCard
@@ -138,6 +205,7 @@ export default function ApplicantBillingPage() {
                             isProcessing={processingPlanCode === plan.plan_code}
                             onSubscribe={handleSubscribe}
                             customButtonText="Nâng cấp ngay"
+                            isDowngrade={isDowngrade}
                         />
                     );
                 })}
@@ -146,8 +214,9 @@ export default function ApplicantBillingPage() {
             {/* LỊCH SỬ ĐƠN HÀNG */}
             <OrderHistory orders={orders} isLoading={isOrdersLoading} />
 
-            {/* SỔ CÁI GIAO DỊCH */}
+            {/* NHẬT KÝ SỬ DỤNG CREDIT AI */}
             <BillingLedger transactions={transactions} isLoading={isTxLoading} />
+
 
             <DowngradeBlockedModal info={downgradeBlocked} onClose={() => setDowngradeBlocked(null)} />
 
@@ -158,8 +227,8 @@ export default function ApplicantBillingPage() {
                 onSuccess={() => {
                     setIsCheckoutModalOpen(false);
                     queryClient.invalidateQueries({ queryKey: ['my-subscription'] });
-                    queryClient.invalidateQueries({ queryKey: ['transactions'] });
                     queryClient.invalidateQueries({ queryKey: ['orders'] });
+                    queryClient.invalidateQueries({ queryKey: ['transactions'] });
                 }}
             />
         </div>

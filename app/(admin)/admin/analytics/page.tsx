@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { adminService } from '@/features/admin/admin.service';
 import AdminAnalytics from '@/components/admin/AdminAnalytics';
-import { Activity, Server, Users, Building2, Briefcase, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Activity, Server, Users, Building2, Briefcase, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import { systemService } from '@/features/system/system.service';
 
 export default function AdminAnalyticsPage() {
@@ -134,24 +134,26 @@ function MetricCard({ title, value, subtitle, icon: Icon, colorClass }: any) {
 
 function SystemHealthMonitor() {
     const [health, setHealth] = useState<Record<string, string> | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const fetchHealth = async (force: boolean = false) => {
+        if (!force && typeof document !== 'undefined' && document.hidden) return;
+        setIsRefreshing(true);
+        try {
+            const res = await systemService.getSystemHealth();
+            setHealth(res);
+        } catch (e) {
+            setHealth({ error: 'disconnected' });
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
 
     useEffect(() => {
-        let isMounted = true;
-        const fetchHealth = async () => {
-            try {
-                const res = await systemService.getSystemHealth();
-                if (isMounted) setHealth(res);
-            } catch (e) {
-                if (isMounted) setHealth({ error: 'disconnected' });
-            }
-        };
-
-        fetchHealth();
-        const interval = setInterval(fetchHealth, 30000);
-        return () => {
-            isMounted = false;
-            clearInterval(interval);
-        };
+        fetchHealth(true);
+        // Ping every 60s instead of 30s, and pause if browser tab is hidden
+        const interval = setInterval(() => fetchHealth(false), 60000);
+        return () => clearInterval(interval);
     }, []);
 
     const getStatusColor = (status: string) => {
@@ -178,14 +180,25 @@ function SystemHealthMonitor() {
 
     return (
         <div>
-            <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-xl border border-blue-100 dark:border-blue-500/20 flex items-center justify-center shrink-0">
-                    <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-xl border border-blue-100 dark:border-blue-500/20 flex items-center justify-center shrink-0">
+                        <Server className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Giám sát Kết nối Backend (Real-time)</h2>
+                        <p className="text-xs text-slate-500 mt-1">Tự động kiểm tra định kỳ mỗi 60s (Cache 5 phút bảo vệ Quota AI)</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">Giám sát Kết nối Backend (Real-time)</h2>
-                    <p className="text-xs text-slate-500 mt-1">Tự động ping các dịch vụ cốt lõi mỗi 30s</p>
-                </div>
+                <button
+                    onClick={() => fetchHealth(true)}
+                    disabled={isRefreshing}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl transition-all cursor-pointer disabled:opacity-50"
+                    title="Làm mới trạng thái kết nối"
+                >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                    <span>Làm mới</span>
+                </button>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">

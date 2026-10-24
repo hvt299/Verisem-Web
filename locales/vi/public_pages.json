@@ -1,0 +1,345 @@
+{
+  "about": {
+    "hero": {
+      "badge": "Về chúng tôi",
+      "title_prefix": "Giới thiệu về",
+      "title_brand": "Verisem",
+      "desc": "Ứng dụng xử lý ngôn ngữ tự nhiên (NLP) và toán học vector vào tuyển dụng thực tế, kết nối ứng viên và doanh nghiệp một cách minh bạch, hiệu quả."
+    },
+    "story": {
+      "badge": "Khởi nguồn dự án",
+      "title": "Xây dựng từ bài toán thực tế của tuyển dụng",
+      "p1": "Trong thực tế tuyển dụng, các nhà tuyển dụng thường phải đối mặt với hàng trăm tệp CV ở đủ định dạng khác nhau. Việc lọc thủ công vừa tốn thời gian, vừa dễ bỏ sót các ứng viên tiềm năng chỉ vì từ ngữ mô tả không hoàn toàn khớp từng chữ với mô tả công việc (JD).",
+      "p2": "Về phía người tìm việc, việc nộp hồ sơ mà không biết mức độ tương thích kỹ năng của bản thân với yêu cầu doanh nghiệp thường dẫn đến cảm giác mơ hồ và tỷ lệ phản hồi thấp.",
+      "p3": "Verisem được xây dựng nhằm giải quyết bài toán này bằng công nghệ thực tế: trích xuất nội dung văn bản chính xác, chuẩn hóa thuật ngữ kỹ năng theo ngành nghề và tính toán độ tương đồng ngữ nghĩa bằng giải thuật toán học Cosine Similarity."
+    },
+    "stats": {
+      "match_rate": "Tỷ lệ tương thích chuẩn",
+      "candidates": "Hồ sơ ứng viên",
+      "companies": "Doanh nghiệp tham gia",
+      "uptime": "Hệ thống sẵn sàng"
+    },
+    "mission": {
+      "title": "Sứ mệnh",
+      "desc": "Cung cấp công cụ đánh giá hồ sơ khách quan, minh bạch và có cơ sở khoa học cho thị trường lao động. Giúp ứng viên tự tin cải thiện kỹ năng và giúp nhà tuyển dụng tối ưu chi phí, thời gian tuyển chọn."
+    },
+    "vision": {
+      "title": "Mục tiêu phát triển",
+      "desc": "Không ngừng hoàn thiện bộ từ điển chuẩn hóa kỹ năng và mô hình embedding ngữ nghĩa, hướng tới trở thành nền tảng hỗ trợ tuyển dụng thông minh đáng tin cậy cho cộng đồng công nghệ và các doanh nghiệp tại Việt Nam."
+    },
+    "values": {
+      "title": "Giá trị cốt lõi",
+      "subtitle": "Những nguyên tắc kỹ thuật và đạo đức định hướng toàn bộ quá trình xây dựng nền tảng Verisem.",
+      "speed_title": "Tốc độ & Thực tiễn",
+      "speed_desc": "Tự động hóa bóc tách và sơ loại hồ sơ bằng thuật toán NLP, giúp nhà tuyển dụng tiết kiệm hàng chục giờ sàng lọc thủ công mỗi đợt tuyển.",
+      "transparent_title": "Minh bạch & Có cơ sở",
+      "transparent_desc": "Mọi điểm số tương đồng đều được phân tích dựa trên sự đối soát trực tiếp giữa từ vựng kỹ năng, kinh nghiệm trong CV và mô tả yêu cầu trong JD.",
+      "technical_title": "Kỹ thuật Chính xác",
+      "technical_desc": "Không thổi phồng công nghệ viễn vông. Chúng tôi tập trung tối ưu thuật toán Vector Cosine Similarity và bộ từ điển kỹ năng chuẩn mực cho từng ngành.",
+      "user_first_title": "Hỗ trợ Người dùng Thực",
+      "user_first_desc": "Công nghệ đóng vai trò trợ lý đắc lực giúp ứng viên tự nhận diện lỗ hổng kỹ năng và giúp nhà tuyển dụng tìm thấy ứng viên tiềm năng một cách khách quan."
+    }
+  },
+  "features": {
+    "hero": {
+      "title_prefix": "Sản phẩm &",
+      "title_highlight": "Tính năng",
+      "desc": "Khám phá lõi công nghệ NLP và thuật toán so khớp thực tế của Verisem. Đơn giản hóa tuyển dụng, gia tăng độ chính xác và kết nối đúng người với đúng việc."
+    },
+    "modules": {
+      "m1_title": "Trích xuất & Chuẩn hóa Hồ sơ (CV Parsing)",
+      "m1_desc": "Thuật toán bóc tách cấu trúc văn bản từ các định dạng PDF và DOCX. Tự động nhận diện học vấn, kinh nghiệm làm việc và phân loại kỹ năng theo từ điển chuyên ngành kỹ thuật, chuẩn hóa các biến thể từ ngữ (ví dụ: React, ReactJS, React.js quy về một chuẩn đồng nhất).",
+      "m1_highlight": "Xử lý tệp PDF & DOCX tự động",
+      "m2_title": "So khớp Ngữ nghĩa Vector (Cosine Similarity)",
+      "m2_desc": "Biến đổi nội dung CV ứng viên và Bản mô tả công việc (JD) thành các Vector nhúng ngữ nghĩa (Text Embeddings). Áp dụng công thức đo góc tương đồng Cosine kết hợp ma trận trọng số kỹ năng thực tế để tính điểm phù hợp (0 - 100%), không phụ thuộc vào việc đếm từ khóa cơ học.",
+      "m2_highlight": "Khớp ngữ nghĩa toán học chính xác",
+      "m3_title": "Tự Chấm điểm & Phân tích Lỗ hổng Kỹ năng (Self-Scoring)",
+      "m3_desc": "Cho phép ứng viên tự đối soát CV với JD công việc cụ thể trước khi chính thức nộp hồ sơ. Hệ thống trực quan hóa danh sách Kỹ năng đã khớp (Matched Skills), Kỹ năng còn thiếu (Missing Skills) và các khuyến nghị thiết thực để nâng cấp chất lượng hồ sơ.",
+      "m3_highlight": "Thấu hiểu điểm mạnh & thiếu sót",
+      "m4_title": "Quản lý Pipeline Tuyển dụng Toàn diện",
+      "m4_desc": "Giao diện bảng điều khiển dành cho Nhà tuyển dụng theo dõi ứng viên qua từng giai đoạn cụ thể: Mới nộp, Đã duyệt, Hẹn phỏng vấn, Nhận việc hoặc Từ chối. Tích hợp bộ lọc đa chiều theo Tỉnh/Thành, Quận/Huyện chuẩn hành chính, Chế độ làm việc (Remote/On-site/Hybrid) và Mức lương.",
+      "m4_highlight": "Tiết kiệm 70% thời gian lọc hồ sơ ban đầu",
+      "m5_title": "Bảo mật Thông tin & Kho lưu trữ CV Riêng tư",
+      "m5_desc": "Hồ sơ cá nhân trong Thư viện ứng viên được bảo mật tuyệt đối. Nhà tuyển dụng chỉ có quyền tiếp cận chi tiết hồ sơ và tải tệp CV gốc khi và chỉ khi ứng viên chủ động bấm nút \"Ứng tuyển\" vào vị trí tuyển dụng tương ứng của doanh nghiệp.",
+      "m5_highlight": "Ứng viên nắm quyền kiểm soát dữ liệu",
+      "m6_title": "Hệ thống Quản lý Credit & Thanh toán Tự động",
+      "m6_desc": "Cơ chế hạn mức Credit minh bạch cho từng lượt sử dụng tác vụ AI (chấm điểm, phân tích). Tích hợp cổng thanh toán chuyển khoản quét mã VietQR tự động qua Webhook SePay, kích hoạt gói cước và cộng credit ngay tức thì 24/7 không cần chờ duyệt thủ công.",
+      "m6_highlight": "Thanh toán VietQR kích hoạt tức thì"
+    },
+    "cta": {
+      "title": "Sẵn sàng trải nghiệm Verisem?",
+      "desc": "Bắt đầu tạo tài khoản miễn phí để tự chấm điểm hồ sơ năng lực hoặc đăng tuyển công việc ngay hôm nay.",
+      "btn_register": "Tạo tài khoản miễn phí",
+      "btn_pricing": "Xem bảng giá dịch vụ"
+    }
+  },
+  "terms": {
+    "hero": {
+      "title_prefix": "Điều khoản",
+      "title_highlight": "Dịch vụ",
+      "desc": "Các quy định và thỏa thuận khi sử dụng nền tảng hỗ trợ tuyển dụng và phân tích hồ sơ Verisem."
+    },
+    "toc_title": "Mục lục tài liệu",
+    "s1": {
+      "title": "1. Chấp nhận Điều khoản",
+      "p1": "Bằng việc đăng ký tài khoản, truy cập và sử dụng bất kỳ tính năng nào của hệ thống Verisem, bạn xác nhận đã đọc, hiểu rõ và đồng ý chịu sự ràng buộc bởi các Điều khoản dịch vụ này.",
+      "p2": "Nếu bạn không đồng ý với bất kỳ nội dung nào trong bản điều khoản, vui lòng ngưng sử dụng dịch vụ và liên hệ với chúng tôi nếu cần giải đáp."
+    },
+    "s2": {
+      "title": "2. Mô tả Dịch vụ & Công nghệ",
+      "intro": "Verisem cung cấp nền tảng hỗ trợ tuyển dụng ứng dụng xử lý ngôn ngữ tự nhiên (NLP) và thuật toán toán học so khớp vector (Cosine Similarity). Hệ thống phục vụ 2 nhóm người dùng chính:",
+      "applicant_label": "Đối với Ứng viên:",
+      "applicant_desc": "Cung cấp không gian quản lý thư viện CV cá nhân, tìm kiếm việc làm theo địa phương (tỉnh/huyện chuẩn), và tính năng tự chấm điểm thử (Self-Scoring) để nhận diện các kỹ năng đã khớp hoặc còn thiếu so với JD công việc cụ thể.",
+      "employer_label": "Đối với Doanh nghiệp:",
+      "employer_desc": "Cung cấp giao diện đăng tin tuyển dụng, tiếp nhận hồ sơ ứng tuyển, sắp xếp ứng viên theo pipeline tuyển dụng và hiển thị điểm số tương đồng ngữ nghĩa phục vụ việc sàng lọc hồ sơ ban đầu nhanh chóng."
+    },
+    "s3": {
+      "title": "3. Trách nhiệm của Người dùng",
+      "sub1_title": "3.1. Tính trung thực của thông tin",
+      "sub1_desc": "Ứng viên cam kết mọi thông tin trong CV (kinh nghiệm, kỹ năng, văn bằng) là chính xác và trung thực. Doanh nghiệp cam kết các tin đăng tuyển dụng phản ánh đúng nhu cầu tuyển dụng thực tế, không chứa nội dung lừa đảo hoặc vi phạm quy định pháp luật lao động.",
+      "sub2_title": "3.2. Bảo mật thông tin đăng nhập",
+      "sub2_desc": "Người dùng chịu trách nhiệm bảo vệ mật khẩu và phiên đăng nhập của mình. Không chia sẻ tài khoản cho bên thứ ba trái phép."
+    },
+    "s4": {
+      "title": "4. Gói cước, Hạn ngạch & Thanh toán",
+      "p1": "Hệ thống cung cấp các gói dịch vụ theo chu kỳ (Tháng / Năm) và các gói nạp lẻ Credit AI. Thanh toán được thực hiện qua hình thức chuyển khoản quét mã VietQR tự động qua SePay.",
+      "p2": "Khi gói cước hiện tại của người dùng vẫn còn thời hạn sử dụng, hệ thống áp dụng cơ chế bảo vệ quyền lợi: người dùng có thể nâng cấp lên gói cao hơn hoặc nạp thêm Credit, nhưng không thể hạ cấp xuống gói có cấp bậc thấp hơn cho đến khi gói cũ hết hiệu lực."
+    },
+    "s5": {
+      "title": "5. Quyền Sở hữu Trí tuệ",
+      "p1": "Người dùng giữ toàn quyền sở hữu đối với nội dung hồ sơ và CV cá nhân tải lên hệ thống. Verisem được người dùng cấp quyền đọc và phân tích văn bản phục vụ mục đích trích xuất kỹ năng và tính toán điểm phù hợp.",
+      "p2": "Mã nguồn, thuật toán chấm điểm, bộ từ điển chuẩn hóa ngành nghề, thiết kế giao diện và thương hiệu Verisem thuộc quyền sở hữu của đơn vị phát triển nền tảng."
+    },
+    "s6": {
+      "title": "6. Giới hạn Trách nhiệm",
+      "note_title": "Tính chất tham khảo của Điểm số AI:",
+      "note_desc": "Điểm số tương thích do thuật toán Verisem đưa ra là chỉ số toán học ước lượng dựa trên dữ liệu văn bản đối soát. Chỉ số này mang tính chất hỗ trợ sàng lọc ban đầu, không mang tính khẳng định tuyệt đối về năng lực chuyên môn hay kết quả trúng tuyển thực tế. Quyết định tuyển dụng cuối cùng thuộc về các vòng phỏng vấn chuyên môn giữa Doanh nghiệp và Ứng viên."
+    }
+  },
+  "privacy": {
+    "hero": {
+      "title_prefix": "Chính sách",
+      "title_highlight": "Bảo mật",
+      "desc": "Cam kết minh bạch và bảo vệ tối đa dữ liệu hồ sơ cá nhân của người dùng trên nền tảng Verisem."
+    },
+    "toc_title": "Mục lục tài liệu",
+    "s1": {
+      "title": "1. Thu thập Dữ liệu",
+      "intro": "Chúng tôi chỉ thu thập các thông tin thực sự cần thiết nhằm phục vụ hoạt động cốt lõi của nền tảng:",
+      "item1_label": "Tài khoản cá nhân:",
+      "item1_desc": "Họ tên, Địa chỉ Email đăng nhập, Mật khẩu được mã hóa an toàn.",
+      "item2_label": "Hồ sơ Ứng viên:",
+      "item2_desc": "Tệp tài liệu CV định dạng PDF hoặc DOCX do chính ứng viên tải lên thư viện cá nhân.",
+      "item3_label": "Tài khoản Doanh nghiệp:",
+      "item3_desc": "Tên công ty, Mã số thuế, Website, Logo và Nội dung tin tuyển dụng (JD).",
+      "item4_label": "Dữ liệu giao dịch:",
+      "item4_desc": "Mã đơn hàng và lịch sử giao dịch chuyển khoản VietQR hỗ trợ đối soát thanh toán."
+    },
+    "s2": {
+      "title": "2. Xử lý Dữ liệu & Thuật toán NLP",
+      "p1": "Tệp CV của người dùng được xử lý bởi thuật toán trích xuất văn bản (Text Extraction) nhằm xác định các phần học vấn, kinh nghiệm và kỹ năng.",
+      "p2": "Nội dung sau đó được chuyển đổi thành các Vector đặc trưng để tính khoảng cách Cosine Similarity với Vector của mô tả công việc (JD). Quá trình này được thực hiện bảo mật trên máy chủ nội bộ của Verisem và tuyệt đối không chia sẻ hoặc bán dữ liệu hồ sơ cho bên thứ ba."
+    },
+    "s3": {
+      "title": "3. Cơ chế Chia sẻ Thông tin Minh bạch",
+      "note_title": "Nguyên tắc chủ động ứng tuyển:",
+      "note_desc": "Tệp CV và thông tin liên hệ của Ứng viên chỉ được chuyển giao tới Nhà tuyển dụng khi Ứng viên chủ động bấm nút \"Ứng tuyển\" vào vị trí cụ thể của doanh nghiệp đó. Khi chưa ứng tuyển, không doanh nghiệp nào có thể tự ý tra cứu hoặc tải tệp CV riêng tư của bạn từ thư viện."
+    },
+    "s4": {
+      "title": "4. Lưu trữ & Bảo vệ Dữ liệu",
+      "p1": "Mật khẩu người dùng được băm mã hóa một chiều qua thuật toán bcrypt trước khi lưu trữ. Toàn bộ kết nối giữa trình duyệt và máy chủ được mã hóa qua giao thức HTTPS an toàn.",
+      "p2": "Hệ thống phân quyền truy cập nghiêm ngặt theo vai trò (Role-Based Access Control) đảm bảo người dùng chỉ truy cập được dữ liệu thuộc thẩm quyền của mình."
+    },
+    "s5": {
+      "title": "5. Quyền Kiểm soát của Người dùng",
+      "intro": "Bạn có toàn quyền quản lý dữ liệu của mình trên Verisem:",
+      "item1": "Chỉnh sửa hoặc xóa các phiên bản CV trong Thư viện hồ sơ cá nhân bất cứ lúc nào.",
+      "item2": "Yêu cầu cập nhật hoặc đính chính thông tin tài khoản qua trang Cài đặt hoặc kênh Hỗ trợ trực tuyến.",
+      "item3": "Rút lại đơn ứng tuyển hoặc yêu cầu hỗ trợ kỹ thuật trực tiếp thông qua trang Trung tâm Hỗ trợ."
+    }
+  },
+  "support": {
+    "hero": {
+      "title_prefix": "Trung tâm",
+      "title_highlight": "Hỗ trợ",
+      "desc": "Tìm câu trả lời nhanh chóng hoặc gửi yêu cầu trực tiếp đến đội ngũ kỹ thuật của Verisem."
+    },
+    "faq_title": "Câu hỏi thường gặp",
+    "faqs": [
+      {
+        "q": "Verisem chấm điểm CV như thế nào?",
+        "a": "Hệ thống sử dụng NLP (Xử lý ngôn ngữ tự nhiên) để đọc hiểu CV của bạn, sau đó chuyển đổi thành Vector. Thuật toán AI sẽ tính toán độ tương đồng (Cosine Similarity) giữa Vector của CV và Vector của mô tả công việc (JD) để đưa ra thang điểm chính xác nhất, không dựa trên việc đếm từ khóa cứng nhắc."
+      },
+      {
+        "q": "Thông tin cá nhân của tôi có được bảo mật không?",
+        "a": "Hoàn toàn bảo mật. Dữ liệu của bạn được mã hóa và lưu trữ an toàn. Tệp CV chỉ được gửi đến Nhà tuyển dụng khi và chỉ khi bạn chủ động bấm nút \"Ứng tuyển\". Chúng tôi tuân thủ nghiêm ngặt Chính sách bảo mật đã công bố."
+      },
+      {
+        "q": "Làm thế nào để tài khoản công ty được xác thực (KYC)?",
+        "a": "Doanh nghiệp cần cung cấp Mã số thuế hợp lệ và hình ảnh Giấy phép đăng ký kinh doanh trong phần Cài đặt Tài khoản. Đội ngũ kiểm duyệt của Verisem sẽ tiến hành đối chiếu với cổng thông tin quốc gia và xác duyệt trong vòng 2-4 giờ làm việc."
+      },
+      {
+        "q": "Tôi có thể tải lên bao nhiêu CV trong thư viện?",
+        "a": "Đối với tài khoản ứng viên (Miễn phí), bạn có thể tải lên và lưu trữ tối đa 5 phiên bản CV khác nhau để linh hoạt ứng tuyển cho nhiều vị trí chuyên môn biệt lập."
+      }
+    ],
+    "form": {
+      "title": "Gửi yêu cầu hỗ trợ",
+      "desc": "Điền thông tin vào mẫu bên dưới, chuyên viên hỗ trợ sẽ phản hồi sớm nhất.",
+      "full_name": "Họ và tên",
+      "email": "Email",
+      "category": "Chủ đề",
+      "category_placeholder": "-- Chọn chủ đề hỗ trợ --",
+      "category_tech": "Hỗ trợ kỹ thuật / Báo lỗi",
+      "category_billing": "Thanh toán & Gói cước",
+      "category_kyc": "Xác thực doanh nghiệp (KYC)",
+      "category_other": "Vấn đề khác",
+      "subject": "Tiêu đề",
+      "subject_placeholder": "Tóm tắt vấn đề...",
+      "description": "Nội dung chi tiết",
+      "description_placeholder": "Mô tả chi tiết vấn đề bạn đang gặp phải...",
+      "submit_btn": "Gửi yêu cầu",
+      "submitting_btn": "Đang gửi...",
+      "success_title": "Gửi yêu cầu thành công",
+      "ticket_number_label": "Mã yêu cầu:",
+      "response_notice": "Đội ngũ hỗ trợ sẽ kiểm tra và phản hồi qua email",
+      "new_ticket_btn": "Gửi yêu cầu mới",
+      "error_required": "Vui lòng điền đầy đủ các trường bắt buộc.",
+      "error_invalid": "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại Email và các trường khác.",
+      "success_toast": "Gửi yêu cầu hỗ trợ thành công!"
+    },
+    "cards": {
+      "phone_title": "Gọi cho chúng tôi",
+      "phone_desc": "Hỗ trợ nhanh trong giờ hành chính",
+      "email_title": "Gửi Email",
+      "email_desc": "Phản hồi trong vòng 24 giờ",
+      "office_title": "Trụ sở chính",
+      "office_desc": "Tầng 7, Tòa nhà Verisem Tower",
+      "office_city": "Đà Nẵng, Việt Nam"
+    },
+    "ticket_no_id_error": "Gửi yêu cầu hỗ trợ thành công, nhưng không nhận được mã Ticket từ hệ thống."
+  },
+  "pricing": {
+    "hero": {
+      "title_prefix": "Bảng giá",
+      "title_highlight": "Dịch vụ",
+      "desc": "Đầu tư thông minh, tối ưu chi phí tuyển dụng và phát triển sự nghiệp cùng hệ thống AI Verisem."
+    },
+    "audience": {
+      "hr": "Nhà tuyển dụng",
+      "applicant": "Ứng viên"
+    },
+    "cycles": {
+      "monthly": "Gói Tháng",
+      "yearly": "Gói Năm",
+      "save_20": "Tiết kiệm 20%",
+      "topup": "Nạp Lẻ Credit AI"
+    },
+    "loading": "Đang tải bảng giá dịch vụ...",
+    "btn_select": "Chọn gói này",
+    "btn_start": "Bắt đầu ngay",
+    "custom": {
+      "title": "Cần giải pháp hoặc gói tùy chỉnh?",
+      "desc": "Doanh nghiệp quy mô lớn hoặc cần cấu hình hạn mức riêng biệt? Đội ngũ chuyên gia của Verisem luôn sẵn sàng tư vấn.",
+      "btn": "Liên hệ Đội ngũ tư vấn"
+    },
+    "downgrade_blocked": "Không thể hạ cấp về gói Miễn phí do gói hiện tại vẫn còn hạn sử dụng.",
+    "free_active_default": "Gói miễn phí đã được kích hoạt mặc định.",
+    "checkout_error": "Không thể tạo phiên thanh toán."
+  },
+  "blog": {
+    "hero": {
+      "title_prefix": "Cẩm nang",
+      "title_highlight": "Nghề nghiệp",
+      "desc": "Cập nhật phương pháp chuẩn hóa CV theo ATS, chiến lược phỏng vấn chuyên sâu và xu hướng tuyển dụng ứng dụng trí tuệ nhân tạo."
+    },
+    "status": {
+      "all_articles": "Tất cả bài viết",
+      "count_label": "{count} bài viết",
+      "reset_filters": "Đặt lại bộ lọc",
+      "clear_filters_btn": "Xóa bộ lọc & xem tất cả",
+      "loading": "Đang tải cẩm nang nghề nghiệp...",
+      "error_title": "Không thể tải bài viết",
+      "error_desc": "Hệ thống đang gặp sự cố khi kết nối dữ liệu. Vui lòng thử lại sau ít phút.",
+      "empty_title": "Chưa có bài viết nào",
+      "empty_desc": "Các bài viết kiến thức mới đang được ban biên tập hoàn thiện.",
+      "not_found_title": "Không tìm thấy bài viết phù hợp",
+      "not_found_desc": "Thử thay đổi từ khóa tìm kiếm hoặc bỏ bớt các tiêu chí lọc để xem thêm bài viết nhé.",
+      "featured_badge": "Bài viết tiêu điểm",
+      "read_now": "Khám phá ngay →",
+      "minutes_read": "{minutes} phút đọc",
+      "prev_page": "Trang trước",
+      "next_page": "Trang sau"
+    },
+    "search": {
+      "placeholder": "Tìm kiếm bài viết, chủ đề chuyên môn, kỹ năng, mẹo ATS...",
+      "clear_keyword": "Xóa từ khóa",
+      "all_categories": "Tất cả chủ đề",
+      "select_category": "Chọn chủ đề...",
+      "filters_btn": "Bộ lọc",
+      "view_grid": "Xem dạng lưới",
+      "view_list": "Xem dạng danh sách",
+      "deep_filters": "Bộ lọc chuyên sâu",
+      "applying_count": "(Đang áp dụng {count} tiêu chí)",
+      "clear_all": "Xóa tất cả",
+      "category_title": "Chủ đề danh mục",
+      "trending_tags": "Từ khóa thịnh hành",
+      "all_tags": "Tất cả từ khóa",
+      "reading_time": "Thời lượng đọc",
+      "time_all": "Mọi thời lượng",
+      "time_under_5": "< 5 phút",
+      "time_5_10": "5 - 10 phút",
+      "time_over_10": "> 10 phút",
+      "sort_by": "Sắp xếp theo",
+      "sort_latest": "Mới nhất",
+      "sort_popular": "Đọc nhiều nhất",
+      "sort_time_asc": "Thời lượng: Ngắn trước",
+      "sort_time_desc": "Thời lượng: Dài trước"
+    },
+    "cta": {
+      "title": "Chấm điểm CV cùng AI Verisem",
+      "desc": "Kiểm tra độ tương thích hồ sơ với JD và tối ưu hóa từ khóa chuẩn ATS chỉ trong 10 giây.",
+      "explore_jobs": "Khám phá việc làm ngay",
+      "register_free": "Đăng ký tài khoản miễn phí"
+    },
+    "toc": {
+      "title": "Mục lục bài viết"
+    },
+    "card": {
+      "toast_saved": "Đã lưu bài viết vào danh sách đọc!",
+      "toast_unmarked": "Đã bỏ lưu bài viết.",
+      "toast_copied": "Đã sao chép link bài viết!",
+      "toast_copy_error": "Không thể sao chép liên kết",
+      "bookmark": "Lưu bài viết",
+      "unbookmark": "Bỏ lưu",
+      "share": "Chia sẻ liên kết",
+      "read": "Đọc"
+    },
+    "detail": {
+      "back_to_blog": "Quay lại Cẩm nang nghề nghiệp",
+      "bookmark": "Lưu bài",
+      "bookmarked": "Đã lưu",
+      "share": "Chia sẻ",
+      "trending": "Xu hướng",
+      "views": "{count} lượt xem",
+      "published_on": "Xuất bản:",
+      "key_takeaways": "Điểm cốt lõi cần nhớ",
+      "related_tags": "Từ khóa liên quan:",
+      "prev_post": "Bài trước đó",
+      "next_post": "Bài tiếp theo",
+      "related_title": "Bài viết liên quan",
+      "view_more_category": "Xem thêm trong danh mục →",
+      "most_read": "Đọc nhiều nhất",
+      "toast_copied": "Đã sao chép link bài viết vào clipboard!",
+      "toast_copy_error": "Không thể sao chép liên kết.",
+      "toast_bookmarked": "Đã lưu bài viết vào danh sách quan tâm!",
+      "toast_unbookmarked": "Đã bỏ lưu bài viết.",
+      "loading_detail": "Đang tải nội dung bài viết...",
+      "unbookmark": "Bỏ lưu",
+      "share_title": "Sao chép link chia sẻ",
+      "print_title": "In bài viết"
+    },
+    "min_read": "p đọc",
+    "views": "lượt xem"
+  }
+}

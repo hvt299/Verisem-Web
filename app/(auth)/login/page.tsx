@@ -14,8 +14,10 @@ import { UserRole } from '@/types';
 import { HrInfoState } from '@/components/auth/HrEnterpriseForm';
 import { ROUTES } from '@/constants/routes';
 import AuthShell from '@/components/auth/AuthShell';
+import { useTranslation } from '@/store/useLanguageStore';
 
 export default function LoginPage() {
+    const { t } = useTranslation();
     const { login: handleLogin, isLoading, socialLoginFlow } = useAuthFlow();
 
     const [email, setEmail] = useState('');
@@ -70,7 +72,7 @@ export default function LoginPage() {
 
     const loginWithGoogle = useGoogleLogin({
         onSuccess: (tokenResponse) => handleSocialAuth(tokenResponse.access_token, 'google'),
-        onError: () => toast.error('Đăng nhập Google thất bại')
+        onError: () => toast.error(t('auth.login.google_failed', undefined, 'Đăng nhập Google thất bại'))
     });
 
     const { linkedInLogin } = useLinkedInAuth({
@@ -81,13 +83,13 @@ export default function LoginPage() {
     return (
         <AuthShell variant="login">
             <div className="flex flex-col items-center mb-8 text-center transition-all">
-                <h1 className="text-2xl font-bold text-text">Chào mừng trở lại</h1>
-                <p className="text-text-muted text-sm mt-1.5">Đăng nhập để tiếp tục quản lý tuyển dụng</p>
+                <h1 className="text-2xl font-bold text-text">{t('auth.login.title', undefined, 'Chào mừng trở lại')}</h1>
+                <p className="text-text-muted text-sm mt-1.5">{t('auth.login.subtitle', undefined, 'Đăng nhập để tiếp tục quản lý tuyển dụng')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-sm font-semibold text-text mb-1.5">Email</label>
+                    <label className="block text-sm font-semibold text-text mb-1.5">{t('auth.login.email_label', undefined, 'Email')}</label>
                     <div className="relative">
                         <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-subtle w-5 h-5" />
                         <input 
@@ -100,8 +102,8 @@ export default function LoginPage() {
 
                 <div>
                     <div className="flex justify-between items-center mb-1.5">
-                        <label className="text-sm font-semibold text-text">Mật khẩu</label>
-                        <Link href={ROUTES.FORGOT_PASSWORD} className="text-sm text-primary-600 font-medium hover:underline transition-colors">Quên mật khẩu?</Link>
+                        <label className="text-sm font-semibold text-text">{t('auth.login.password_label', undefined, 'Mật khẩu')}</label>
+                        <Link href={ROUTES.FORGOT_PASSWORD} className="text-sm text-primary-600 font-medium hover:underline transition-colors">{t('auth.login.forgot_password', undefined, 'Quên mật khẩu?')}</Link>
                     </div>
                     <div className="relative">
                         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-subtle w-5 h-5" />
@@ -120,27 +122,28 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div className="mt-4 flex flex-col items-center justify-center pt-2">
+                <div className="mt-4 w-full flex justify-center pt-2 [&>div]:!w-full [&_iframe]:!w-full">
                     <Turnstile 
                         siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_SITE_KEY || '1x00000000000000000000AA'} 
                         onSuccess={(token) => setTurnstileToken(token)}
                         onError={() => setTurnstileToken('')}
                         onExpire={() => setTurnstileToken('')}
-                        options={{ theme: 'auto', size: 'normal' }}
+                        options={{ theme: 'auto', size: 'flexible' }}
+                        className="w-full"
                     />
                 </div>
 
                 {error && <p className="text-error-700 text-sm font-medium bg-error-50 dark:bg-error-500/10 p-3 rounded-button border border-error-100 dark:border-error-500/20">{error}</p>}
 
                 <button type="submit" disabled={isLoading} className="w-full bg-button-primary-bg hover:bg-button-primary-hover disabled:opacity-70 text-button-primary-text font-bold py-3 rounded-button flex items-center justify-center gap-2 group mt-2 transition-colors">
-                    {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
+                    {isLoading ? t('auth.login.submitting', undefined, 'Đang xử lý...') : t('auth.login.submit', undefined, 'Đăng nhập')}
                     {!isLoading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
                 </button>
             </form>
 
             <div className="mt-6 flex items-center gap-4">
                 <div className="h-px bg-border flex-1"></div>
-                <span className="text-xs font-semibold text-text-subtle uppercase tracking-wider">Hoặc tiếp tục với</span>
+                <span className="text-xs font-semibold text-text-subtle uppercase tracking-wider">{t('auth.login.or_continue_with', undefined, 'Hoặc tiếp tục với')}</span>
                 <div className="h-px bg-border flex-1"></div>
             </div>
 
@@ -149,7 +152,7 @@ export default function LoginPage() {
             </div>
 
             <p className="text-center mt-8 text-text-muted text-sm font-medium">
-                Chưa có tài khoản? <Link href={ROUTES.REGISTER} className="text-primary-600 font-bold hover:underline transition-colors">Tạo tài khoản</Link>
+                {t('auth.login.no_account', undefined, 'Chưa có tài khoản?')} <Link href={ROUTES.REGISTER} className="text-primary-600 font-bold hover:underline transition-colors">{t('auth.login.create_account', undefined, 'Tạo tài khoản')}</Link>
             </p>
 
             <SocialRoleModal
