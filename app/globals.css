@@ -128,7 +128,9 @@
      Typography
      ========================= */
 
-  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-be-vietnam), "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-be-vietnam), "Be Vietnam Pro", monospace;
+  --font-serif: var(--font-be-vietnam), "Be Vietnam Pro", serif;
 }
 
 
@@ -137,10 +139,10 @@
    ========================================================= */
 
 .dark {
-  --color-surface: #111827;
+  --color-surface: #0f172a;
   --color-surface-hover: #1e293b;
 
-  --color-background: #090b10;
+  --color-background: #020617;
 
   --color-border: #1e293b;
   --color-border-hover: #334155;
@@ -149,12 +151,12 @@
   --color-text-muted: #94a3b8;
   --color-text-subtle: #64748b;
 
-  --color-card-bg: #111827;
+  --color-card-bg: #0f172a;
   --color-card-border: #1e293b;
   --color-card-hover: #334155;
 
   --color-input-bg: #0f172a;
-  --color-input-border: #334155;
+  --color-input-border: #1e293b;
   --color-input-focus: #3b82f6;
 }
 
@@ -316,3 +318,243 @@ body {
     animation: none;
   }
 }
+
+
+@keyframes marqueeScrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 0.5rem));
+  }
+}
+
+.animate-marquee-left {
+  animation: marqueeScrollLeft 8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-left {
+    animation: none;
+  }
+}
+
+
+/* =========================================================
+   BORDER BEAM ANIMATION FOR HOT JOBS
+   ========================================================= */
+
+@keyframes borderBeamSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-border-beam {
+  animation: borderBeamSpin 5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-border-beam {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   ENFORCE BE VIETNAM PRO EVERYWHERE (GHI ĐÈ TOÀN DIỆN)
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  font-family: var(--font-be-vietnam), "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+html,
+body,
+button,
+input,
+optgroup,
+select,
+textarea,
+pre,
+code,
+kbd,
+samp,
+h1, h2, h3, h4, h5, h6,
+p, span, a, label, li, td, th {
+  font-family: var(--font-be-vietnam), "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.ck,
+.ck-content,
+.ck-editor__editable,
+.ck-editor__editable * {
+  font-family: var(--font-be-vietnam), "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* =========================================================
+   Blog Article Rich Content Typography Styling
+   ========================================================= */
+.blog-content {
+  color: #334155;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+}
+
+:is(.dark *) .blog-content {
+  color: #cbd5e1;
+}
+
+.blog-content p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.85;
+}
+
+.blog-content h2 {
+  font-size: 1.625rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #0f172a;
+  scroll-margin-top: 7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+:is(.dark *) .blog-content h2 {
+  color: #ffffff;
+}
+
+.blog-content h2::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 1.25em;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom, #2563eb, #3b82f6);
+  flex-shrink: 0;
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+  scroll-margin-top: 6rem;
+}
+
+:is(.dark *) .blog-content h3 {
+  color: #f8fafc;
+}
+
+.blog-content ul {
+  list-style-type: none !important;
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.blog-content ul li {
+  position: relative;
+  padding-left: 1.75rem;
+  line-height: 1.75;
+}
+
+.blog-content ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.65em;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #2563eb;
+}
+
+:is(.dark *) .blog-content ul li::before {
+  background-color: #60a5fa;
+}
+
+.blog-content ol {
+  list-style-type: decimal !important;
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.blog-content strong {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+:is(.dark *) .blog-content strong {
+  color: #ffffff;
+}
+
+.blog-content em {
+  font-style: italic;
+  color: #1e293b;
+}
+
+:is(.dark *) .blog-content em {
+  color: #e2e8f0;
+}
+
+.blog-content blockquote {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid #2563eb;
+  border-radius: 0.75rem;
+  background-color: rgba(37, 99, 235, 0.05);
+  font-style: italic;
+  color: #1e293b;
+}
+
+:is(.dark *) .blog-content blockquote {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: #e2e8f0;
+}
+
+.blog-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
+  transition: color 0.15s ease;
+}
+
+.blog-content a:hover {
+  color: #1d4ed8;
+}
+
+:is(.dark *) .blog-content a {
+  color: #60a5fa;
+}
+
+:is(.dark *) .blog-content a:hover {
+  color: #93c5fd;
+}
+
+.blog-content img {
+  border-radius: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+}
+

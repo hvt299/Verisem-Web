@@ -15,7 +15,7 @@ export default function GlobalError({
 }) {
     // Tự động log lỗi ra console hoặc gửi lên Sentry/Datadog nếu có
     useEffect(() => {
-        console.error('Hệ thống ATS phát hiện lỗi nghiêm trọng:', error);
+        console.error('Hệ thống Verisem phát hiện lỗi nghiêm trọng:', error);
     }, [error]);
 
     return (

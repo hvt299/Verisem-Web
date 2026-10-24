@@ -9,9 +9,12 @@ export const ROUTES = {
     PUBLIC_COMPANIES: '/companies',
     PUBLIC_COMPANY_DETAIL: (id: string) => `/companies/${id}`,
     PRICING: '/pricing',
+    FEATURES: '/features',
     ABOUT: '/about',
     BLOG: '/blog',
     SUPPORT: '/support',
+    TERMS: '/terms',
+    PRIVACY: '/privacy',
 
     // APPLICANT
     APPLICANT_DASHBOARD: '/applicant/dashboard',

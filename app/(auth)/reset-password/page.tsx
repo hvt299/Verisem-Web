@@ -7,10 +7,13 @@ import { Lock, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authService } from '@/features/auth/auth.service';
 import AuthLogo from '@/components/ui/AuthLogo';
+import AuthPageBackground from '@/components/auth/AuthPageBackground';
 import { getPasswordStrength } from '@/utils/format';
 import { ROUTES } from '@/constants/routes';
+import { useTranslation } from '@/store/useLanguageStore';
 
 function ResetPasswordContent() {
+    const { t } = useTranslation();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
     const router = useRouter();
@@ -27,17 +30,17 @@ function ResetPasswordContent() {
         e.preventDefault();
 
         if (!token) {
-            toast.error('Token không hợp lệ!');
+            toast.error(t('auth.reset_password.toast_invalid', undefined, 'Liên kết không hợp lệ hoặc đã hết hạn.'));
             return;
         }
 
         if (password !== confirmPassword) {
-            toast.error('Mật khẩu xác nhận không khớp!');
+            toast.error(t('auth.register.err_password_mismatch', undefined, 'Mật khẩu xác nhận không khớp!'));
             return;
         }
 
         if (passStrength.score < 2) {
-            toast.error('Mật khẩu quá yếu! Yêu cầu chữ hoa, số và ký tự đặc biệt.');
+            toast.error(t('auth.register.err_password_weak', undefined, 'Mật khẩu quá yếu! Yêu cầu chữ hoa, số và ký tự đặc biệt.'));
             return;
         }
 
@@ -47,7 +50,7 @@ function ResetPasswordContent() {
                 token: token,
                 new_password: password
             });
-            toast.success('Đổi mật khẩu thành công! Vui lòng đăng nhập.');
+            toast.success(t('auth.reset_password.toast_success', undefined, 'Đổi mật khẩu thành công! Vui lòng đăng nhập.'));
             router.push(ROUTES.LOGIN);
         } catch (error: any) {
             const detail = error.response?.data?.detail;
@@ -58,7 +61,7 @@ function ResetPasswordContent() {
                 const errorMessage = detail[0].msg.replace('Value error, ', '');
                 toast.error(errorMessage);
             } else {
-                toast.error('Liên kết không hợp lệ hoặc đã hết hạn.');
+                toast.error(t('auth.reset_password.toast_invalid', undefined, 'Liên kết không hợp lệ hoặc đã hết hạn.'));
             }
         } finally {
             setIsLoading(false);
@@ -69,18 +72,18 @@ function ResetPasswordContent() {
         return (
             <div className="text-center">
                 <h1 className="mb-2 text-2xl font-bold text-error-600 dark:text-error-500">
-                    Lỗi xác thực
+                    {t('auth.reset_password.invalid_token_title', undefined, 'Lỗi xác thực')}
                 </h1>
 
                 <p className="mb-6 text-text-muted">
-                    Liên kết đặt lại mật khẩu của bạn không hợp lệ hoặc bị thiếu.
+                    {t('auth.reset_password.invalid_token_desc', undefined, 'Liên kết đặt lại mật khẩu của bạn không hợp lệ hoặc bị thiếu.')}
                 </p>
 
                 <Link
                     href={ROUTES.FORGOT_PASSWORD}
                     className="font-bold text-primary-600 hover:underline"
                 >
-                    Yêu cầu liên kết mới
+                    {t('auth.reset_password.request_new_link', undefined, 'Yêu cầu liên kết mới')}
                 </Link>
             </div>
         );
@@ -94,18 +97,18 @@ function ResetPasswordContent() {
                 </div>
 
                 <h1 className="text-2xl font-bold text-text">
-                    Tạo mật khẩu mới
+                    {t('auth.reset_password.title', undefined, 'Tạo mật khẩu mới')}
                 </h1>
 
                 <p className="mt-2 text-sm text-text-muted">
-                    Vui lòng nhập mật khẩu mới cho tài khoản của bạn.
+                    {t('auth.reset_password.subtitle', undefined, 'Vui lòng nhập mật khẩu mới cho tài khoản của bạn.')}
                 </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="mb-1.5 block text-sm font-semibold text-text">
-                        Mật khẩu mới
+                        {t('auth.reset_password.new_password_label', undefined, 'Mật khẩu mới')}
                     </label>
 
                     <div className="relative">
@@ -160,7 +163,7 @@ function ResetPasswordContent() {
 
                         <div className="mt-1 flex items-center justify-between">
                             <span className="text-[10px] font-medium text-text-muted">
-                                Ít nhất 8 ký tự, 1 chữ hoa, 1 số & 1 ký tự đặc biệt
+                                {t('auth.register.password_hint', undefined, 'Ít nhất 8 ký tự, 1 chữ hoa, 1 số & 1 ký tự đặc biệt')}
                             </span>
 
                             <span
@@ -177,7 +180,7 @@ function ResetPasswordContent() {
 
                 <div>
                     <label className="mb-1.5 block text-sm font-semibold text-text">
-                        Xác nhận Mật khẩu mới
+                        {t('auth.reset_password.confirm_password_label', undefined, 'Xác nhận Mật khẩu mới')}
                     </label>
 
                     <div className="relative">
@@ -213,7 +216,7 @@ function ResetPasswordContent() {
                     disabled={isLoading}
                     className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-button-primary-bg py-3.5 font-bold text-button-primary-text shadow-card transition-all hover:bg-button-primary-hover disabled:opacity-60"
                 >
-                    {isLoading ? 'Đang lưu...' : 'Lưu mật khẩu mới'}
+                    {isLoading ? t('auth.reset_password.submitting', undefined, 'Đang lưu...') : t('auth.reset_password.submit', undefined, 'Lưu mật khẩu mới')}
                 </button>
             </form>
         </>
@@ -221,22 +224,19 @@ function ResetPasswordContent() {
 }
 
 export default function ResetPasswordPage() {
+    const { t } = useTranslation();
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4 transition-colors duration-300">
-            {/* Background Grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50 dark:opacity-20 pointer-events-none" />
-
-            <div className="pointer-events-none absolute top-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-primary-500/10 blur-[100px]" />
-
-            <div className="pointer-events-none absolute right-[-10%] bottom-[-10%] h-[40%] w-[40%] rounded-full bg-primary-700/10 blur-[100px]" />
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 p-4 pt-24 sm:pt-28 pb-16 transition-colors duration-300 font-sans">
+            {/* Background hình ảnh mờ giống ngoài trang chủ */}
+            <AuthPageBackground />
 
             <AuthLogo />
 
-            <div className="relative z-10 w-full max-w-md rounded-3xl border border-card-border bg-card-bg p-10 shadow-card transition-colors duration-300">
+            <div className="relative z-10 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 sm:p-10 shadow-xs transition-colors duration-300">
                 <Suspense
                     fallback={
                         <div className="text-center text-text-muted">
-                            Đang tải dữ liệu...
+                            {t('common.status.loading', undefined, 'Đang tải dữ liệu...')}
                         </div>
                     }
                 >

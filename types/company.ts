@@ -51,6 +51,8 @@ export interface Company {
 
     created_at: string;
     updated_at?: string;
+    active_jobs_count?: number;
+    jobs_count?: number;
 }
 
 export interface Department {

@@ -1,0 +1,170 @@
+{
+  "nav": {
+    "jobs": "Jobs",
+    "companies": "Companies",
+    "products": "Products",
+    "resources": "Resources",
+    "features": "Core Features",
+    "pricing": "Pricing Plans",
+    "about": "About Us",
+    "blog": "Career Guide",
+    "support": "Support Center",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
+  },
+  "roles": {
+    "applicant": "Applicant",
+    "hr": "Employer (HR)",
+    "admin": "System Admin"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out",
+    "dashboard": "Dashboard",
+    "profile": "My Profile",
+    "settings": "Settings"
+  },
+  "actions": {
+    "search": "Search",
+    "filter": "Filter",
+    "clear_filters": "Clear Filters",
+    "apply": "Apply Now",
+    "save": "Save Job",
+    "saved": "Saved",
+    "share": "Share",
+    "view_more": "View More",
+    "back": "Back",
+    "close": "Close",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "upgrade": "Upgrade Plan",
+    "explore": "Explore Now",
+    "clear_keyword": "Clear keyword"
+  },
+  "status": {
+    "loading": "Loading data...",
+    "empty": "No data found",
+    "error": "An error occurred, please try again",
+    "success": "Action completed successfully",
+    "nationwide": "Nationwide"
+  },
+  "theme": {
+    "toggle": "Toggle light/dark theme"
+  },
+  "language": {
+    "select": "Select Language",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "header": {
+    "badges": {
+      "hot": "Hot",
+      "featured": "Featured",
+      "verified": "Verified",
+      "easy_apply": "Easy Apply",
+      "trend": "Trending",
+      "high_salary": "High Salary",
+      "top_tier": "Top Tier"
+    },
+    "mega_jobs": {
+      "title": "Jobs",
+      "col_industry": "Trending Industries",
+      "col_level": "Level & Work Mode",
+      "col_location": "Location & Salary",
+      "it_ai": "Information Tech / AI",
+      "business": "Sales / Business Dev",
+      "marketing": "Marketing / Media",
+      "finance": "Finance / Accounting",
+      "hr": "HR / Administration",
+      "design": "Design / UI-UX",
+      "intern": "Internship (Intern)",
+      "fresher": "Fresh Graduate (Fresher)",
+      "junior": "Specialist (Junior / Mid)",
+      "senior": "Leadership (Senior / Lead)",
+      "remote": "Remote Work (Remote)",
+      "hybrid": "Flexible (Hybrid)",
+      "jobs_hn": "Jobs in Hanoi",
+      "jobs_hcm": "Jobs in Ho Chi Minh City",
+      "jobs_dn": "Jobs in Da Nang",
+      "salary_20_50": "$800 - $2,000 / month",
+      "salary_over_50": "Over $2,000 / month",
+      "highlight_title": "Urgent & High-Demand Jobs",
+      "highlight_desc": "Hundreds of verified job openings matched seamlessly by Verisem AI.",
+      "highlight_btn": "Explore Hot Jobs",
+      "view_all": "View all jobs →",
+      "view_all_mobile": "View all career opportunities"
+    },
+    "mega_companies": {
+      "title": "Companies",
+      "col_field": "Business Sectors",
+      "col_size": "Company Scale",
+      "col_office": "Office Locations",
+      "software_ai": "Software & AI Tech",
+      "finance_fintech": "Finance & FinTech",
+      "ecommerce": "E-Commerce & Retail",
+      "consulting_hr": "Consulting & HR Services",
+      "education": "Education & EdTech",
+      "large_corp": "Enterprises (> 500 staff)",
+      "medium_corp": "Mid-market (100 - 499)",
+      "startup": "Dynamic Startups (< 100)",
+      "companies_hn": "Companies in Hanoi",
+      "companies_hcm": "Companies in HCMC",
+      "companies_dn": "Companies in Da Nang",
+      "highlight_title": "Top Verified Employers",
+      "highlight_desc": "Profile-verified by Verisem AI with high workplace satisfaction standards.",
+      "highlight_btn": "Explore Companies",
+      "view_all_large": "View major enterprises →",
+      "view_all_mobile": "Explore all companies"
+    },
+    "user_menu": {
+      "current_plan": "Current Plan",
+      "credits": "Credits",
+      "expiry": "Valid Thru",
+      "profile": "My Profile",
+      "enter_system": "Enter Verisem System",
+      "logout": "Sign Out",
+      "login": "Sign In",
+      "login_system": "Sign In to System"
+    },
+    "aria": {
+      "open_menu": "Open menu",
+      "close_menu": "Close menu",
+      "select_language": "Select language",
+      "toggle_theme": "Toggle theme"
+    }
+  },
+  "footer": {
+    "tagline": "AI-Powered Recruitment Management Platform. Connecting companies with the right talent and candidates with ideal careers in seconds.",
+    "back_to_top": "Back to top",
+    "candidates_title": "For Candidates",
+    "latest_jobs": "Latest Jobs",
+    "company_directory": "Company Directory",
+    "career_guide": "Career Guide",
+    "business_title": "For Employers",
+    "products_features": "Products & Features",
+    "pricing_plans": "Pricing Plans",
+    "customer_support": "Customer Support",
+    "about_title": "About Verisem",
+    "about_us": "About Us",
+    "terms_of_service": "Terms of Service",
+    "privacy_policy": "Privacy Policy",
+    "copyright": "© 2026 Verisem. All rights reserved."
+  },
+  "promo": {
+    "sponsored": "Sponsored",
+    "strategic_partner": "Strategic Partner",
+    "verisem_offer": "Verisem Offer",
+    "for_hr": "For HR / Employers",
+    "pro_title": "Upgrade to Verisem Pro – Unlimited AI Resume Scoring Mentor",
+    "pro_desc": "Optimize competency profiles to international ATS standards and discover skill gaps in 3 seconds.",
+    "explore_now": "Explore Now",
+    "hr_service_title": "Enterprise Recruitment Solutions",
+    "hr_service_desc": "Get expert hiring consultation & automated AI talent ranking.",
+    "get_quote": "Get a Quote",
+    "close_banner": "Close banner",
+    "cv_scoring_title": "AI Resume Matching & Scoring",
+    "cv_scoring_desc": "Leverage AI ATS technology to analyze compatibility between your profile and this job.",
+    "cv_scoring_cta": "Score CV Now"
+  }
+}

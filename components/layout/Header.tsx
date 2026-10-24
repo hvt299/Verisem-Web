@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useTranslation } from '@/store/useLanguageStore';
 import { useRouter } from 'next/navigation';
 import NotificationBell from '@/components/shared/NotificationBell';
 import { UserRole } from '@/types';
@@ -29,7 +30,7 @@ export default function Header({ setIsMobileOpen }: HeaderProps) {
     const [mounted, setMounted] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-    const [language, setLanguage] = useState<'VI' | 'EN'>('VI');
+    const { language, setLanguage, t } = useTranslation();
 
     const dropdownRef = useRef<HTMLDivElement>(null);
     const languageRef = useRef<HTMLDivElement>(null);
@@ -76,14 +77,14 @@ export default function Header({ setIsMobileOpen }: HeaderProps) {
 
     const getRoleDisplayName = () => {
         if (role === UserRole.HR_OWNER || role === UserRole.HR_MEMBER) {
-            return 'Nhà tuyển dụng';
+            return t('common.roles.hr', undefined, 'Nhà tuyển dụng');
         }
 
         if (role === UserRole.ADMIN) {
-            return 'Quản trị viên';
+            return t('common.roles.admin', undefined, 'Quản trị viên');
         }
 
-        return 'Ứng viên';
+        return t('common.roles.applicant', undefined, 'Ứng viên');
     };
 
     const profileRoute =
@@ -173,13 +174,24 @@ export default function Header({ setIsMobileOpen }: HeaderProps) {
 
                 {/* Profile */}
                 <div className="relative" ref={dropdownRef}>
-                    <button type="button" onClick={() => setIsDropdownOpen((prev) => !prev)} className="flex items-center gap-2 rounded-full p-1 pr-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 md:gap-3" aria-expanded={isDropdownOpen} aria-haspopup="menu">
-                        <img src={user?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'User')}&background=random`} alt="Avatar" className="h-9 w-9 rounded-full border-2 border-white object-cover shadow-sm dark:border-slate-700" referrerPolicy="no-referrer" />
+                    <button type="button" onClick={() => setIsDropdownOpen((prev) => !prev)} className="group/profile flex items-center gap-2 rounded-full p-1 pr-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 md:gap-3" aria-expanded={isDropdownOpen} aria-haspopup="menu">
+                        <img src={user?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'User')}&background=0284c7&color=fff&bold=true`} alt="Avatar" className="h-9 w-9 rounded-full border-2 border-white object-cover shadow-sm dark:border-slate-700" referrerPolicy="no-referrer" />
 
                         <div className="hidden flex-col items-start text-left md:flex">
-                            <span className="line-clamp-1 max-w-30 text-sm font-bold leading-tight text-slate-700 dark:text-white">
-                                {user?.full_name || 'User'}
-                            </span>
+                            <div className="relative max-w-[130px] overflow-hidden whitespace-nowrap" title={user?.full_name || 'User'}>
+                                {(user?.full_name?.length || 0) > 13 ? (
+                                    <div className="inline-flex items-center gap-3 animate-marquee-left hover:[animation-play-state:paused] whitespace-nowrap text-sm font-bold leading-tight text-slate-700 dark:text-white cursor-pointer">
+                                        <span>{user?.full_name}</span>
+                                        <span className="opacity-40">•</span>
+                                        <span>{user?.full_name}</span>
+                                        <span className="opacity-40">•</span>
+                                    </div>
+                                ) : (
+                                    <span className="block truncate text-sm font-bold leading-tight text-slate-700 dark:text-white">
+                                        {user?.full_name || 'User'}
+                                    </span>
+                                )}
+                            </div>
 
                             <div className="mt-0.5 flex items-center gap-1.5">
                                 <span className="text-[10px] font-medium leading-tight text-slate-500 dark:text-slate-400">

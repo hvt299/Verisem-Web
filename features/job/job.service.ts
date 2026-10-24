@@ -63,9 +63,12 @@ export const jobService = {
     /**
      * [PUBLIC] Lấy danh sách việc làm cho Khách vãng lai
      */
-    async getPublicJobs(): Promise<Job[]> {
-        const response = await apiClient.get<Job[]>('/jobs/public/list');
-        return response.data;
+    async getPublicJobs(params?: { page?: number; page_size?: number; q?: string }): Promise<Job[]> {
+        const response = await apiClient.get<any>('/jobs/public/list', { params });
+        if (Array.isArray(response.data)) {
+            return response.data;
+        }
+        return response.data?.items || [];
     },
 
     /**

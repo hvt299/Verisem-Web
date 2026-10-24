@@ -317,7 +317,7 @@ export function useMyProfile() {
         try {
             await applicationService.updateMyProfile(newProfile);
             toast.success('Cập nhật thông tin thành công!');
-            updateAuthContext({ full_name: newProfile.full_name }); // Sync với Navbar
+            updateAuthContext({ full_name: newProfile.full_name, avatar_url: newProfile.avatar_url || newProfile.avatar }); // Sync với Navbar
         } catch (error: any) {
             toast.error(error.response?.data?.detail || 'Không thể cập nhật thông tin');
         } finally {

@@ -280,9 +280,9 @@ export default function Sidebar({
 
                         {(!isCollapsed || isMobileOpen) && (
                             <span className="whitespace-nowrap text-xl font-black tracking-tight text-slate-900 dark:text-white">
-                                ATS
+                                VERI
                                 <span className="text-primary-600 transition-colors duration-300 group-hover:text-primary-500 dark:text-primary-400 dark:group-hover:text-primary-300">
-                                    SYSTEM
+                                    SEM
                                 </span>
                             </span>
                         )}

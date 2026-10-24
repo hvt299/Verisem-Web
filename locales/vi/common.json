@@ -1,0 +1,170 @@
+{
+  "nav": {
+    "jobs": "Việc làm",
+    "companies": "Công ty",
+    "products": "Sản phẩm",
+    "resources": "Tài nguyên",
+    "features": "Tính năng cốt lõi",
+    "pricing": "Bảng giá dịch vụ",
+    "about": "Về chúng tôi",
+    "blog": "Cẩm nang nghề nghiệp",
+    "support": "Trung tâm hỗ trợ",
+    "terms": "Điều khoản dịch vụ",
+    "privacy": "Chính sách bảo mật"
+  },
+  "roles": {
+    "applicant": "Ứng viên",
+    "hr": "Nhà tuyển dụng",
+    "admin": "Quản trị viên"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "dashboard": "Bảng điều khiển",
+    "profile": "Hồ sơ cá nhân",
+    "settings": "Cài đặt tài khoản"
+  },
+  "actions": {
+    "search": "Tìm kiếm",
+    "filter": "Bộ lọc",
+    "clear_filters": "Xóa bộ lọc",
+    "apply": "Ứng tuyển ngay",
+    "save": "Lưu tin",
+    "saved": "Đã lưu",
+    "share": "Chia sẻ",
+    "view_more": "Xem thêm",
+    "back": "Quay lại",
+    "close": "Đóng",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy bỏ",
+    "upgrade": "Nâng cấp gói",
+    "explore": "Khám phá ngay",
+    "clear_keyword": "Xóa từ khóa"
+  },
+  "status": {
+    "loading": "Đang tải dữ liệu...",
+    "empty": "Không có dữ liệu hiển thị",
+    "error": "Đã xảy ra lỗi, vui lòng thử lại sau",
+    "success": "Thao tác thành công",
+    "nationwide": "Toàn quốc"
+  },
+  "theme": {
+    "toggle": "Chuyển đổi giao diện sáng/tối"
+  },
+  "language": {
+    "select": "Chọn ngôn ngữ",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "header": {
+    "badges": {
+      "hot": "Hot",
+      "featured": "Nổi bật",
+      "verified": "Xác minh",
+      "easy_apply": "Dễ trúng tuyển",
+      "trend": "Xu hướng",
+      "high_salary": "Lương cao",
+      "top_tier": "Top Tier"
+    },
+    "mega_jobs": {
+      "title": "Việc làm",
+      "col_industry": "Theo Ngành nghề hot",
+      "col_level": "Cấp bậc & Hình thức",
+      "col_location": "Địa điểm & Thu nhập",
+      "it_ai": "Công nghệ thông tin / AI",
+      "business": "Kinh doanh / Bán hàng",
+      "marketing": "Marketing / Truyền thông",
+      "finance": "Tài chính / Kế toán",
+      "hr": "Hành chính / Nhân sự",
+      "design": "Thiết kế / UI-UX",
+      "intern": "Thực tập sinh (Intern)",
+      "fresher": "Mới tốt nghiệp (Fresher)",
+      "junior": "Chuyên viên (Junior / Mid)",
+      "senior": "Quản lý (Senior / Lead)",
+      "remote": "Làm việc từ xa (Remote)",
+      "hybrid": "Làm kết hợp (Hybrid)",
+      "jobs_hn": "Việc làm tại Hà Nội",
+      "jobs_hcm": "Việc làm tại TP. Hồ Chí Minh",
+      "jobs_dn": "Việc làm tại Đà Nẵng",
+      "salary_20_50": "Thu nhập 20 - 50 triệu",
+      "salary_over_50": "Thu nhập trên 50 triệu",
+      "highlight_title": "Việc làm Tuyển Gấp & Hot",
+      "highlight_desc": "Hàng trăm cơ hội việc làm hấp dẫn được ứng dụng AI kết nối nhanh chóng.",
+      "highlight_btn": "Xem Việc Làm Hot",
+      "view_all": "Xem tất cả việc làm →",
+      "view_all_mobile": "Xem tất cả cơ hội việc làm"
+    },
+    "mega_companies": {
+      "title": "Công ty",
+      "col_field": "Theo Lĩnh vực hoạt động",
+      "col_size": "Theo Quy mô nhân sự",
+      "col_office": "Khu vực văn phòng",
+      "software_ai": "Công nghệ phần mềm & AI",
+      "finance_fintech": "Tài chính & FinTech",
+      "ecommerce": "Thương mại điện tử & Retail",
+      "consulting_hr": "Dịch vụ tư vấn & Nhân sự",
+      "education": "Giáo dục & Đào tạo",
+      "large_corp": "Tập đoàn lớn (> 500 nhân sự)",
+      "medium_corp": "Doanh nghiệp vừa (100 - 499)",
+      "startup": "Startup năng động (< 100)",
+      "companies_hn": "Doanh nghiệp tại Hà Nội",
+      "companies_hcm": "Doanh nghiệp tại TP. HCM",
+      "companies_dn": "Doanh nghiệp tại Đà Nẵng",
+      "highlight_title": "Top Doanh Nghiệp Uy Tín",
+      "highlight_desc": "Được Verisem AI xác thực hồ sơ và đánh giá chất lượng môi trường làm việc.",
+      "highlight_btn": "Khám phá Công Ty",
+      "view_all_large": "Xem tập đoàn lớn →",
+      "view_all_mobile": "Khám phá toàn bộ công ty"
+    },
+    "user_menu": {
+      "current_plan": "Gói hiện tại",
+      "credits": "Credits",
+      "expiry": "Thời hạn",
+      "profile": "Hồ sơ cá nhân",
+      "enter_system": "Vào hệ thống Verisem",
+      "logout": "Đăng xuất",
+      "login": "Đăng nhập",
+      "login_system": "Đăng nhập hệ thống"
+    },
+    "aria": {
+      "open_menu": "Mở menu",
+      "close_menu": "Đóng menu",
+      "select_language": "Chọn ngôn ngữ",
+      "toggle_theme": "Chuyển đổi giao diện"
+    }
+  },
+  "footer": {
+    "tagline": "Nền tảng Quản trị Tuyển dụng Ứng dụng Trí tuệ Nhân tạo. Giải pháp tối ưu giúp doanh nghiệp tìm đúng người, và ứng viên tìm đúng việc chỉ trong chớp mắt.",
+    "back_to_top": "Về đầu trang",
+    "candidates_title": "Dành cho Ứng viên",
+    "latest_jobs": "Việc làm mới nhất",
+    "company_directory": "Danh sách công ty",
+    "career_guide": "Cẩm nang nghề nghiệp",
+    "business_title": "Doanh nghiệp",
+    "products_features": "Sản phẩm & Tính năng",
+    "pricing_plans": "Bảng giá dịch vụ",
+    "customer_support": "Hỗ trợ khách hàng",
+    "about_title": "Về Verisem",
+    "about_us": "Về chúng tôi",
+    "terms_of_service": "Điều khoản dịch vụ",
+    "privacy_policy": "Chính sách bảo mật",
+    "copyright": "© 2026 Verisem. Bản quyền đã được bảo hộ."
+  },
+  "promo": {
+    "sponsored": "Được tài trợ",
+    "strategic_partner": "Đối tác chiến lược",
+    "verisem_offer": "Ưu đãi Verisem",
+    "for_hr": "Dành cho HR",
+    "pro_title": "Nâng cấp Verisem Pro – Trải nghiệm AI Mentor Chấm điểm CV Không Giới Hạn",
+    "pro_desc": "Tối ưu hồ sơ năng lực theo chuẩn ATS quốc tế và nhận diện lỗ hổng kỹ năng trong 3 giây.",
+    "explore_now": "Khám phá ngay",
+    "hr_service_title": "Dịch vụ Tuyển dụng Doanh nghiệp",
+    "hr_service_desc": "Đăng ký tư vấn tuyển dụng & xếp hạng ứng viên tự động bằng AI.",
+    "get_quote": "Nhận báo giá",
+    "close_banner": "Đóng banner",
+    "cv_scoring_title": "Chấm điểm mức độ tương thích CV",
+    "cv_scoring_desc": "Ứng dụng công nghệ AI ATS để phân tích sự phù hợp giữa hồ sơ của bạn và vị trí này.",
+    "cv_scoring_cta": "Đánh giá CV ngay"
+  }
+}

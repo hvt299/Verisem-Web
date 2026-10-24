@@ -7,19 +7,22 @@ import { CheckCircle2, XCircle, Loader2, ArrowRight } from 'lucide-react';
 import { authService } from '@/features/auth/auth.service';
 import confetti from 'canvas-confetti';
 import AuthLogo from '@/components/ui/AuthLogo';
+import AuthPageBackground from '@/components/auth/AuthPageBackground';
 import { ROUTES } from '@/constants/routes';
+import { useTranslation } from '@/store/useLanguageStore';
 
 function VerifyContent() {
+    const { t } = useTranslation();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
 
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-    const [message, setMessage] = useState('Đang xác thực tài khoản của bạn...');
+    const [message, setMessage] = useState(t('auth.verify.loading_desc', undefined, 'Đang xác thực tài khoản của bạn...'));
 
     useEffect(() => {
         if (!token) {
             setStatus('error');
-            setMessage('Link xác thực không hợp lệ hoặc bị thiếu.');
+            setMessage(t('auth.verify.invalid_link', undefined, 'Link xác thực không hợp lệ hoặc bị thiếu.'));
             return;
         }
 
@@ -30,7 +33,7 @@ function VerifyContent() {
                 setStatus('success');
                 setMessage(
                     res.data.message ||
-                    'Tài khoản của bạn đã được kích hoạt thành công!'
+                    t('auth.verify.success_default', undefined, 'Tài khoản của bạn đã được kích hoạt thành công!')
                 );
 
                 confetti({
@@ -43,7 +46,7 @@ function VerifyContent() {
                 setStatus('error');
                 setMessage(
                     error.response?.data?.detail ||
-                    'Xác thực thất bại. Link có thể đã hết hạn.'
+                    t('auth.verify.error_default', undefined, 'Xác thực thất bại. Link có thể đã hết hạn.')
                 );
             }
         };
@@ -58,7 +61,7 @@ function VerifyContent() {
                     <Loader2 className="mb-6 h-16 w-16 animate-spin text-primary-500" />
 
                     <h1 className="text-2xl font-bold text-text">
-                        Đang xử lý...
+                        {t('auth.verify.loading_title', undefined, 'Đang xử lý...')}
                     </h1>
 
                     <p className="mt-2 text-text-muted">{message}</p>
@@ -72,7 +75,7 @@ function VerifyContent() {
                     </div>
 
                     <h1 className="text-2xl font-bold text-text">
-                        Tuyệt vời!
+                        {t('auth.verify.success_title', undefined, 'Tuyệt vời!')}
                     </h1>
 
                     <p className="mt-2 text-text-muted">{message}</p>
@@ -81,7 +84,7 @@ function VerifyContent() {
                         href={ROUTES.LOGIN}
                         className="group mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-button-primary-bg py-3.5 font-bold text-button-primary-text shadow-card transition-all hover:bg-button-primary-hover"
                     >
-                        Đến trang Đăng nhập
+                        {t('auth.verify.go_to_login', undefined, 'Đến trang Đăng nhập')}
 
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
@@ -95,7 +98,7 @@ function VerifyContent() {
                     </div>
 
                     <h1 className="text-2xl font-bold text-text">
-                        Rất tiếc!
+                        {t('auth.verify.error_title', undefined, 'Rất tiếc!')}
                     </h1>
 
                     <p className="mt-2 text-text-muted">{message}</p>
@@ -105,14 +108,14 @@ function VerifyContent() {
                             href={ROUTES.LOGIN}
                             className="flex-1 rounded-xl border border-border bg-surface-hover py-3.5 text-center font-bold text-text transition-all hover:border-border-hover"
                         >
-                            Đăng nhập
+                            {t('common.auth.login', undefined, 'Đăng nhập')}
                         </Link>
 
                         <Link
                             href={ROUTES.REGISTER}
                             className="flex-1 rounded-xl bg-button-primary-bg py-3.5 text-center font-bold text-button-primary-text shadow-card transition-all hover:bg-button-primary-hover"
                         >
-                            Đăng ký lại
+                            {t('auth.register.title', undefined, 'Đăng ký')}
                         </Link>
                     </div>
                 </>
@@ -122,22 +125,19 @@ function VerifyContent() {
 }
 
 export default function VerifyPage() {
+    const { t } = useTranslation();
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4 transition-colors duration-300">
-            {/* Background Grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50 dark:opacity-20 pointer-events-none" />
-
-            {/* Ambient Background Elements */}
-            <div className="pointer-events-none absolute top-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-primary-500/10 blur-[100px]" />
-            <div className="pointer-events-none absolute right-[-10%] bottom-[-10%] h-[40%] w-[40%] rounded-full bg-primary-700/10 blur-[100px]" />
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 p-4 pt-24 sm:pt-28 pb-16 transition-colors duration-300 font-sans">
+            {/* Background hình ảnh mờ giống ngoài trang chủ */}
+            <AuthPageBackground />
 
             <AuthLogo />
 
-            <div className="relative z-10 w-full max-w-md rounded-3xl border border-card-border bg-card-bg p-10 shadow-card transition-colors duration-300">
+            <div className="relative z-10 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 sm:p-10 shadow-xs transition-colors duration-300">
                 <Suspense
                     fallback={
                         <div className="text-center text-text-muted">
-                            Đang xác thực...
+                            {t('auth.verify.loading_desc', undefined, 'Đang xác thực...')}
                         </div>
                     }
                 >

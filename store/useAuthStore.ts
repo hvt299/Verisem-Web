@@ -62,12 +62,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
 
     initAuth: async () => {
-        const token = Cookies.get('token');
-        if (!token) {
-            set({ loading: false, isAuthenticated: false, user: null });
-            return;
-        }
-
         try {
             const res = await apiClient.get('/auth/me');
             const fetchedUser = res.data;
@@ -96,13 +90,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 }
             }
         } catch {
-            clearAllAuthData();
             set({ isAuthenticated: false, user: null, loading: false });
         }
     },
 
     login: async (token: string, router: any) => {
         set({ loading: true });
+        // Fallback for non-HttpOnly client side
         Cookies.set('token', token, { expires: 1, path: '/' });
 
         try {
@@ -149,7 +143,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
     },
 
-    logout: (router: any) => {
+    logout: async (router: any) => {
+        try {
+            await apiClient.post('/auth/logout');
+        } catch (e) {
+            // ignore network/session error on logout
+        }
         clearAllAuthData();
         set({ isAuthenticated: false, user: null });
         router.push(ROUTES.LOGIN);

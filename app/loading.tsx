@@ -15,7 +15,7 @@ export default function GlobalLoading() {
                 </div>
 
                 <h2 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">
-                    ATS<span className="text-primary-600">SYSTEM</span>
+                    VERI<span className="text-primary-600">SEM</span>
                 </h2>
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2 animate-pulse">
                     Đang tải dữ liệu, vui lòng đợi...

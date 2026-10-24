@@ -13,17 +13,51 @@ import toast from 'react-hot-toast';
 import PublicHeader from '@/components/layout/PublicHeader';
 import PublicFooter from '@/components/layout/PublicFooter';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useTranslation } from '@/store/useLanguageStore';
 import { HotJobItem } from '@/components/landing/HotJobsSection';
 import { LatestJobItem } from '@/components/landing/LatestJobsSection';
 import { ROUTES } from '@/constants/routes';
 import apiClient from '@/lib/api-client';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import PromoBanner from '@/components/ads/PromoBanner';
 
 export default function PublicJobsPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { isAuthenticated, user } = useAuthStore();
+    const { t } = useTranslation();
+
+    const scrollToResults = () => {
+        if (typeof window !== 'undefined') {
+            const el = document.getElementById('results-section');
+            if (el) {
+                const yOffset = -90;
+                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+            }
+        }
+    };
+
+    const handleFiltersChange = (newFilters: any) => {
+        setFilters(newFilters);
+        setCurrentPage(1);
+        if (typeof window !== 'undefined' && window.scrollY > 350) {
+            scrollToResults();
+        }
+    };
+
+    const handleClearFilters = () => {
+        clearFilters();
+        if (typeof window !== 'undefined' && window.scrollY > 350) {
+            scrollToResults();
+        }
+    };
+
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+        scrollToResults();
+    };
 
     const [jobs, setJobs] = useState<Job[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -42,14 +76,49 @@ export default function PublicJobsPage() {
         districtCodes: searchParams.get('districts')?.split(',').filter(Boolean) || [] as string[],
         wardCodes: searchParams.get('wards')?.split(',').filter(Boolean) || [] as string[],
         foreignLocation: searchParams.get('foreign') || '',
-        workMode: '', jobLevel: '', employmentType: '',
-        salaryRange: '', experienceRange: '', isHot: false,
-        skills: [] as string[], company: '', industry: searchParams.get('industry') || '', education: ''
+        workMode: searchParams.get('workMode') || '',
+        jobLevel: searchParams.get('jobLevel') || '',
+        employmentType: searchParams.get('employmentType') || '',
+        salaryRange: searchParams.get('salaryRange') || '',
+        experienceRange: searchParams.get('experienceRange') || '',
+        isHot: searchParams.get('jobType') === 'hot',
+        jobType: searchParams.get('jobType') || 'all',
+        skills: [] as string[],
+        company: searchParams.get('company') || '',
+        industry: searchParams.get('industry') || '',
+        education: ''
     });
 
     const [filterOptions, setFilterOptions] = useState({
         locations: [] as any[], workModes: [] as string[], jobLevels: [] as string[], employmentTypes: [] as string[], skills: [] as string[], companies: [] as string[], industries: [] as string[], educations: [] as string[]
     });
+
+    // Lắng nghe thay đổi của searchParams khi người dùng click từ Mega Menu hoặc liên kết ngoài
+    useEffect(() => {
+        const kw = searchParams.get('keyword') || '';
+        const provs = searchParams.get('provinces')?.split(',').filter(Boolean) || [];
+        const dists = searchParams.get('districts')?.split(',').filter(Boolean) || [];
+        const ind = searchParams.get('industry') || '';
+        const wm = searchParams.get('workMode') || '';
+        const jl = searchParams.get('jobLevel') || '';
+        const jt = searchParams.get('jobType') || 'all';
+        const sal = searchParams.get('salaryRange') || '';
+        const comp = searchParams.get('company') || '';
+
+        setSearchQuery(kw);
+        setFilters(prev => ({
+            ...prev,
+            provinceCodes: provs,
+            districtCodes: dists,
+            industry: ind,
+            workMode: wm,
+            jobLevel: jl,
+            jobType: jt,
+            isHot: jt === 'hot',
+            salaryRange: sal,
+            company: comp,
+        }));
+    }, [searchParams]);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -106,7 +175,11 @@ export default function PublicJobsPage() {
             );
         }
 
-        if (filters.isHot) result = result.filter(job => job.is_hot);
+        if (filters.jobType === 'hot' || filters.isHot) {
+            result = result.filter(job => job.is_hot);
+        } else if (filters.jobType === 'normal') {
+            result = result.filter(job => !job.is_hot);
+        }
         if (filters.industry) result = result.filter(job => job.industry === filters.industry);
         if (filters.company) result = result.filter(job => job.company_name === filters.company);
 
@@ -160,24 +233,29 @@ export default function PublicJobsPage() {
         return result;
     }, [jobs, searchQuery, filters, sortBy]);
 
-    const activeFiltersCount = Object.values(filters).filter(value => Array.isArray(value) ? value.length > 0 : (value !== '' && value !== false)).length + (searchQuery ? 1 : 0);
+    const activeFiltersCount = Object.entries(filters).filter(([key, value]) => {
+        if (key === 'jobType') return value === 'hot' || value === 'normal';
+        if (key === 'isHot') return false;
+        if (Array.isArray(value)) return value.length > 0;
+        return value !== '' && value !== false;
+    }).length + (searchQuery ? 1 : 0);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [filters, searchQuery, sortBy]);
 
     const clearFilters = () => {
-        setFilters({ provinceCodes: [], districtCodes: [], wardCodes: [], foreignLocation: '', workMode: '', jobLevel: '', employmentType: '', salaryRange: '', experienceRange: '', isHot: false, skills: [], company: '', industry: '', education: '' });
+        setFilters({ provinceCodes: [], districtCodes: [], wardCodes: [], foreignLocation: '', workMode: '', jobLevel: '', employmentType: '', salaryRange: '', experienceRange: '', isHot: false, jobType: 'all', skills: [], company: '', industry: '', education: '' });
         setSearchQuery('');
         setSortBy('newest');
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#050505] flex flex-col transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
             <PublicHeader isScrolled={isScrolled} isAuthenticated={isAuthenticated} user={user} />
 
             {/* Khối Hero Banner Tích hợp Pattern */}
-            <div className="relative pt-32 pb-16 md:pt-40 md:pb-20 border-b border-slate-200 dark:border-slate-800 overflow-hidden bg-white dark:bg-[#0a0a0a]">
+            <div className="relative pt-32 pb-24 md:pt-40 md:pb-32 border-b border-slate-200 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-950">
                 {/* Background image - giống HeroSection */}
                 <div className="absolute inset-0">
                     <Image
@@ -199,20 +277,6 @@ export default function PublicJobsPage() {
                     <div className="absolute inset-0 hidden bg-blue-950/20 mix-blend-multiply dark:block" />
                 </div>
 
-                {/* Grid vuông - giống HeroSection */}
-                <div
-                    className="absolute inset-0 opacity-[0.065] dark:opacity-[0.055]"
-                    style={{
-                        backgroundImage:
-                            'linear-gradient(#64748b 1px, transparent 1px), linear-gradient(90deg, #64748b 1px, transparent 1px)',
-                        backgroundSize: '4rem 4rem',
-                        maskImage:
-                            'radial-gradient(ellipse 80% 75% at 50% 25%, black 30%, transparent 90%)',
-                        WebkitMaskImage:
-                            'radial-gradient(ellipse 80% 75% at 50% 25%, black 30%, transparent 90%)',
-                    }}
-                />
-
                 {/* Primary glow */}
                 <div className="absolute left-1/2 top-[-12%] h-130 w-205 -translate-x-1/2 rounded-full bg-primary-500/10 blur-[140px] dark:bg-primary-500/10" />
 
@@ -229,30 +293,55 @@ export default function PublicJobsPage() {
                         <Briefcase className="w-8 h-8" />
                     </div>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
-                        Khám phá <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-blue-400">công việc mơ ước</span>
+                        {t('jobs.title_prefix', undefined, 'Khám phá')}{' '}<span className="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-primary-400">{t('jobs.title_highlight', undefined, 'công việc mơ ước')}</span>
                     </h1>
                     <p className="text-slate-500 dark:text-slate-400 font-medium text-lg max-w-2xl mx-auto">
-                        Hơn {jobs.length > 0 ? jobs.length : 'hàng ngàn'} cơ hội việc làm từ các doanh nghiệp hàng đầu đang chờ đón bạn.
+                        {jobs.length > 0
+                            ? t('jobs.hero_subtitle', { count: jobs.length }, `Hơn ${jobs.length} cơ hội việc làm từ các doanh nghiệp hàng đầu đang chờ đón bạn.`)
+                            : t('jobs.hero_subtitle_thousands', undefined, 'Hàng ngàn cơ hội việc làm từ các doanh nghiệp hàng đầu đang chờ đón bạn.')}
                     </p>
                 </div>
             </div>
 
-            <main className="flex-1 max-w-350 mx-auto px-4 sm:px-6 w-full py-12 flex flex-col gap-20">
+            <main className="flex-1 max-w-350 mx-auto px-4 sm:px-6 w-full py-10 -mt-12 sm:-mt-14 relative z-10 flex flex-col gap-16">
 
-                {/* ================= PHẦN 1: BỘ LỌC & KẾT QUẢ TÌM KIẾM (Layout 25% - 75%) ================= */}
-                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                {/* ================= PHẦN 1: BỘ LỌC & KẾT QUẢ TÌM KIẾM ================= */}
+                <div className="w-full flex flex-col gap-6">
+                    {/* Banner tài trợ / Khuyến mại phong cách TopCV / VietnamWorks */}
+                    <PromoBanner
+                        variant="ribbon"
+                        title={t('common.promo.pro_title', undefined, 'Nâng cấp Verisem Pro – Trải nghiệm AI Mentor Chấm điểm CV Không Giới Hạn')}
+                        description={t('common.promo.pro_desc', undefined, 'Tối ưu hồ sơ năng lực theo chuẩn ATS quốc tế và nhận diện lỗ hổng kỹ năng trong 3 giây.')}
+                        badge={t('common.promo.verisem_offer', undefined, 'Ưu đãi Verisem')}
+                        ctaText={t('common.promo.explore_now', undefined, 'Khám phá ngay')}
+                        ctaLink="/pricing"
+                        className="w-full"
+                    />
+
+                    {/* ================= LAYOUT 25% - 75% ================= */}
+                    <div id="results-section" className="flex flex-col lg:flex-row gap-8 items-start scroll-mt-28">
 
                     {/* CỘT TRÁI (25%): Bộ lọc dính (Sticky Sidebar) */}
-                    <aside className="w-full lg:w-1/4 shrink-0 lg:sticky lg:top-24">
+                    <aside className="w-full lg:w-1/4 shrink-0 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto pr-1 pb-4 [scrollbar-width:thin] scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
                         <JobSearchBar
                             searchQuery={searchQuery}
                             onSearchChange={setSearchQuery}
                             filters={filters}
-                            onFiltersChange={(newFilters: any) => setFilters(newFilters)}
+                            onFiltersChange={handleFiltersChange}
                             filterOptions={filterOptions}
-                            onClearFilters={clearFilters}
+                            onClearFilters={handleClearFilters}
                             activeFiltersCount={activeFiltersCount}
                         />
+                                            <div className="mt-6">
+                            <PromoBanner
+                                variant="sidebar"
+                                title={t('common.promo.hr_service_title', undefined, 'Dịch vụ Tuyển dụng Doanh nghiệp')}
+                                description={t('common.promo.hr_service_desc', undefined, 'Đăng ký tư vấn tuyển dụng & xếp hạng ứng viên tự động bằng AI.')}
+                                badge={t('common.promo.for_hr', undefined, 'Dành cho HR')}
+                                ctaText={t('common.promo.get_quote', undefined, 'Nhận báo giá')}
+                                ctaLink="/pricing"
+                            />
+                        </div>
                     </aside>
 
                     {/* CỘT PHẢI (75%): Kết quả lọc */}
@@ -261,29 +350,29 @@ export default function PublicJobsPage() {
                         {/* Header điều hướng (ViewMode, Sort) */}
                         <div className="flex flex-col sm:flex-row items-center justify-between text-sm text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm gap-4">
                             <span className="font-bold text-slate-800 dark:text-slate-200">
-                                Tìm thấy <span className="text-blue-600 dark:text-blue-400">{filteredJobs.length}</span> vị trí phù hợp
+                                {t('jobs.found_results', { count: filteredJobs.length }, `Tìm thấy ${filteredJobs.length} vị trí phù hợp`)}
                             </span>
 
                             <div className="flex items-center gap-4">
                                 {activeFiltersCount > 0 && (
                                     <button onClick={clearFilters} className="text-rose-500 font-bold hover:underline hidden md:block">
-                                        Xóa ({activeFiltersCount}) bộ lọc
+                                        {t('jobs.filters.clear_count', { count: activeFiltersCount }, `Xóa (${activeFiltersCount}) bộ lọc`)}
                                     </button>
                                 )}
                                 <div className="flex items-center gap-2 border-r border-slate-200 dark:border-slate-700 pr-4">
-                                    <label className="font-bold hidden sm:block">Sắp xếp:</label>
+                                    <label className="font-bold hidden sm:block">{t('jobs.sort.label', undefined, 'Sắp xếp:')}</label>
                                     <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer">
-                                        <option value="newest">Mới nhất</option>
-                                        <option value="oldest">Cũ nhất</option>
-                                        <option value="salary_high">Lương cao nhất</option>
-                                        <option value="salary_low">Lương thấp nhất</option>
+                                        <option value="newest">{t('jobs.sort.newest', undefined, 'Mới nhất')}</option>
+                                        <option value="oldest">{t('jobs.sort.oldest', undefined, 'Cũ nhất')}</option>
+                                        <option value="salary_high">{t('jobs.sort.salary_high', undefined, 'Lương cao nhất')}</option>
+                                        <option value="salary_low">{t('jobs.sort.salary_low', undefined, 'Lương thấp nhất')}</option>
                                     </select>
                                 </div>
                                 <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-                                    <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`} title="Lưới">
+                                    <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`} title={t('jobs.grid_view', undefined, 'Lưới')}>
                                         <LayoutGrid className="w-5 h-5" />
                                     </button>
-                                    <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === 'list' ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`} title="Danh sách">
+                                    <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${viewMode === 'list' ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`} title={t('jobs.list_view', undefined, 'Danh sách')}>
                                         <List className="w-5 h-5" />
                                     </button>
                                 </div>
@@ -293,14 +382,14 @@ export default function PublicJobsPage() {
                         {isLoading ? (
                             <div className="flex flex-col items-center justify-center py-20 text-blue-500">
                                 <Loader2 className="w-10 h-10 animate-spin mb-4" />
-                                <p className="text-slate-500 font-medium">Đang tải việc làm...</p>
+                                <p className="text-slate-500 font-medium">{t('jobs.loading_jobs', undefined, 'Đang tải việc làm...')}</p>
                             </div>
                         ) : filteredJobs.length === 0 ? (
                             <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center">
                                 <XCircle className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-4" />
-                                <p className="text-slate-500 font-medium mb-4">Không tìm thấy việc làm phù hợp với tiêu chí lọc.</p>
+                                <p className="text-slate-500 font-medium mb-4">{t('jobs.no_results', undefined, 'Không tìm thấy việc làm phù hợp với tiêu chí lọc.')}</p>
                                 <button onClick={clearFilters} className="px-6 py-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl font-bold hover:bg-blue-100 transition-colors">
-                                    Xóa bộ lọc
+                                    {t('jobs.filters.clear_all', undefined, 'Xóa bộ lọc')}
                                 </button>
                             </div>
                         ) : (
@@ -326,13 +415,13 @@ export default function PublicJobsPage() {
                                 {/* Phân trang Kết quả lọc */}
                                 {Math.ceil(filteredJobs.length / 10) > 1 && (
                                     <div className="mt-6 flex items-center justify-center gap-4">
-                                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)} className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                             <ChevronLeft className="w-5 h-5" />
                                         </button>
                                         <span className="text-sm font-bold text-slate-600 dark:text-slate-400">
                                             <span className="text-blue-600 dark:text-blue-400">{currentPage}</span> / {Math.ceil(filteredJobs.length / 10)}
                                         </span>
-                                        <button disabled={currentPage === Math.ceil(filteredJobs.length / 10)} onClick={() => setCurrentPage(p => p + 1)} className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <button disabled={currentPage === Math.ceil(filteredJobs.length / 10)} onClick={() => handlePageChange(currentPage + 1)} className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                             <ChevronRight className="w-5 h-5" />
                                         </button>
                                     </div>
@@ -340,6 +429,8 @@ export default function PublicJobsPage() {
                             </>
                         )}
                     </div>
+                </div>
+
                 </div>
 
                 {/* ================= PHẦN 2: VIỆC LÀM HOT ================= */}
@@ -408,14 +499,14 @@ export default function PublicJobsPage() {
 
                                         <div className="min-w-0">
                                             <h2 className="truncate text-xl font-black uppercase tracking-tight text-slate-900 dark:text-white md:text-2xl">
-                                                Việc Làm{' '}
+                                                {t('landing.hot_jobs.title_prefix', undefined, 'Việc Làm')}{' '}
                                                 <span className="bg-linear-to-r from-orange-400 via-orange-500 to-rose-500 bg-clip-text text-transparent">
-                                                    Hot
+                                                    {t('landing.hot_jobs.title_highlight', undefined, 'Hot')}
                                                 </span>
                                             </h2>
 
                                             <p className="mt-0.5 hidden text-sm text-slate-400 sm:block">
-                                                Những vị trí có mức đãi ngộ tốt nhất đang chờ đón bạn.
+                                                {t('landing.hot_jobs.subtitle', undefined, 'Những vị trí có mức đãi ngộ tốt nhất đang chờ đón bạn.')}
                                             </p>
                                         </div>
                                     </div>
@@ -424,7 +515,7 @@ export default function PublicJobsPage() {
                                         href={`${ROUTES.PUBLIC_JOBS}?is_hot=true`}
                                         className="flex shrink-0 items-center gap-1 text-sm font-bold text-orange-600 transition-colors hover:text-orange-700 dark:text-orange-500 dark:hover:text-orange-400"
                                     >
-                                        Xem tất cả
+                                        {t('landing.hot_jobs.view_all', undefined, 'Xem tất cả')}
                                         <ChevronRight className="h-4 w-4" />
                                     </Link>
                                 </div>
@@ -433,18 +524,18 @@ export default function PublicJobsPage() {
                                 <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-orange-50/60 px-4 py-2.5 dark:bg-orange-500/5">
                                     <div className="flex min-w-0 items-center gap-2">
                                         <span className="hidden shrink-0 text-sm font-medium text-slate-500 sm:inline dark:text-slate-400">
-                                            Sắp xếp theo:
+                                            {t('landing.hot_jobs.sort_by', undefined, 'Sắp xếp theo:')}
                                         </span>
 
                                         <select className="h-9 cursor-pointer rounded-lg border border-orange-100 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-orange-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                                            <option value="default">Mặc định</option>
-                                            <option value="salary_desc">Lương cao nhất</option>
-                                            <option value="latest">Mới cập nhật</option>
+                                            <option value="default">{t('landing.hot_jobs.sort_default', undefined, 'Mặc định')}</option>
+                                            <option value="salary_desc">{t('landing.hot_jobs.sort_salary', undefined, 'Lương cao nhất')}</option>
+                                            <option value="latest">{t('landing.hot_jobs.sort_latest', undefined, 'Mới cập nhật')}</option>
                                         </select>
                                     </div>
 
                                     <span className="shrink-0 text-sm font-medium text-slate-400">
-                                        {jobs.filter(j => j.is_hot).length} việc làm
+                                        {t('landing.hot_jobs.jobs_count', { count: jobs.filter(j => j.is_hot).length }, `${jobs.filter(j => j.is_hot).length} việc làm`)}
                                     </span>
                                 </div>
                             </div>
@@ -551,14 +642,14 @@ export default function PublicJobsPage() {
 
                                     <div className="min-w-0">
                                         <h2 className="truncate text-xl font-black uppercase tracking-tight text-slate-900 dark:text-white md:text-2xl">
-                                            Việc Làm{' '}
+                                            {t('landing.latest_jobs.title_prefix', undefined, 'Việc Làm')}{' '}
                                             <span className="bg-linear-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                                                Mới Nhất
+                                                {t('landing.latest_jobs.title_highlight', undefined, 'Mới Nhất')}
                                             </span>
                                         </h2>
 
                                         <p className="mt-0.5 hidden text-sm text-slate-400 sm:block">
-                                            Cập nhật liên tục hàng ngàn cơ hội từ các doanh nghiệp hàng đầu.
+                                            {t('landing.latest_jobs.subtitle', undefined, 'Cập nhật liên tục hàng ngàn cơ hội từ các doanh nghiệp hàng đầu.')}
                                         </p>
                                     </div>
                                 </div>
@@ -567,7 +658,7 @@ export default function PublicJobsPage() {
                                     href={ROUTES.PUBLIC_JOBS}
                                     className="flex shrink-0 items-center gap-1 text-sm font-bold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                                 >
-                                    Xem tất cả
+                                    {t('landing.latest_jobs.view_all', undefined, 'Xem tất cả')}
                                     <ChevronRight className="h-4 w-4" />
                                 </Link>
                             </div>
@@ -576,17 +667,17 @@ export default function PublicJobsPage() {
                             <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-blue-50/60 px-4 py-2.5 dark:bg-blue-500/5">
                                 <div className="flex min-w-0 items-center gap-2">
                                     <span className="hidden shrink-0 text-sm font-medium text-slate-500 sm:inline dark:text-slate-400">
-                                        Sắp xếp theo:
+                                        {t('landing.latest_jobs.sort_by', undefined, 'Sắp xếp theo:')}
                                     </span>
 
                                     <select className="h-9 cursor-pointer rounded-lg border border-blue-100 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                                        <option value="latest">Mới nhất</option>
-                                        <option value="salary_desc">Lương cao nhất</option>
+                                        <option value="latest">{t('landing.latest_jobs.sort_latest', undefined, 'Mới nhất')}</option>
+                                        <option value="salary_desc">{t('landing.latest_jobs.sort_salary', undefined, 'Lương cao nhất')}</option>
                                     </select>
                                 </div>
 
                                 <span className="shrink-0 text-sm font-medium text-slate-400">
-                                    {jobs.length} việc làm
+                                    {t('landing.latest_jobs.jobs_count', { count: jobs.length }, `${jobs.length} việc làm`)}
                                 </span>
                             </div>
                         </div>

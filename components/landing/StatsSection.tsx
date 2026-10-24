@@ -6,65 +6,55 @@ import { Users, Building2, BriefcaseBusiness, TrendingUp } from 'lucide-react';
 
 import Counter from '@/components/ui/Counter';
 import { systemService } from '@/features/system/system.service';
+import { useTranslation } from '@/store/useLanguageStore';
 
 const STAT_ICONS = [ Users, Building2, BriefcaseBusiness, TrendingUp ];
 
 export default function StatsSection() {
-    const [stats, setStats] = useState([
-        {
-            label: 'Ứng viên hoạt động',
-            value: 0,
-            suffix: '+',
-        },
-        {
-            label: 'Doanh nghiệp tin dùng',
-            value: 0,
-            suffix: '+',
-        },
-        {
-            label: 'Việc làm đang mở',
-            value: 0,
-            suffix: '+',
-        },
-        {
-            label: 'Tỷ lệ kết nối thành công',
-            value: 0,
-            suffix: '%',
-        },
-    ]);
+    const { t } = useTranslation();
+    const [statsData, setStatsData] = useState({
+        total_candidates: 0,
+        total_companies: 0,
+        total_jobs: 0,
+        success_rate: 0,
+    });
 
     useEffect(() => {
         systemService
             .getStatistics()
             .then((data) => {
-                setStats([
-                    {
-                        label: 'Ứng viên hoạt động',
-                        value: data.total_candidates || 0,
-                        suffix:
-                            data.total_candidates > 10 ? '+' : '',
-                    },
-                    {
-                        label: 'Doanh nghiệp tin dùng',
-                        value: data.total_companies || 0,
-                        suffix:
-                            data.total_companies > 10 ? '+' : '',
-                    },
-                    {
-                        label: 'Việc làm đang mở',
-                        value: data.total_jobs || 0,
-                        suffix:
-                            data.total_jobs > 10 ? '+' : '',
-                    },
-                    {
-                        label: 'Tỷ lệ kết nối thành công',
-                        value: data.success_rate || 0,
-                        suffix: '%',
-                    },
-                ]);
+                setStatsData({
+                    total_candidates: data.total_candidates || 0,
+                    total_companies: data.total_companies || 0,
+                    total_jobs: data.total_jobs || 0,
+                    success_rate: data.success_rate || 0,
+                });
             })
             .catch(console.error);
     }, []);
+
+    const stats = [
+        {
+            label: t('landing.stats.applications', undefined, 'Ứng viên hoạt động'),
+            value: statsData.total_candidates,
+            suffix: statsData.total_candidates > 10 ? '+' : '',
+        },
+        {
+            label: t('landing.stats.verified_companies', undefined, 'Doanh nghiệp tin dùng'),
+            value: statsData.total_companies,
+            suffix: statsData.total_companies > 10 ? '+' : '',
+        },
+        {
+            label: t('landing.stats.active_jobs', undefined, 'Việc làm đang mở'),
+            value: statsData.total_jobs,
+            suffix: statsData.total_jobs > 10 ? '+' : '',
+        },
+        {
+            label: t('landing.stats.match_rate', undefined, 'Tỷ lệ kết nối thành công'),
+            value: statsData.success_rate,
+            suffix: '%',
+        },
+    ];
 
     return (
         <section className="border-y border-slate-200 bg-blue-50 py-8 transition-colors dark:border-slate-800 dark:bg-slate-900 sm:py-9 md:py-10">

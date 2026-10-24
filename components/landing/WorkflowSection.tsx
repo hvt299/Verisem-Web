@@ -2,34 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/store/useLanguageStore';
 import { BriefcaseBusiness, BrainCircuit, CalendarCheck, CheckCircle2, ArrowRight } from 'lucide-react';
-
-const WORKFLOW_STEPS = [
-    {
-        step: '01',
-        title: 'Tạo chiến dịch',
-        desc: 'HR tạo vị trí tuyển dụng, nhập yêu cầu công việc và thiết lập các tiêu chí đánh giá phù hợp.',
-        icon: BriefcaseBusiness,
-        color: 'blue',
-        stats: ['Mô tả công việc', 'Yêu cầu kỹ năng', 'Tiêu chí tuyển dụng'],
-    },
-    {
-        step: '02',
-        title: 'AI phân tích',
-        desc: 'CV được tự động bóc tách, đối chiếu với JD và chấm điểm theo các tiêu chí đã thiết lập.',
-        icon: BrainCircuit,
-        color: 'violet',
-        stats: ['Bóc tách CV', 'Đối chiếu JD', 'Chấm điểm AI'],
-    },
-    {
-        step: '03',
-        title: 'Kết nối ứng viên',
-        desc: 'HR nhanh chóng xác định ứng viên nổi bật, gửi lời mời và lên lịch phỏng vấn.',
-        icon: CalendarCheck,
-        color: 'emerald',
-        stats: ['Xếp hạng ứng viên', 'Mời phỏng vấn', 'Theo dõi tiến trình'],
-    },
-];
 
 const colorStyles = {
     blue: {
@@ -56,7 +30,47 @@ const colorStyles = {
 } as const;
 
 export default function WorkflowSection() {
+    const { t } = useTranslation();
     const [activeStep, setActiveStep] = useState(0);
+
+    const steps = [
+        {
+            step: '01',
+            title: t('landing.workflow.step1_title', undefined, 'Tạo chiến dịch'),
+            desc: t('landing.workflow.step1_desc', undefined, 'HR tạo vị trí tuyển dụng, nhập yêu cầu công việc và thiết lập các tiêu chí đánh giá phù hợp.'),
+            icon: BriefcaseBusiness,
+            color: 'blue' as const,
+            stats: [
+                t('landing.workflow.step1_stat1', undefined, 'Mô tả công việc'),
+                t('landing.workflow.step1_stat2', undefined, 'Yêu cầu kỹ năng'),
+                t('landing.workflow.step1_stat3', undefined, 'Tiêu chí tuyển dụng'),
+            ],
+        },
+        {
+            step: '02',
+            title: t('landing.workflow.step2_title', undefined, 'AI phân tích'),
+            desc: t('landing.workflow.step2_desc', undefined, 'CV được tự động bóc tách, đối chiếu với JD và chấm điểm theo các tiêu chí đã thiết lập.'),
+            icon: BrainCircuit,
+            color: 'violet' as const,
+            stats: [
+                t('landing.workflow.step2_stat1', undefined, 'Bóc tách CV'),
+                t('landing.workflow.step2_stat2', undefined, 'Đối chiếu JD'),
+                t('landing.workflow.step2_stat3', undefined, 'Chấm điểm AI'),
+            ],
+        },
+        {
+            step: '03',
+            title: t('landing.workflow.step3_title', undefined, 'Kết nối ứng viên'),
+            desc: t('landing.workflow.step3_desc', undefined, 'HR nhanh chóng xác định ứng viên nổi bật, gửi lời mời và lên lịch phỏng vấn.'),
+            icon: CalendarCheck,
+            color: 'emerald' as const,
+            stats: [
+                t('landing.workflow.step3_stat1', undefined, 'Xếp hạng ứng viên'),
+                t('landing.workflow.step3_stat2', undefined, 'Mời phỏng vấn'),
+                t('landing.workflow.step3_stat3', undefined, 'Theo dõi tiến trình'),
+            ],
+        },
+    ];
     const [allActive, setAllActive] = useState(false);
 
     useEffect(() => {
@@ -64,7 +78,7 @@ export default function WorkflowSection() {
 
         if (!allActive) {
             timer = setTimeout(() => {
-                if (activeStep < WORKFLOW_STEPS.length - 1) {
+                if (activeStep < steps.length - 1) {
                     setActiveStep((prev) => prev + 1);
                 } else {
                     setAllActive(true);
@@ -83,7 +97,7 @@ export default function WorkflowSection() {
     return (
         <section
             id="workflow"
-            className="relative scroll-mt-20 overflow-hidden border-y border-slate-200 bg-slate-50 py-20 transition-colors dark:border-slate-800 dark:bg-[#090b10] sm:py-24 md:py-32"
+            className="relative scroll-mt-20 overflow-hidden border-y border-slate-200 bg-slate-50 py-20 transition-colors dark:border-slate-800 dark:bg-slate-950 sm:py-24 md:py-32"
         >
             {/* Background */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -147,11 +161,11 @@ export default function WorkflowSection() {
                         }}
                         className="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl"
                     >
-                        Từ CV đến ứng viên phù hợp.
+                        {t('landing.workflow.title_part1', undefined, 'Từ CV đến ứng viên phù hợp.')}
                         <br className="hidden sm:block" />
                         <span className="text-blue-600 dark:text-blue-400">
                             {' '}
-                            Nhanh hơn. Chính xác hơn.
+                            {t('landing.workflow.title_highlight', undefined, 'Nhanh hơn. Chính xác hơn.')}
                         </span>
                     </motion.h2>
 
@@ -171,9 +185,7 @@ export default function WorkflowSection() {
                         }}
                         className="mx-auto mt-5 max-w-2xl text-sm font-medium leading-7 text-slate-500 dark:text-slate-400 sm:text-base md:text-lg"
                     >
-                        Một quy trình liền mạch giúp đội ngũ tuyển dụng giảm
-                        thao tác thủ công và tập trung vào những ứng viên
-                        thực sự tiềm năng.
+                        {t('landing.workflow.subtitle', undefined, 'Một quy trình liền mạch giúp đội ngũ tuyển dụng giảm thao tác thủ công và tập trung vào những ứng viên thực sự tiềm năng.')}
                     </motion.p>
                 </div>
 
@@ -225,7 +237,7 @@ export default function WorkflowSection() {
 
                     {/* Steps */}
                     <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-6">
-                        {WORKFLOW_STEPS.map((item, index) => {
+                        {steps.map((item, index) => {
                             const Icon = item.icon;
 
                             const styles =
@@ -254,6 +266,15 @@ export default function WorkflowSection() {
     );
 }
 
+interface WorkflowStepItem {
+    step: string;
+    title: string;
+    desc: string;
+    icon: React.ElementType;
+    color: 'blue' | 'violet' | 'emerald';
+    stats: string[];
+}
+
 function WorkflowStep({
     item,
     index,
@@ -261,7 +282,7 @@ function WorkflowStep({
     styles,
     isActive,
 }: {
-    item: (typeof WORKFLOW_STEPS)[number];
+    item: WorkflowStepItem;
     index: number;
     Icon: React.ElementType;
     styles: (typeof colorStyles)[keyof typeof colorStyles];
@@ -433,7 +454,7 @@ function WorkflowStep({
                                 duration: 0.45,
                             }}
                         >
-                            Bước {item.step}
+                            {useTranslation().t('landing.workflow.step_prefix', undefined, 'Bước')} {item.step}
                         </motion.p>
 
                         <h3 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -441,7 +462,7 @@ function WorkflowStep({
                         </h3>
                     </div>
 
-                    {index < WORKFLOW_STEPS.length - 1 && (
+                    {index < 2 && (
                         <motion.div
                             animate={{
                                 color: isActive
@@ -500,7 +521,7 @@ function WorkflowStep({
             </motion.div>
 
             {/* Mobile connector */}
-            {index < WORKFLOW_STEPS.length - 1 && (
+            {index < 2 && (
                 <div className="absolute -bottom-12 left-1/2 flex h-12 -translate-x-1/2 flex-col items-center md:hidden">
                     <motion.div
                         className="h-full w-px origin-top"

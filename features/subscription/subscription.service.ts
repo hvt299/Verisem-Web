@@ -19,5 +19,21 @@ export const subscriptionService = {
     createCheckoutSession: async (planCode: string) => {
         const response = await apiClient.post(`/subscriptions/checkout/${planCode}`);
         return response.data;
+    },
+
+    getOrder: async (orderCode: string) => {
+        const response = await apiClient.get(`/subscriptions/orders/${orderCode}`);
+        return response.data;
+    },
+
+    getOrders: async () => {
+        const response = await apiClient.get('/subscriptions/orders');
+        return response.data;
+    },
+
+    // Chỉ hoạt động khi Backend bật ENABLE_PAYMENT_SIMULATION=true
+    simulatePayment: async (orderCode: string) => {
+        const response = await apiClient.post(`/subscriptions/dev/simulate-payment/${orderCode}`);
+        return response.data;
     }
 };
