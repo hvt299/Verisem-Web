@@ -10,8 +10,9 @@ import Typewriter from '@/components/ui/Typewriter';
 import Select from 'react-select';
 import { INDUSTRIES, GROUPED_INDUSTRIES } from '@/constants/job.constants';
 import { ROUTES } from '@/constants/routes';
+import { useTranslation } from '@/store/useLanguageStore';
 
-const HERO_WORDS = [
+const HERO_WORDS_VI = [
     'Nhân viên kinh doanh',
     'Chuyên viên Marketing',
     'Chuyên viên CSKH',
@@ -37,6 +38,34 @@ const HERO_WORDS = [
     'Biên dịch viên',
     'Luật sư',
     'Chuyên viên',
+];
+
+const HERO_WORDS_EN = [
+    'Sales Executive',
+    'Marketing Specialist',
+    'Customer Support Specialist',
+    'HR Specialist',
+    'Software Engineer',
+    'Production Worker',
+    'Financial Analyst',
+    'Real Estate Agent',
+    'Civil Engineer',
+    'Accountant',
+    'Manufacturing Engineer',
+    'Teacher',
+    'Sales Representative',
+    'Journalist',
+    'Electrical Engineer',
+    'Logistics Coordinator',
+    'Consultant',
+    'Doctor',
+    'UI/UX Designer',
+    'Restaurant Manager',
+    'Environmental Engineer',
+    'Driver',
+    'Translator',
+    'Lawyer',
+    'Specialist',
 ];
 
 const staggerContainer: Variants = {
@@ -158,6 +187,8 @@ export default function HeroSection({
     const router = useRouter();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+    const { t, language } = useTranslation();
+    const heroWords = language === 'EN' ? HERO_WORDS_EN : HERO_WORDS_VI;
 
     const [showLocationPopover, setShowLocationPopover] = useState(false);
     const [mainTab, setMainTab] = useState<'domestic' | 'foreign'>('domestic');
@@ -278,19 +309,6 @@ export default function HeroSection({
                     <div className="absolute inset-0 hidden bg-blue-950/20 mix-blend-multiply dark:block" />
                 </div>
 
-                {/* Grid vuông */}
-                <div
-                    className="absolute inset-0 opacity-[0.065] dark:opacity-[0.055]"
-                    style={{
-                        backgroundImage:
-                            'linear-gradient(#64748b 1px, transparent 1px), linear-gradient(90deg, #64748b 1px, transparent 1px)',
-                        backgroundSize: '4rem 4rem',
-                        maskImage:
-                            'radial-gradient(ellipse 80% 75% at 50% 25%, black 30%, transparent 90%)',
-                        WebkitMaskImage:
-                            'radial-gradient(ellipse 80% 75% at 50% 25%, black 30%, transparent 90%)',
-                    }}
-                />
 
                 {/* Primary glow */}
                 <div className="absolute left-1/2 top-[-12%] h-130 w-205 -translate-x-1/2 rounded-full bg-primary-500/10 blur-[140px] dark:bg-primary-500/10" />
@@ -393,7 +411,7 @@ export default function HeroSection({
                             }}
                             className="text-xs font-black tracking-tight text-slate-700 dark:text-slate-100 sm:text-[13px]"
                         >
-                            Nền tảng Tuyển dụng AI thế hệ mới
+                            {t('landing.hero.badge', undefined, 'Nền tảng Tuyển dụng AI thế hệ mới')}
                         </motion.span>
                     </div>
 
@@ -444,9 +462,9 @@ export default function HeroSection({
                     variants={fadeUp}
                     className="max-w-5xl text-4xl font-black leading-[1.15] tracking-tight text-text dark:text-white sm:text-5xl md:text-6xl lg:text-7xl"
                 >
-                    Khám phá cơ hội cho <br className="hidden sm:block" />
+                    {t('landing.hero.heading_prefix', undefined, 'Khám phá cơ hội cho')} <br className="hidden sm:block" />
                     <span className="text-primary-600 dark:text-primary-400">
-                        <Typewriter words={HERO_WORDS} />
+                        <Typewriter words={heroWords} />
                     </span>
                 </motion.h1>
 
@@ -455,7 +473,7 @@ export default function HeroSection({
                     variants={fadeUp}
                     className="mt-5 max-w-xl text-sm font-medium leading-6 text-text-muted dark:text-slate-400 sm:text-base"
                 >
-                    AI giúp kết nối đúng ứng viên với đúng công việc, giảm thao tác thủ công và rút ngắn thời gian tuyển dụng.
+                    {t('landing.hero.subtitle', undefined, 'AI giúp kết nối đúng ứng viên với đúng công việc, giảm thao tác thủ công và rút ngắn thời gian tuyển dụng.')}
                 </motion.p>
 
                 {/* Search */}
@@ -470,7 +488,7 @@ export default function HeroSection({
                                 <Search className="h-5 w-5 shrink-0 text-slate-400" />
                                 <input
                                     type="text"
-                                    placeholder="Từ khóa, công ty..."
+                                    placeholder={t('landing.hero.keyword_placeholder', undefined, 'Từ khóa, công ty...')}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -489,7 +507,7 @@ export default function HeroSection({
                                         options={[
                                             {
                                                 value: '',
-                                                label: 'Tất cả Ngành',
+                                                label: t('landing.hero.all_industries', undefined, 'Tất cả Ngành'),
                                             },
                                             ...GROUPED_INDUSTRIES,
                                         ]}
@@ -498,7 +516,7 @@ export default function HeroSection({
                                                 (i) => i.value === filters.industry,
                                             ) || {
                                                 value: '',
-                                                label: 'Tất cả Ngành',
+                                                label: t('landing.hero.all_industries', undefined, 'Tất cả Ngành'),
                                             }
                                         }
                                         onChange={(selected: any) =>
@@ -508,7 +526,7 @@ export default function HeroSection({
                                                 skills: [],
                                             })
                                         }
-                                        placeholder="Tất cả Ngành..."
+                                        placeholder={t('landing.hero.industry_placeholder', undefined, 'Tất cả Ngành...')}
                                         menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
                                         menuPosition="fixed"
                                         styles={{
@@ -549,8 +567,8 @@ export default function HeroSection({
                                             }`}
                                     >
                                         {selectedLocCount > 0
-                                            ? `Đã chọn ${selectedLocCount} khu vực`
-                                            : 'Địa điểm'}
+                                            ? t('landing.hero.selected_locations', { count: selectedLocCount }, `Đã chọn ${selectedLocCount} khu vực`)
+                                            : t('landing.hero.location_label', undefined, 'Địa điểm')}
                                     </span>
 
                                     <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
@@ -568,7 +586,7 @@ export default function HeroSection({
                                                     }`}
                                                 onClick={() => setMainTab('domestic')}
                                             >
-                                                Trong nước
+                                                {t('jobs.location_popover.domestic', undefined, 'Trong nước')}
                                             </button>
 
                                             <button
@@ -579,7 +597,7 @@ export default function HeroSection({
                                                     }`}
                                                 onClick={() => setMainTab('foreign')}
                                             >
-                                                Nước ngoài
+                                                {t('jobs.location_popover.foreign', undefined, 'Nước ngoài')}
                                             </button>
                                         </div>
 
@@ -599,7 +617,7 @@ export default function HeroSection({
                                                             setSubLocations([]);
                                                         }}
                                                     >
-                                                        Mới (Tỉnh → Xã)
+                                                        {t('jobs.location_popover.domestic_new', undefined, 'Mới (Tỉnh → Xã)')}
                                                     </button>
 
                                                     <button
@@ -614,13 +632,13 @@ export default function HeroSection({
                                                             setSubLocations([]);
                                                         }}
                                                     >
-                                                        Cũ (Tỉnh → Huyện)
+                                                        {t('jobs.location_popover.domestic_old', undefined, 'Cũ (Tỉnh → Huyện)')}
                                                     </button>
                                                 </div>
 
                                                 <input
                                                     type="text"
-                                                    placeholder="Tìm nhanh Tỉnh/Thành phố..."
+                                                    placeholder={t('landing.hero.search_province_placeholder', undefined, 'Tìm nhanh Tỉnh/Thành phố...')}
                                                     value={locationSearchKeyword}
                                                     onChange={(e) => setLocationSearchKeyword(e.target.value)}
                                                     className="mb-3 w-full shrink-0 rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:border-primary-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
@@ -746,7 +764,7 @@ export default function HeroSection({
                                                                         })
                                                                     ) : (
                                                                         <div className="py-3 text-center text-xs font-medium text-slate-400">
-                                                                            Đang tải...
+                                                                            {t('jobs.location_popover.loading_regions', undefined, 'Đang tải...')}
                                                                         </div>
                                                                     )}
                                                                 </div>
@@ -756,7 +774,7 @@ export default function HeroSection({
 
                                                     {displayedProvinces.length === 0 && (
                                                         <div className="py-4 text-center text-xs font-medium text-slate-400">
-                                                            Không tìm thấy địa điểm
+                                                            {t('jobs.location_popover.no_location_found', undefined, 'Không tìm thấy địa điểm')}
                                                         </div>
                                                     )}
                                                 </div>
@@ -767,12 +785,12 @@ export default function HeroSection({
                                         {mainTab === 'foreign' && (
                                             <div className="flex h-72 flex-col p-4">
                                                 <p className="mb-3 text-xs font-medium text-slate-500 dark:text-slate-400">
-                                                    Nhập tên quốc gia hoặc khu vực làm việc ở nước ngoài:
+                                                    {t('landing.hero.foreign_instruction', undefined, 'Nhập tên quốc gia hoặc khu vực làm việc ở nước ngoài:')}
                                                 </p>
 
                                                 <input
                                                     type="text"
-                                                    placeholder="VD: Nhật Bản, Mỹ, Singapore..."
+                                                    placeholder={t('landing.hero.foreign_placeholder', undefined, 'VD: Nhật Bản, Mỹ, Singapore...')}
                                                     value={foreignInput}
                                                     onChange={(e) => setForeignInput(e.target.value)}
                                                     onKeyDown={(e) =>
@@ -786,7 +804,7 @@ export default function HeroSection({
                                                     onClick={handleForeignSubmit}
                                                     className="w-full rounded-xl bg-primary-600 py-2.5 font-bold text-white shadow-md shadow-primary-500/20 transition-colors hover:bg-primary-700"
                                                 >
-                                                    Xác nhận
+                                                    {t('jobs.location_popover.confirm', undefined, 'Xác nhận')}
                                                 </button>
                                             </div>
                                         )}
@@ -801,7 +819,7 @@ export default function HeroSection({
                                 className="mt-1 flex w-full shrink-0 items-center justify-center gap-2 rounded-2xl bg-button-primary-bg px-7 py-3.5 text-sm font-bold text-button-primary-text shadow-md shadow-primary-500/20 transition-all hover:bg-button-primary-hover hover:shadow-lg md:mt-0 md:w-auto md:rounded-full"
                             >
                                 <Search className="h-4 w-4" />
-                                Tìm việc
+                                {t('landing.hero.search_btn', undefined, 'Tìm việc')}
                             </button>
                         </div>
                     </div>

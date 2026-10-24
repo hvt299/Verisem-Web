@@ -6,9 +6,12 @@ import { Mail, ArrowRight, KeyRound, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authService } from '@/features/auth/auth.service';
 import AuthLogo from '@/components/ui/AuthLogo';
+import AuthPageBackground from '@/components/auth/AuthPageBackground';
 import { ROUTES } from '@/constants/routes';
+import { useTranslation } from '@/store/useLanguageStore';
 
 export default function ForgotPasswordPage() {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isSent, setIsSent] = useState(false);
@@ -19,26 +22,22 @@ export default function ForgotPasswordPage() {
         try {
             await authService.forgotPassword(email);
             setIsSent(true);
-            toast.success('Link khôi phục đã được gửi!');
+            toast.success(t('auth.forgot_password.toast_sent', undefined, 'Link khôi phục đã được gửi!'));
         } catch (error) {
-            toast.error('Có lỗi xảy ra. Vui lòng thử lại sau.');
+            toast.error(t('auth.forgot_password.toast_error', undefined, 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4 transition-colors duration-300">
-            {/* Background Grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50 dark:opacity-20 pointer-events-none" />
-
-            {/* Ambient Background Elements */}
-            <div className="pointer-events-none absolute top-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-primary-500/10 blur-[100px]" />
-            <div className="pointer-events-none absolute right-[-10%] bottom-[-10%] h-[40%] w-[40%] rounded-full bg-primary-700/10 blur-[100px]" />
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 p-4 pt-24 sm:pt-28 pb-16 transition-colors duration-300 font-sans">
+            {/* Background hình ảnh mờ giống ngoài trang chủ */}
+            <AuthPageBackground />
 
             <AuthLogo />
 
-            <div className="relative z-10 w-full max-w-md rounded-3xl border border-card-border bg-card-bg p-10 shadow-card transition-colors duration-300">
+            <div className="relative z-10 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 sm:p-10 shadow-xs transition-colors duration-300">
                 {!isSent ? (
                     <>
                         <div className="mb-8 flex flex-col items-center text-center">
@@ -47,18 +46,18 @@ export default function ForgotPasswordPage() {
                             </div>
 
                             <h1 className="text-2xl font-bold text-text">
-                                Quên mật khẩu?
+                                {t('auth.forgot_password.title', undefined, 'Quên mật khẩu?')}
                             </h1>
 
                             <p className="mt-2 text-sm text-text-muted">
-                                Nhập email của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu
+                                {t('auth.forgot_password.subtitle', undefined, 'Nhập email của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu')}
                             </p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="mb-1.5 block text-sm font-semibold text-text">
-                                    Email công việc
+                                    {t('auth.forgot_password.email_label', undefined, 'Email công việc')}
                                 </label>
 
                                 <div className="relative">
@@ -80,7 +79,7 @@ export default function ForgotPasswordPage() {
                                 disabled={isLoading}
                                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-button-primary-bg py-3.5 font-bold text-button-primary-text shadow-card transition-all hover:bg-button-primary-hover disabled:opacity-60"
                             >
-                                {isLoading ? 'Đang gửi...' : 'Gửi link khôi phục'}
+                                {isLoading ? t('auth.forgot_password.submitting', undefined, 'Đang gửi...') : t('auth.forgot_password.submit', undefined, 'Gửi link khôi phục')}
                             </button>
                         </form>
                     </>
@@ -91,13 +90,11 @@ export default function ForgotPasswordPage() {
                         </div>
 
                         <h1 className="text-2xl font-bold text-text">
-                            Kiểm tra Email
+                            {t('auth.forgot_password.check_email_title', undefined, 'Kiểm tra Email')}
                         </h1>
 
                         <p className="mt-2 text-text-muted">
-                            Chúng tôi đã gửi một liên kết khôi phục mật khẩu đến{' '}
-                            <strong className="text-text">{email}</strong>. Vui
-                            lòng kiểm tra hộp thư đến hoặc thư mục Spam.
+                            {t('auth.forgot_password.check_email_desc', { email }, `Chúng tôi đã gửi một liên kết khôi phục mật khẩu đến ${email}. Vui lòng kiểm tra hộp thư đến hoặc thư mục Spam.`)}
                         </p>
                     </div>
                 )}
@@ -108,7 +105,7 @@ export default function ForgotPasswordPage() {
                         className="flex items-center justify-center gap-2 text-sm font-semibold text-text-muted transition-colors hover:text-text"
                     >
                         <ArrowRight className="h-4 w-4 rotate-180" />
-                        Quay lại Đăng nhập
+                        {t('auth.forgot_password.back_to_login', undefined, 'Quay lại Đăng nhập')}
                     </Link>
                 </div>
             </div>

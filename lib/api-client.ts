@@ -6,6 +6,7 @@ import { ROUTES } from '../constants/routes';
 
 const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -40,7 +41,12 @@ apiClient.interceptors.response.use(
 
         if (status === 401) {
             clearAllAuthData();
-            if (!window.location.pathname.includes(ROUTES.LOGIN)) {
+            // Bỏ qua chuyển hướng nếu đang kiểm tra phiên (/auth/me) hoặc người dùng đang ở các trang công khai (public)
+            const isAuthCheck = error.config?.url?.includes('/auth/me');
+            const pathname = window.location.pathname;
+            const isProtectedPage = pathname.startsWith('/admin') || pathname.startsWith('/hr') || pathname.startsWith('/applicant');
+
+            if (!isAuthCheck && isProtectedPage && !pathname.includes(ROUTES.LOGIN)) {
                 toast.error('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');
                 window.location.href = ROUTES.LOGIN;
             }

@@ -8,6 +8,7 @@ import { Job } from '@/types';
 import { formatSalaryRange } from '@/utils/format';
 import { ROUTES } from '@/constants/routes';
 import { JOB_BADGE_CONFIG } from '@/utils/tier-colors';
+import { useTranslation } from '@/store/useLanguageStore';
 
 interface HotJobsSectionProps {
     jobs: Job[];
@@ -30,65 +31,78 @@ export const HotJobItem = ({
 }: {
     job: Partial<Job> & { company_name?: string; company_logo?: string };
 }) => {
+    const { t } = useTranslation();
     const hotBadge = JOB_BADGE_CONFIG.hot;
 
     return (
-        <Link
-            href={ROUTES.PUBLIC_JOB_DETAIL(job.id!)}
-            className="group relative flex h-full min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg hover:shadow-orange-500/10 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-orange-500/50"
-        >
-            <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-500/10 blur-2xl transition-all group-hover:bg-orange-500/20" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-orange-400 via-orange-500 to-rose-500 opacity-70" />
+        <div className="group/item relative overflow-hidden rounded-2xl p-[1.5px] bg-slate-200/80 dark:bg-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/10">
+            {/* Animated Rotating Border Beam (Hot job: Orange/Amber) */}
+            <div
+                className="pointer-events-none absolute -inset-[150%] animate-border-beam"
+                style={{
+                    background:
+                        'conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 280deg, rgba(251, 146, 60, 0.15) 305deg, rgba(249, 115, 22, 0.75) 330deg, rgba(251, 146, 60, 0.2) 348deg, transparent 360deg)',
+                }}
+            />
 
-            <div className="relative z-10 flex w-full min-w-0 gap-4">
-                <div className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 p-1.5 shadow-sm dark:border-slate-700 ${job.company_logo ? 'bg-white' : 'bg-slate-50 dark:bg-slate-800'}`}>
-                    {job.company_logo ? (
-                        <img src={job.company_logo} alt={job.company_name || 'Company'} className="h-full w-full object-contain" loading="lazy" />
-                    ) : (
-                        <Building2 className="h-8 w-8 text-slate-300" />
-                    )}
-                </div>
+            <Link
+                href={ROUTES.PUBLIC_JOB_DETAIL(job.id!)}
+                className="relative z-10 flex h-full min-w-0 w-full rounded-[14.5px] bg-white p-5 transition-all duration-300 dark:bg-slate-900 overflow-hidden"
+            >
+                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-500/10 blur-2xl transition-all group-hover/item:bg-orange-500/20" />
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-orange-400 via-orange-500 to-rose-500 opacity-70" />
 
-                <div className="min-w-0 flex-1">
-                    <div className="flex items-start gap-2">
-                        <h3 className="min-w-0 flex-1 line-clamp-2 text-base font-bold leading-6 text-slate-900 transition-colors group-hover:text-orange-600 dark:text-white dark:group-hover:text-orange-400">
-                            {job.title}
-                        </h3>
-
-                        {job.is_hot && (
-                            <span className={`flex shrink-0 items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${hotBadge.bg} ${hotBadge.text} ${hotBadge.border} ${hotBadge.glow}`}>
-                                <Flame className="h-3.5 w-3.5" />
-                                <span className="hidden sm:inline">{hotBadge.label}</span>
-                            </span>
+                <div className="relative z-10 flex w-full min-w-0 gap-4">
+                    <div className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 p-1.5 shadow-sm dark:border-slate-700 ${job.company_logo ? 'bg-white' : 'bg-slate-50 dark:bg-slate-800'}`}>
+                        {job.company_logo ? (
+                            <img src={job.company_logo} alt={job.company_name || 'Company'} className="h-full w-full object-contain" loading="lazy" />
+                        ) : (
+                            <Building2 className="h-8 w-8 text-slate-300" />
                         )}
                     </div>
 
-                    <p className="mb-3 mt-1.5 truncate text-sm font-medium text-slate-500 dark:text-slate-400">
-                        {job.company_name || 'Công ty Ẩn danh'}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                        <div className="flex items-start gap-2">
+                            <h3 className="min-w-0 flex-1 line-clamp-2 text-base font-bold leading-6 text-slate-900 transition-colors group-hover/item:text-orange-600 dark:text-white dark:group-hover/item:text-orange-400">
+                                {job.title}
+                            </h3>
 
-                    <div className="flex min-w-0 flex-wrap items-center gap-2">
-                        <span className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
-                            <DollarSign className="h-4 w-4 shrink-0" />
-                            <span className="truncate">{formatSalaryRange(job.salary)}</span>
-                        </span>
-
-                        {(job.location?.province_name || job.location?.country) && (
-                            <span className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-slate-50 px-2.5 py-1.5 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                                <MapPin className="h-4 w-4 shrink-0" />
-                                <span className="truncate">
-                                    {job.location.country && job.location.country !== 'Việt Nam' ? job.location.country : job.location.province_name}
+                            {job.is_hot && (
+                                <span className={`flex shrink-0 items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${hotBadge.bg} ${hotBadge.text} ${hotBadge.border} ${hotBadge.glow}`}>
+                                    <Flame className="h-3.5 w-3.5" />
+                                    <span className="hidden sm:inline">{hotBadge.label}</span>
                                 </span>
+                            )}
+                        </div>
+
+                        <p className="mb-3 mt-1.5 truncate text-sm font-medium text-slate-500 dark:text-slate-400">
+                            {job.company_name || t('landing.hot_jobs.anonymous_company', undefined, 'Công ty Ẩn danh')}
+                        </p>
+
+                        <div className="flex min-w-0 flex-wrap items-center gap-2">
+                            <span className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                                <DollarSign className="h-4 w-4 shrink-0" />
+                                <span className="truncate">{formatSalaryRange(job.salary)}</span>
                             </span>
-                        )}
+
+                            {(job.location?.province_name || job.location?.country) && (
+                                <span className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md bg-slate-50 px-2.5 py-1.5 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                    <MapPin className="h-4 w-4 shrink-0" />
+                                    <span className="truncate">
+                                        {job.location.country && job.location.country !== 'Việt Nam' ? job.location.country : job.location.province_name}
+                                    </span>
+                                </span>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Link>
+            </Link>
+        </div>
     );
 };
 
 export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
+    const { t } = useTranslation();
     const [currentPage, setCurrentPage] = useState(1);
     const [sortBy, setSortBy] = useState<SortOption>('default');
     const itemsPerPage = 6;
@@ -114,7 +128,7 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
     if (allHotJobs.length === 0) return null;
 
     return (
-        <section className="border-b border-slate-200 bg-background py-10 font-sans transition-colors dark:border-slate-800 dark:bg-slate-950 md:py-12">
+        <section className="border-b border-slate-200 bg-background pt-12 pb-12 sm:pt-14 sm:pb-14 md:pt-16 md:pb-16 lg:pt-16 lg:pb-16 font-sans transition-colors dark:border-slate-800 dark:bg-slate-950">
             <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
                 {/* Gian hàng */}
@@ -184,14 +198,14 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
 
                                 <div className="min-w-0">
                                     <h2 className="truncate text-xl font-black uppercase tracking-tight text-slate-900 dark:text-white md:text-2xl">
-                                        Việc Làm{' '}
+                                        {t('landing.hot_jobs.title_prefix', undefined, 'Việc Làm')}{' '}
                                         <span className="bg-linear-to-r from-orange-400 via-orange-500 to-rose-500 bg-clip-text text-transparent">
-                                            Hot
+                                            {t('landing.hot_jobs.title_highlight', undefined, 'Hot')}
                                         </span>
                                     </h2>
 
                                     <p className="mt-0.5 hidden text-sm text-slate-400 sm:block">
-                                        Những cơ hội việc làm nổi bật dành cho bạn
+                                        {t('landing.hot_jobs.subtitle', undefined, 'Những cơ hội việc làm nổi bật dành cho bạn')}
                                     </p>
                                 </div>
                             </div>
@@ -200,7 +214,7 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
                                 href={`${ROUTES.PUBLIC_JOBS}?is_hot=true`}
                                 className="flex shrink-0 items-center gap-1 text-sm font-bold text-orange-600 transition-colors hover:text-orange-700 dark:text-orange-500 dark:hover:text-orange-400"
                             >
-                                Xem tất cả
+                                {t('landing.hot_jobs.view_all', undefined, 'Xem tất cả')}
                                 <ChevronRight className="h-4 w-4" />
                             </Link>
                         </div>
@@ -209,7 +223,7 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
                         <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-2.5 dark:bg-slate-800/60">
                             <div className="flex min-w-0 items-center gap-2">
                                 <span className="hidden shrink-0 text-sm font-medium text-slate-500 sm:inline dark:text-slate-400">
-                                    Sắp xếp theo:
+                                    {t('landing.hot_jobs.sort_by', undefined, 'Sắp xếp theo:')}
                                 </span>
 
                                 <select
@@ -220,14 +234,14 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
                                     }}
                                     className="h-9 cursor-pointer rounded-lg border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 outline-none focus:border-orange-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                                 >
-                                    <option value="default">Mặc định</option>
-                                    <option value="salary_desc">Lương cao nhất</option>
-                                    <option value="latest">Mới cập nhật</option>
+                                    <option value="default">{t('landing.hot_jobs.sort_default', undefined, 'Mặc định')}</option>
+                                    <option value="salary_desc">{t('landing.hot_jobs.sort_salary', undefined, 'Lương cao nhất')}</option>
+                                    <option value="latest">{t('landing.hot_jobs.sort_latest', undefined, 'Mới cập nhật')}</option>
                                 </select>
                             </div>
 
                             <span className="shrink-0 text-sm font-medium text-slate-400">
-                                {sortedHotJobs.length} việc làm
+                                {t('landing.hot_jobs.jobs_count', { count: sortedHotJobs.length }, `${sortedHotJobs.length} việc làm`)}
                             </span>
                         </div>
                     </div>
@@ -256,7 +270,7 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
                                         type="button"
                                         disabled={safeCurrentPage === 1}
                                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                        aria-label="Trang trước"
+                                        aria-label={t('landing.hot_jobs.prev_page', undefined, 'Trang trước')}
                                         className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-slate-700"
                                     >
                                         <ChevronLeft className="h-4 w-4" />
@@ -272,7 +286,7 @@ export default function HotJobsSection({ jobs }: HotJobsSectionProps) {
                                         type="button"
                                         disabled={safeCurrentPage === totalPages}
                                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                        aria-label="Trang tiếp theo"
+                                        aria-label={t('landing.hot_jobs.next_page', undefined, 'Trang tiếp theo')}
                                         className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-white hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-slate-700"
                                     >
                                         <ChevronRight className="h-4 w-4" />

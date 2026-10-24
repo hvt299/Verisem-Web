@@ -21,9 +21,11 @@ import FaqSection from '@/components/landing/FaqSection';
 import BottomCTA from '@/components/landing/BottomCTA';
 import PublicFooter from '@/components/layout/PublicFooter';
 import { ROUTES } from '@/constants/routes';
+import { useTranslation } from '@/store/useLanguageStore';
 
 export default function LandingClient() {
     const router = useRouter();
+    const { t } = useTranslation();
     const { isAuthenticated, user } = useAuthStore();
 
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -95,7 +97,7 @@ export default function LandingClient() {
                 });
             } catch (error) {
                 console.error('Landing initial data error:', error);
-                toast.error('Không thể tải dữ liệu hệ thống');
+                toast.error(t('landing.toast_system_error', undefined, 'Không thể tải dữ liệu hệ thống'));
             } finally {
                 setIsLoading(false);
             }

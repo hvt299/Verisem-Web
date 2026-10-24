@@ -8,8 +8,8 @@ export const parseCurrency = (val: string): number => {
 export const formatCurrency = (val: number): string =>
     new Intl.NumberFormat('vi-VN').format(val);
 
-export const formatSalaryRange = (salary?: SalaryRange): string => {
-    if (salary?.min_salary == null) return 'Thỏa thuận';
+export const formatSalaryRange = (salary?: SalaryRange, lang: 'VI' | 'EN' = 'VI'): string => {
+    if (salary?.min_salary == null) return lang === 'EN' ? 'Negotiable' : 'Thỏa thuận';
 
     const symbols: Record<string, string> = {
         VND: '₫',
@@ -17,6 +17,16 @@ export const formatSalaryRange = (salary?: SalaryRange): string => {
     };
 
     const formatShort = (value: number) => {
+        if (lang === 'EN') {
+            if (value >= 1_000_000_000)
+                return `${Number((value / 1_000_000_000).toFixed(1))}B`;
+
+            if (value >= 1_000_000)
+                return `${Number((value / 1_000_000).toFixed(1))}M`;
+
+            return formatCurrency(value);
+        }
+
         if (value >= 1_000_000_000)
             return `${Number((value / 1_000_000_000).toFixed(1))}Tỷ`;
 
@@ -36,7 +46,7 @@ export const formatSalaryRange = (salary?: SalaryRange): string => {
     const curr = symbols[salary.currency] ?? salary.currency;
 
     if (max == null) {
-        return `Từ ${formatShort(min)}${curr}`;
+        return lang === 'EN' ? `From ${formatShort(min)}${curr}` : `Từ ${formatShort(min)}${curr}`;
     }
 
     if (min === max) {
@@ -113,14 +123,15 @@ export const getPasswordStrength = (pass: string) => {
     return { score, color: 'bg-success-500', label: 'Mạnh' };
 };
 
-export const getDeadlineCountdown = (deadline?: string | Date): string => {
-    if (!deadline) return 'Không thời hạn';
+export const getDeadlineCountdown = (deadline?: string | Date, lang: 'VI' | 'EN' = 'VI'): string => {
+    if (!deadline) return lang === 'EN' ? 'No deadline' : 'Không thời hạn';
 
     const diff = new Date(deadline).getTime() - Date.now();
-    if (diff < 0) return 'Đã hết hạn';
+    if (diff < 0) return lang === 'EN' ? 'Expired' : 'Đã hết hạn';
 
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    return days === 0 ? 'Hết hạn hôm nay' : `Còn ${days} ngày`;
+    if (days === 0) return lang === 'EN' ? 'Expires today' : 'Hết hạn hôm nay';
+    return lang === 'EN' ? `${days} days left` : `Còn ${days} ngày`;
 };
 
 export const formatSubscriptionDate = (date?: string) => {

@@ -5,6 +5,7 @@ import { Building2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/store/useLanguageStore';
 
 interface CompanyMarqueeProps {
     companies: any[];
@@ -16,6 +17,7 @@ export default function CompanyMarquee({
     onSelectCompany,
 }: CompanyMarqueeProps) {
     const router = useRouter();
+    const { t } = useTranslation();
     const [shuffled, setShuffled] = useState<any[]>([]);
 
     useEffect(() => {
@@ -35,7 +37,7 @@ export default function CompanyMarquee({
 
     const renderCompany = (company: any, index: number) => {
         const companyId = company?.id || null;
-        const companyName = company?.name || 'Công ty';
+        const companyName = company?.name || t('companies.anonymous', undefined, 'Công ty');
         const logoUrl = company?.logo_url || null;
 
         return (
@@ -80,7 +82,7 @@ export default function CompanyMarquee({
             <div className="max-w-full mx-auto flex flex-col items-center">
                 {/* Tiêu đề */}
                 <p className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-8">
-                    Được tin dùng bởi các doanh nghiệp
+                    {t('landing.marquee.trusted_by', undefined, 'Được tin dùng bởi các doanh nghiệp')}
                 </p>
 
                 {/* Danh sách logo trượt */}

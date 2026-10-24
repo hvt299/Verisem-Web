@@ -8,7 +8,32 @@ interface AdminAnalyticsProps {
     charts: any;
 }
 
-const tooltipStyle = { borderRadius: '12px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-card-bg)', boxShadow: 'var(--shadow-dropdown)', fontWeight: 'bold' as const };
+const tooltipStyle = {
+    borderRadius: '12px',
+    border: '1px solid var(--color-border)',
+    backgroundColor: 'var(--color-card-bg)',
+    boxShadow: 'var(--shadow-dropdown)',
+    color: 'var(--color-text)',
+    fontSize: '12px',
+    fontWeight: 'bold' as const
+};
+const tooltipItemStyle = { color: 'var(--color-text)', fontWeight: 'bold' as const };
+
+const renderCustomBarLabel = (props: any) => {
+    const { x, y, width, height, value } = props;
+    if (value === undefined || value === null) return null;
+    return (
+        <text
+            x={Number(x) + Number(width) + 8}
+            y={Number(y) + Number(height) / 2}
+            className="fill-slate-700 dark:fill-slate-200 text-[11px] font-bold select-none"
+            dominantBaseline="central"
+            textAnchor="start"
+        >
+            {value}
+        </text>
+    );
+};
 
 // Helper components for consistency
 const AnalyticsCard = ({ index, icon: Icon, iconClass, bgClass, borderClass, title, description, children }: any) => (
@@ -86,7 +111,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} opacity={0.5} />
                                     <XAxis dataKey="date" stroke="var(--color-text-subtle)" fontSize={11} tickLine={false} axisLine={false} />
                                     <YAxis stroke="var(--color-text-subtle)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Area type="monotone" dataKey="users" name="Người dùng mới" stroke="#3b82f6" fillOpacity={1} fill="url(#colorUsers)" strokeWidth={2} />
                                     <Area type="monotone" dataKey="companies" name="Doanh nghiệp mới" stroke="#10b981" fillOpacity={1} fill="url(#colorCompanies)" strokeWidth={2} />
                                 </AreaChart>
@@ -105,7 +130,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.5} />
                                     <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11 }} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11 }} allowDecimals={false} />
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Area type="monotone" dataKey="cv_received" name="CV Mới" stroke="var(--color-info-500)" strokeWidth={2.5} fill="url(#colorLoad)" />
                                 </AreaChart>
                             </ResponsiveContainer>
@@ -120,7 +145,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.5} />
                                     <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11 }} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11 }} allowDecimals={false} />
-                                    <RechartsTooltip contentStyle={tooltipStyle} cursor={{ fill: 'var(--color-border)', opacity: 0.2 }} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} cursor={{ fill: 'var(--color-border)', opacity: 0.2 }} />
                                     <Area type="monotone" dataKey="jobs" name="Việc làm mới" stroke="#ec4899" fillOpacity={0.15} fill="#ec4899" strokeWidth={3} />
                                 </AreaChart>
                             </ResponsiveContainer>
@@ -131,12 +156,12 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                     <AnalyticsCard index={3} icon={FileText} iconClass="text-success-600 dark:text-success-400" bgClass="bg-success-50 dark:bg-success-500/10" borderClass="border-success-100 dark:border-success-500/20" title="Phễu Trạng thái Ứng tuyển" description="Tỉ lệ chuyển đổi CV toàn hệ thống">
                         {appFunnel.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={appFunnel} layout="vertical" margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                                <BarChart data={appFunnel} layout="vertical" margin={{ top: 5, right: 35, left: 10, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--color-border)" opacity={0.5} />
                                     <XAxis type="number" hide />
-                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11, fontWeight: 600 }} width={80} />
-                                    <RechartsTooltip contentStyle={tooltipStyle} cursor={{ fill: 'transparent' }} />
-                                    <Bar dataKey="value" name="Số lượng CV" radius={[0, 4, 4, 0]} barSize={24} label={{ position: 'right', fill: 'var(--color-text-subtle)', fontSize: 11, fontWeight: 'bold' }}>
+                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 11, fontWeight: 600 }} className="text-slate-600 dark:text-slate-300" width={80} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} cursor={{ fill: 'transparent' }} />
+                                    <Bar dataKey="value" name="Số lượng CV" radius={[0, 4, 4, 0]} barSize={24} label={renderCustomBarLabel}>
                                         {appFunnel.map((entry: any, index: number) => (
                                             <Cell key={`funnel-${index}`} fill={entry.color} />
                                         ))}
@@ -156,7 +181,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                             <Cell key={`company-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-subtle)' }} />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -179,7 +204,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                             <Cell key={`role-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-subtle)' }} />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -196,7 +221,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                             <Cell key={`sub-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-subtle)' }} />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -207,12 +232,12 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                     <AnalyticsCard index={7} icon={BarChart2} iconClass="text-cyan-600 dark:text-cyan-400" bgClass="bg-cyan-50 dark:bg-cyan-500/10" borderClass="border-cyan-100 dark:border-cyan-500/20" title="Top Ngành Nghề" description="Số lượng Job mở nhiều nhất">
                         {jobsByIndustry.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={jobsByIndustry} layout="vertical" margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                                <BarChart data={jobsByIndustry} layout="vertical" margin={{ top: 5, right: 35, left: 10, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--color-border)" opacity={0.5} />
                                     <XAxis type="number" hide />
-                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11, fontWeight: 500 }} width={85} />
-                                    <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={tooltipStyle} />
-                                    <Bar dataKey="value" name="Jobs" radius={[0, 4, 4, 0]} barSize={20} label={{ position: 'right', fill: 'var(--color-text-subtle)', fontSize: 11, fontWeight: 'bold' }}>
+                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 11, fontWeight: 500 }} className="text-slate-600 dark:text-slate-300" width={85} />
+                                    <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
+                                    <Bar dataKey="value" name="Jobs" radius={[0, 4, 4, 0]} barSize={20} label={renderCustomBarLabel}>
                                         {jobsByIndustry.map((entry: any, index: number) => (
                                             <Cell key={`ind-${index}`} fill={entry.color} />
                                         ))}
@@ -226,12 +251,12 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                     <AnalyticsCard index={8} icon={Wrench} iconClass="text-violet-600 dark:text-violet-400" bgClass="bg-violet-50 dark:bg-violet-500/10" borderClass="border-violet-100 dark:border-violet-500/20" title="Top 10 Kỹ năng Hot" description="Các kỹ năng được yêu cầu nhiều nhất">
                         {topSkills.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={topSkills} layout="vertical" margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                                <BarChart data={topSkills} layout="vertical" margin={{ top: 5, right: 35, left: 10, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--color-border)" opacity={0.5} />
                                     <XAxis type="number" hide />
-                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 10, fontWeight: 600 }} width={100} />
-                                    <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={tooltipStyle} />
-                                    <Bar dataKey="value" name="Xuất hiện" radius={[0, 4, 4, 0]} barSize={16} fill="var(--color-violet-500)" label={{ position: 'right', fill: 'var(--color-text-subtle)', fontSize: 10, fontWeight: 'bold' }} />
+                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: 'currentColor', fontSize: 10, fontWeight: 600 }} className="text-slate-600 dark:text-slate-300" width={100} />
+                                    <RechartsTooltip cursor={{ fill: 'transparent' }} contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
+                                    <Bar dataKey="value" name="Xuất hiện" radius={[0, 4, 4, 0]} barSize={16} fill="var(--color-violet-500)" label={renderCustomBarLabel} />
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : <EmptyChartState message="Chưa có dữ liệu" />}
@@ -245,7 +270,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.5} />
                                     <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11 }} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-subtle)', fontSize: 11 }} allowDecimals={false} />
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Line type="monotone" dataKey="tickets" name="Tickets Mới" stroke="#f43f5e" strokeWidth={3} activeDot={{ r: 6 }} dot={{ r: 3, fill: '#f43f5e', strokeWidth: 0 }} />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -262,7 +287,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                             <Cell key={`tick-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-subtle)' }} />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -279,7 +304,7 @@ export default function AdminAnalytics({ charts }: AdminAnalyticsProps) {
                                             <Cell key={`js-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <RechartsTooltip contentStyle={tooltipStyle} />
+                                    <RechartsTooltip contentStyle={tooltipStyle} itemStyle={tooltipItemStyle} />
                                     <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-subtle)' }} />
                                 </PieChart>
                             </ResponsiveContainer>

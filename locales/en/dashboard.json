@@ -1,0 +1,96 @@
+{
+  "applicant": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "profile": "Profile & Competency",
+      "cv_management": "CV Management",
+      "applications": "Application History",
+      "saved_jobs": "Saved Jobs",
+      "billing": "My Subscription",
+      "settings": "Account Settings"
+    },
+    "overview": {
+      "welcome": "Welcome back, {name}",
+      "subtitle": "Track your application status and discover personalized career matches.",
+      "applied_count": "Applications Submitted",
+      "saved_count": "Saved Jobs",
+      "interviews_count": "Interviews Scheduled",
+      "match_avg": "Average Match Score",
+      "recent_applications": "Recent Applications",
+      "recommended_jobs": "Recommended For You"
+    },
+    "profile": {
+      "title": "Profile Configuration",
+      "subtitle": "Keep your profile updated to help AI accurately assess career compatibility.",
+      "avatar_title": "Profile Picture",
+      "avatar_change": "Change Photo",
+      "fullname": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "dob": "Date of Birth",
+      "gender": "Gender",
+      "address": "Residential Address",
+      "headline": "Desired Job Title",
+      "bio": "About Me",
+      "save_btn": "Save Changes"
+    },
+    "cv": {
+      "title": "Resume Vault & AI Audit",
+      "subtitle": "Manage your resumes and receive real-time ATS audit reports from AI Mentor.",
+      "upload_btn": "Upload New CV (PDF/DOCX)",
+      "score_badge": "ATS Score",
+      "score_now": "Score Resume Now",
+      "download": "Download",
+      "delete": "Delete CV",
+      "no_cvs": "No resumes uploaded yet. Upload one to start applying!"
+    }
+  },
+  "hr": {
+    "nav": {
+      "dashboard": "Recruitment Overview",
+      "campaigns": "Hiring Campaigns",
+      "jobs": "Job Postings",
+      "candidates": "Candidate Profiles",
+      "company_profile": "Company Profile",
+      "billing": "Plans & Add-ons",
+      "settings": "Organization Settings"
+    },
+    "dashboard": {
+      "title": "Recruitment Dashboard",
+      "active_jobs": "Active Vacancies",
+      "total_candidates": "Total Candidates",
+      "interviews": "Pending Interviews",
+      "hired": "Hired Talents",
+      "recent_applicants": "Recent Applications"
+    },
+    "kanban": {
+      "title": "Candidate Hiring Pipeline",
+      "new": "New Applied",
+      "reviewing": "Under Review",
+      "interview": "Interviewing",
+      "offered": "Job Offered",
+      "hired": "Hired",
+      "rejected": "Rejected",
+      "rescore_all": "AI Rescore All",
+      "match_score": "Match Score"
+    }
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Administration Hub",
+      "companies": "Company KYC Approvals",
+      "users": "User Management",
+      "subscriptions": "Subscription Tiers",
+      "audit_logs": "Audit Trail Logs",
+      "settings": "System Settings"
+    },
+    "dashboard": {
+      "total_users": "Total Users",
+      "total_companies": "Total Companies",
+      "pending_kyc": "Pending KYC Verifications",
+      "active_jobs": "Active Jobs",
+      "approve": "Approve",
+      "reject": "Reject"
+    }
+  }
+}

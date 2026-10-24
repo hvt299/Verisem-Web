@@ -1,0 +1,96 @@
+{
+  "applicant": {
+    "nav": {
+      "dashboard": "Tổng quan",
+      "profile": "Hồ sơ năng lực",
+      "cv_management": "Quản lý CV",
+      "applications": "Lịch sử ứng tuyển",
+      "saved_jobs": "Việc làm đã lưu",
+      "billing": "Gói cước của tôi",
+      "settings": "Cài đặt tài khoản"
+    },
+    "overview": {
+      "welcome": "Chào mừng trở lại, {name}",
+      "subtitle": "Theo dõi tiến độ hồ sơ và các cơ hội nghề nghiệp phù hợp nhất với bạn.",
+      "applied_count": "Việc làm đã nộp",
+      "saved_count": "Việc làm đã lưu",
+      "interviews_count": "Lịch phỏng vấn",
+      "match_avg": "Điểm khớp nối trung bình",
+      "recent_applications": "Hồ sơ ứng tuyển gần đây",
+      "recommended_jobs": "Việc làm phù hợp với bạn"
+    },
+    "profile": {
+      "title": "Thiết lập Hồ sơ cá nhân",
+      "subtitle": "Cập nhật thông tin chính xác giúp AI chấm điểm độ tương thích tốt nhất.",
+      "avatar_title": "Ảnh đại diện",
+      "avatar_change": "Thay đổi ảnh",
+      "fullname": "Họ và tên",
+      "email": "Email liên hệ",
+      "phone": "Số điện thoại",
+      "dob": "Ngày sinh",
+      "gender": "Giới tính",
+      "address": "Địa chỉ thường trú",
+      "headline": "Chức danh mong muốn",
+      "bio": "Giới thiệu bản thân",
+      "save_btn": "Lưu thay đổi"
+    },
+    "cv": {
+      "title": "Kho Lưu trữ CV & Đánh giá AI",
+      "subtitle": "Quản lý các bản CV và nhận báo cáo phân tích ATS từ AI Mentor.",
+      "upload_btn": "Tải lên CV mới (PDF/DOCX)",
+      "score_badge": "Điểm ATS",
+      "score_now": "Chấm điểm ngay",
+      "download": "Tải xuống",
+      "delete": "Xóa CV",
+      "no_cvs": "Bạn chưa tải lên CV nào. Hãy tải lên ngay để bắt đầu ứng tuyển!"
+    }
+  },
+  "hr": {
+    "nav": {
+      "dashboard": "Tổng quan tuyển dụng",
+      "campaigns": "Chiến dịch tuyển dụng",
+      "jobs": "Tin tuyển dụng",
+      "candidates": "Hồ sơ ứng viên",
+      "company_profile": "Hồ sơ công ty",
+      "billing": "Gói cước & Dịch vụ",
+      "settings": "Cài đặt tổ chức"
+    },
+    "dashboard": {
+      "title": "Bảng điều khiển Tuyển dụng",
+      "active_jobs": "Tin đang đăng",
+      "total_candidates": "Tổng ứng viên",
+      "interviews": "Phỏng vấn chờ duyệt",
+      "hired": "Đã tuyển dụng",
+      "recent_applicants": "Ứng viên mới nộp gần đây"
+    },
+    "kanban": {
+      "title": "Quy trình Tuyển dụng Ứng viên",
+      "new": "Ứng tuyển mới",
+      "reviewing": "Đang xem xét",
+      "interview": "Phỏng vấn",
+      "offered": "Đề nghị tuyển dụng",
+      "hired": "Đã trúng tuyển",
+      "rejected": "Đã từ chối",
+      "rescore_all": "AI Chấm điểm lại toàn bộ",
+      "match_score": "Điểm khớp nối"
+    }
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Trung tâm Quản trị",
+      "companies": "Duyệt Doanh nghiệp (KYC)",
+      "users": "Quản lý Người dùng",
+      "subscriptions": "Gói cước hệ thống",
+      "audit_logs": "Nhật ký hệ thống",
+      "settings": "Cấu hình chung"
+    },
+    "dashboard": {
+      "total_users": "Tổng người dùng",
+      "total_companies": "Doanh nghiệp",
+      "pending_kyc": "Doanh nghiệp chờ duyệt",
+      "active_jobs": "Việc làm hoạt động",
+      "approve": "Duyệt hồ sơ",
+      "reject": "Từ chối"
+    }
+  }
+}

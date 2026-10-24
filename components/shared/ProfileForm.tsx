@@ -102,7 +102,11 @@ export default function ProfileForm() {
     const handleProfileUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         if (updateUser) {
-            await updateProfile(profile, updateUser);
+            await updateProfile({
+                ...profile,
+                avatar: profile.avatar_url || profile.avatar || user?.avatar_url,
+                avatar_url: profile.avatar_url || profile.avatar || user?.avatar_url
+            }, updateUser);
         }
     };
 
@@ -113,7 +117,8 @@ export default function ProfileForm() {
                 {/* Khu vực Avatar */}
                 <div className="flex flex-col sm:flex-row items-center gap-6 mb-10 pb-8 border-b border-slate-100 dark:border-slate-800">
                     <AvatarUpload
-                        value={profile.avatar_url}
+                        value={profile.avatar_url || profile.avatar || user?.avatar_url}
+                        fallbackName={profile?.full_name || user?.full_name || 'User'}
                         onChange={(url) => {
                             setProfile((prev: any) => ({ ...prev, avatar_url: url, avatar: url }));
                             if (updateUser) {

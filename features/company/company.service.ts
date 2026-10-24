@@ -21,9 +21,12 @@ export const companyService = {
         return response.data;
     },
 
-    getPublicCompanies: async () => {
-        const response = await apiClient.get('/companies/public/list');
-        return response.data;
+    getPublicCompanies: async (params?: { page?: number; page_size?: number; q?: string }) => {
+        const response = await apiClient.get('/companies/public/list', { params });
+        if (Array.isArray(response.data)) {
+            return response.data;
+        }
+        return response.data?.items || [];
     },
 
     inviteMember: async (email: string) => {
@@ -78,8 +81,8 @@ export const companyService = {
         return response.data;
     },
 
-    getAdminUsers: async () => {
-        const response = await apiClient.get('/admin/users');
+    getAdminUsers: async (params?: { role?: string; search?: string }) => {
+        const response = await apiClient.get('/admin/users', { params });
         return response.data;
     },
 

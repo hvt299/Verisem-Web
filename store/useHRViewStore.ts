@@ -28,7 +28,7 @@ export const useHRViewStore = create<HRViewState>()(
             },
         }),
         {
-            name: 'cv_ranking_hr_view',
+            name: 'verisem_hr_view',
             storage: createJSONStorage(() => localStorage),
         }
     )

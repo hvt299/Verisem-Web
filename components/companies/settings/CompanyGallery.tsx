@@ -46,14 +46,14 @@ export default function CompanyGallery({ company, setCompany }: { company: any, 
         <div className="md:col-span-2">
             <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-300">Thư viện không gian làm việc (Tối đa 5 ảnh)</label>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                {(company.gallery_urls || []).map((url: string, i: number) => (
+                {(company.gallery_urls || []).filter((u: string) => Boolean(u && u.trim())).map((url: string, i: number) => (
                     <div key={i} className="aspect-square rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden relative group">
                         <img src={url} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
                         <button type="button" onClick={() => removeGalleryImage(i)} className="absolute top-2 right-2 p-1 bg-black/50 hover:bg-rose-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"><X className="w-4 h-4" /></button>
                     </div>
                 ))}
 
-                {(company.gallery_urls || []).length < 5 && (
+                {(company.gallery_urls || []).filter((u: string) => Boolean(u && u.trim())).length < 5 && (
                     <label className={`aspect-square rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 hover:text-primary-500 hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors cursor-pointer ${isUploadingGallery ? 'opacity-50 pointer-events-none' : ''}`}>
                         <input type="file" multiple accept="image/*" className="hidden" onChange={handleGalleryUpload} />
                         {isUploadingGallery ? <Loader2 className="w-6 h-6 animate-spin" /> : <ImageIcon className="w-6 h-6" />}
