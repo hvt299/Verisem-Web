@@ -11,9 +11,9 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/Next.js-16.4.1-black?logo=next.js&logoColor=white" alt="Next.js">
-    <img src="https://img.shields.io/badge/React-19.2.6-61DAFB?logo=react&logoColor=black" alt="React 19">
-    <img src="https://img.shields.io/badge/TailwindCSS-v4.2.2-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4">
+    <img src="https://img.shields.io/badge/Next.js-16.4.3-black?logo=next.js&logoColor=white" alt="Next.js">
+    <img src="https://img.shields.io/badge/React-19.3.1-61DAFB?logo=react&logoColor=black" alt="React 19">
+    <img src="https://img.shields.io/badge/TailwindCSS-v4.3.3-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4">
     <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
     <img src="https://img.shields.io/badge/TanStack_Query-v5-FF4154?logo=reactquery&logoColor=white" alt="TanStack Query">
     <img src="https://img.shields.io/badge/Zustand-v5.0-brown?logo=react&logoColor=white" alt="Zustand">
@@ -58,8 +58,8 @@ Hệ thống được phát triển trên nền tảng công nghệ Front-end hi
 
 | Công nghệ / Thư viện | Phiên bản | Vai trò Kỹ thuật |
 | :--- | :--- | :--- |
-| **[Next.js](https://nextjs.org/)** | `16.4.1` | Khung ứng dụng React App Router, Server Components và trình biên dịch Turbopack |
-| **[React](https://react.dev/)** | `19.2.6` | Thư viện UI cốt lõi phiên bản React 19 tích hợp `babel-plugin-react-compiler` |
+| **[Next.js](https://nextjs.org/)** | `16.4.3` | Khung ứng dụng React App Router, Server Components và trình biên dịch Turbopack |
+| **[React](https://react.dev/)** | `19.3.1` | Thư viện UI cốt lõi phiên bản React 19 tích hợp `babel-plugin-react-compiler` |
 | **[TypeScript](https://www.typescriptlang.org/)** | `^5.0.0` | Đảm bảo tính an toàn kiểu dữ liệu (Type Safety) trên toàn bộ dự án |
 | **[OpenAPI TypeScript](https://openapi-ts.dev/)** | `^7.13.0` | Tự động biên dịch kiểu dữ liệu tĩnh `api-schema.ts` từ tài liệu Swagger OpenAPI của Backend |
 
@@ -69,11 +69,11 @@ Hệ thống được phát triển trên nền tảng công nghệ Front-end hi
 
 | Công nghệ / Thư viện | Phiên bản | Vai trò Kỹ thuật |
 | :--- | :--- | :--- |
-| **[Tailwind CSS](https://tailwindcss.com/)** | `^4.2.2` | Framework CSS Utility-first thế hệ v4 với kiến trúc CSS-first qua `@tailwindcss/postcss` |
-| **[Framer Motion](https://www.framer.com/motion/)** | `^12.42.2` | Xử lý chuyển động mượt mà cho các thành phần điều hướng, modal và hiệu ứng hiển thị |
-| **[Lucide React](https://lucide.dev/)** | `^1.24.0` | Bộ biểu tượng SVG đồng bộ, sắc nét và có khả năng tùy biến cao |
+| **[Tailwind CSS](https://tailwindcss.com/)** | `^4.3.3` | Framework CSS Utility-first thế hệ v4 với kiến trúc CSS-first qua `@tailwindcss/postcss` |
+| **[Framer Motion](https://www.framer.com/motion/)** | `^12.43.0` | Xử lý chuyển động mượt mà cho các thành phần điều hướng, modal và hiệu ứng hiển thị |
+| **[Lucide React](https://lucide.dev/)** | `^1.61.0` | Bộ biểu tượng SVG đồng bộ, sắc nét và có khả năng tùy biến cao |
 | **[next-themes](https://github.com/pacocoursey/next-themes)** | `^0.4.6` | Hỗ trợ chuyển đổi giao diện Sáng / Tối (Light & Dark Mode) mượt mà |
-| **[clsx & tailwind-merge](https://github.com/lukeed/clsx)** | `^2.1.1 / ^3.5.0` | Xử lý ghép nối class Tailwind có điều kiện và tránh xung đột thuộc tính |
+| **[clsx & tailwind-merge](https://github.com/lukeed/clsx)** | `^2.1.1 / ^3.7.0` | Xử lý ghép nối class Tailwind có điều kiện và tránh xung đột thuộc tính |
 
 ---
 
@@ -81,9 +81,9 @@ Hệ thống được phát triển trên nền tảng công nghệ Front-end hi
 
 | Công nghệ / Thư viện | Phiên bản | Vai trò Kỹ thuật |
 | :--- | :--- | :--- |
-| **[TanStack React Query](https://tanstack.com/query/latest)** | `^5.102.8` | Quản lý trạng thái bất đồng bộ từ máy chủ (Server State), lưu đệm và cập nhật dữ liệu tự động |
-| **[Zustand](https://zustand.docs.pmnd.rs/)** | `^5.0.15` | Quản lý trạng thái Client tập trung (`useAuthStore`, `useHRViewStore`, `useUIStore`) |
-| **[Axios](https://axios-http.com/)** | `^1.14.0` | Tầng giao tiếp HTTP Client có cài đặt Interceptors tự động đính kèm Token và xử lý lỗi |
+| **[TanStack React Query](https://tanstack.com/query/latest)** | `^5.104.5` | Quản lý trạng thái bất đồng bộ từ máy chủ (Server State), lưu đệm và cập nhật dữ liệu tự động |
+| **[Zustand](https://zustand.docs.pmnd.rs/)** | `^5.0.16` | Quản lý trạng thái Client tập trung (`useAuthStore`, `useHRViewStore`, `useUIStore`) |
+| **[Axios](https://axios-http.com/)** | `^1.20.0` | Tầng giao tiếp HTTP Client có cài đặt Interceptors tự động đính kèm Token và xử lý lỗi |
 | **[js-cookie](https://github.com/js-cookie/js-cookie)** | `^3.0.5` | Điều phối lưu trữ Access Token an toàn trên trình duyệt |
 
 ---
@@ -94,7 +94,7 @@ Hệ thống được phát triển trên nền tảng công nghệ Front-end hi
 | :--- | :--- | :--- |
 | **[@dnd-kit/core](https://dndkit.com/)** | `^6.3.1` | Bộ công cụ kéo thả hiệu năng cao phục vụ Bảng quản trị phễu ứng viên Kanban |
 | **[Recharts](https://recharts.org/)** | `^3.10.1` | Trực quan hóa dữ liệu: Biểu đồ Radar đối sánh kỹ năng ứng viên, biểu đồ theo dõi tuyển dụng |
-| **[CKEditor 5](https://ckeditor.com/ckeditor-5/)** | `^48.3.1` | Trình soạn thảo văn bản phong phú (Rich-Text Editor) chuyên biệt cho mô tả công việc JD |
+| **[CKEditor 5](https://ckeditor.com/ckeditor-5/)** | `^48.5.2` | Trình soạn thảo văn bản phong phú (Rich-Text Editor) chuyên biệt cho mô tả công việc JD |
 | **[@marsidev/react-turnstile](https://github.com/marsidev/react-turnstile)** | `^1.6.1` | Tích hợp tiện ích bảo vệ chống phần mềm tự động của Cloudflare Turnstile |
 | **[@react-oauth/google](https://github.com/MomenSherif/react-oauth)** | `^0.13.4` | Tích hợp giải pháp đăng nhập một chạm với tài khoản Google |
 | **[Canvas Confetti](https://github.com/catdad/canvas-confetti)** | `^1.9.4` | Hiệu ứng chúc mừng tương tác khi ứng viên nhận được kết quả tuyển dụng hoặc doanh nghiệp nâng cấp gói |
