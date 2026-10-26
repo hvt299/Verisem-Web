@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Briefcase, Users, FolderOpen, FileText, ClipboardCheck, Home, BarChart2, Settings, HelpCircle, ChevronLeft, ChevronRight, Hexagon, X, Building2, ShieldCheck, ArrowRightLeft, MessageSquare, Sliders, CreditCard, Star, Map, History, FileSignature, Bookmark, Heart, Mail, Send } from "lucide-react";
+import { LayoutDashboard, Briefcase, Users, FolderOpen, FileText, ClipboardCheck, Home, BarChart2, Settings, HelpCircle, ChevronLeft, ChevronRight, Hexagon, X, Building2, ShieldCheck, ArrowRightLeft, MessageSquare, Sliders, CreditCard, Star, Map, History, FileSignature, Bookmark, Heart, Mail, Send, Newspaper } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useHRViewStore } from "@/store/useHRViewStore";
@@ -89,6 +89,7 @@ export default function Sidebar({
         { name: "Quản lý chiến dịch", icon: Briefcase, href: ROUTES.ADMIN_JOBS },
         { name: "Quản lý CV", icon: FileText, href: ROUTES.ADMIN_CVS },
         { name: "Quản lý thư", icon: FileSignature, href: ROUTES.ADMIN_COVER_LETTERS },
+        { name: "Quản lý blog", icon: Newspaper, href: ROUTES.ADMIN_BLOGS },
         { name: "Hỗ trợ người dùng", icon: MessageSquare, href: ROUTES.ADMIN_SUPPORT_TICKETS }
     ];
 
