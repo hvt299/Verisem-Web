@@ -97,6 +97,34 @@ export const adminService = {
         const response = await apiClient.post('/admin/subscriptions/grant', data);
         return response.data;
     },
+    async getBlogs() {
+        const response = await apiClient.get('/admin/blogs');
+        return response.data.data || [];
+    },
+    async getBlog(blogId: string) {
+        const response = await apiClient.get(`/admin/blogs/${blogId}`);
+        return response.data.data;
+    },
+    async createBlog(data: any) {
+        const response = await apiClient.post('/admin/blogs', data);
+        return response.data;
+    },
+    async updateBlog(blogId: string, data: any) {
+        const response = await apiClient.patch(`/admin/blogs/${blogId}`, data);
+        return response.data;
+    },
+    async deleteBlog(blogId: string) {
+        const response = await apiClient.delete(`/admin/blogs/${blogId}`);
+        return response.data;
+    },
+    async uploadBlogImage(file: File): Promise<string> {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await apiClient.post('/admin/blogs/upload-image', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response.data.url;
+    },
     async getCoverLetters(params?: any) {
         const response = await apiClient.get('/admin/cover-letters', { params });
         return response.data.data || response.data;
