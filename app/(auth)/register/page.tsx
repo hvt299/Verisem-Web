@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, User, ArrowRight, Briefcase } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useLinkedInAuth } from '@/hooks/useLinkedInAuth';
 import toast from 'react-hot-toast';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { TURNSTILE_SITE_KEY } from '@/constants/turnstile';
 import { useAuthFlow } from '@/features/auth/useAuthFlow';
 import AuthSocialButtons from '@/components/auth/AuthSocialButtons';
 import SocialRoleModal from '@/components/auth/SocialRoleModal';
@@ -28,6 +29,7 @@ export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState<string>('');
+    const turnstileRef = useRef<TurnstileInstance | undefined>(undefined);
 
     const [role, setRole] = useState<UserRole.HR_OWNER | UserRole.HR_MEMBER | UserRole.APPLICANT>(UserRole.APPLICANT);
     const [hrInfo, setHrInfo] = useState<HrInfoState>(DEFAULT_HR_INFO);
@@ -58,6 +60,7 @@ export default function RegisterPage() {
 
         if (!agreeTerms) return setError(t('auth.register.err_agree_terms', undefined, 'Vui lòng đồng ý với Điều khoản dịch vụ và Chính sách quyền riêng tư!'));
         if (password !== confirmPassword) return setError(t('auth.register.err_password_mismatch', undefined, 'Mật khẩu xác nhận không khớp!'));
+        if (!turnstileToken) return setError(t('auth.turnstile.required', undefined, 'Vui lòng hoàn thành xác minh Cloudflare trước khi tiếp tục.'));
         if (passStrength.score < 2) return setError(t('auth.register.err_password_weak', undefined, 'Mật khẩu quá yếu! Yêu cầu chữ hoa, số và ký tự đặc biệt.'));
         
         if (role === UserRole.HR_OWNER && !inviteToken && (!hrInfo.companyName.trim() || !hrInfo.taxCode.trim() || hrInfo.industries.length === 0 || !hrInfo.size)) {
@@ -80,7 +83,12 @@ export default function RegisterPage() {
             })
         };
 
-        await handleRegister(payload, !!inviteToken);
+        const success = await handleRegister(payload, !!inviteToken);
+        if (!success) {
+            // Token Turnstile chỉ dùng được 1 lần, phải lấy token mới cho lần thử tiếp theo
+            turnstileRef.current?.reset();
+            setTurnstileToken('');
+        }
     };
 
     const handleSocialAuth = async (
@@ -264,7 +272,8 @@ export default function RegisterPage() {
                 {/* TURNSTILE */}
                 <div className="mb-5 w-full flex justify-center [&>div]:!w-full [&_iframe]:!w-full">
                     <Turnstile 
-                        siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_SITE_KEY || '1x00000000000000000000AA'} 
+                        ref={turnstileRef}
+                        siteKey={TURNSTILE_SITE_KEY} 
                         onSuccess={(token) => setTurnstileToken(token)}
                         onError={() => setTurnstileToken('')}
                         onExpire={() => setTurnstileToken('')}
@@ -282,7 +291,7 @@ export default function RegisterPage() {
 
                 {/* SUBMIT BUTTON */}
                 <div className="mb-6 md:mb-8 w-full">
-                    <button type="submit" disabled={isLoading} className="w-full bg-button-primary-bg hover:bg-button-primary-hover disabled:opacity-70 text-button-primary-text font-bold py-3.5 rounded-button flex items-center justify-center gap-2 transition-colors shadow-sm">
+                    <button type="submit" disabled={isLoading || !turnstileToken} className="w-full bg-button-primary-bg hover:bg-button-primary-hover disabled:opacity-70 disabled:cursor-not-allowed text-button-primary-text font-bold py-3.5 rounded-button flex items-center justify-center gap-2 transition-colors shadow-sm">
                         {isLoading ? t('auth.register.submitting', undefined, 'Đang xử lý...') : t('auth.register.submit', undefined, 'Đăng ký ngay')}
                         {!isLoading && <ArrowRight className="w-4 h-4" />}
                     </button>

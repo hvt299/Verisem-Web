@@ -56,5 +56,7 @@ export const ROUTES = {
     ADMIN_SUBSCRIPTIONS: '/admin/subscriptions',
     ADMIN_SKILLS: '/admin/skills',
     ADMIN_UNITS: '/admin/units',
+    ADMIN_BLOGS: '/admin/blogs',
+    ADMIN_BLOG_NEW: '/admin/blogs/new',
     ADMIN_NOTIFICATIONS: '/admin/notifications',
 };

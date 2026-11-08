@@ -155,8 +155,11 @@ export default function BlogPage() {
         filters.sortBy === 'latest' &&
         !searchQuery.trim();
 
-    const featuredPost = showFeatured ? filteredPosts[0] : undefined;
-    const regularPosts = featuredPost ? filteredPosts.slice(1) : filteredPosts;
+    // Ưu tiên bài được Admin ghim (is_featured) mới nhất, nếu không có thì lấy bài mới nhất
+    const featuredPost = showFeatured
+        ? filteredPosts.find((post) => post.is_featured) ?? filteredPosts[0]
+        : undefined;
+    const regularPosts = featuredPost ? filteredPosts.filter((post) => post.id !== featuredPost.id) : filteredPosts;
 
     const totalPages = Math.max(1, Math.ceil(regularPosts.length / POSTS_PER_PAGE));
     const safePage = Math.min(currentPage, totalPages);
