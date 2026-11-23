@@ -11,7 +11,7 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/Next.js-16.4.3-black?logo=next.js&logoColor=white" alt="Next.js">
+    <img src="https://img.shields.io/badge/Next.js-16.4.6-black?logo=next.js&logoColor=white" alt="Next.js">
     <img src="https://img.shields.io/badge/React-19.3.1-61DAFB?logo=react&logoColor=black" alt="React 19">
     <img src="https://img.shields.io/badge/TailwindCSS-v4.3.3-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4">
     <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
@@ -58,7 +58,7 @@ Hệ thống được phát triển trên nền tảng công nghệ Front-end hi
 
 | Công nghệ / Thư viện | Phiên bản | Vai trò Kỹ thuật |
 | :--- | :--- | :--- |
-| **[Next.js](https://nextjs.org/)** | `16.4.3` | Khung ứng dụng React App Router, Server Components và trình biên dịch Turbopack |
+| **[Next.js](https://nextjs.org/)** | `16.4.6` | Khung ứng dụng React App Router, Server Components và trình biên dịch Turbopack |
 | **[React](https://react.dev/)** | `19.3.1` | Thư viện UI cốt lõi phiên bản React 19 tích hợp `babel-plugin-react-compiler` |
 | **[TypeScript](https://www.typescriptlang.org/)** | `^5.0.0` | Đảm bảo tính an toàn kiểu dữ liệu (Type Safety) trên toàn bộ dự án |
 | **[OpenAPI TypeScript](https://openapi-ts.dev/)** | `^7.13.0` | Tự động biên dịch kiểu dữ liệu tĩnh `api-schema.ts` từ tài liệu Swagger OpenAPI của Backend |

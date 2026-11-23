@@ -28,12 +28,24 @@ export function middleware(request: NextRequest) {
 
     const isProtected = isAdminRoute || isHrRoute || isApplicantRoute;
 
+    const payload = token ? decodeJWT(token) : null;
+    const isTokenValid = !!payload && (!payload.exp || payload.exp * 1000 > Date.now());
+
+    // Token hỏng hoặc hết hạn: xoá cookie và coi như chưa đăng nhập,
+    // tránh vào trang bảo vệ rồi mới bị API trả 401 liên tục
+    if (token && !isTokenValid) {
+        const response = isProtected
+            ? NextResponse.redirect(new URL('/login', request.url))
+            : NextResponse.next();
+        response.cookies.delete('token');
+        return response;
+    }
+
     if (isProtected && !token) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
     if (token) {
-        const payload = decodeJWT(token);
         const role = payload?.role || UserRole.APPLICANT;
 
         if (isAuthRoute) {

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { Lock, Mail, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useLinkedInAuth } from '@/hooks/useLinkedInAuth';
 import toast from 'react-hot-toast';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { TURNSTILE_SITE_KEY } from '@/constants/turnstile';
 import { useAuthFlow } from '@/features/auth/useAuthFlow';
 import AuthSocialButtons from '@/components/auth/AuthSocialButtons';
 import SocialRoleModal from '@/components/auth/SocialRoleModal';
@@ -24,6 +25,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState<string>('');
+    const turnstileRef = useRef<TurnstileInstance | undefined>(undefined);
 
     const [error, setError] = useState('');
 
@@ -34,7 +36,14 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        await handleLogin({ email, password, cf_turnstile_response: turnstileToken });
+        if (!turnstileToken) return setError(t('auth.turnstile.required', undefined, 'Vui lòng hoàn thành xác minh Cloudflare trước khi tiếp tục.'));
+
+        const success = await handleLogin({ email, password, cf_turnstile_response: turnstileToken });
+        if (!success) {
+            // Token Turnstile chỉ dùng được 1 lần, phải lấy token mới cho lần thử tiếp theo
+            turnstileRef.current?.reset();
+            setTurnstileToken('');
+        }
     };
 
     const handleSocialAuth = async (
@@ -124,7 +133,8 @@ export default function LoginPage() {
 
                 <div className="mt-4 w-full flex justify-center pt-2 [&>div]:!w-full [&_iframe]:!w-full">
                     <Turnstile 
-                        siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_SITE_KEY || '1x00000000000000000000AA'} 
+                        ref={turnstileRef}
+                        siteKey={TURNSTILE_SITE_KEY} 
                         onSuccess={(token) => setTurnstileToken(token)}
                         onError={() => setTurnstileToken('')}
                         onExpire={() => setTurnstileToken('')}
@@ -135,7 +145,7 @@ export default function LoginPage() {
 
                 {error && <p className="text-error-700 text-sm font-medium bg-error-50 dark:bg-error-500/10 p-3 rounded-button border border-error-100 dark:border-error-500/20">{error}</p>}
 
-                <button type="submit" disabled={isLoading} className="w-full bg-button-primary-bg hover:bg-button-primary-hover disabled:opacity-70 text-button-primary-text font-bold py-3 rounded-button flex items-center justify-center gap-2 group mt-2 transition-colors">
+                <button type="submit" disabled={isLoading || !turnstileToken} className="w-full bg-button-primary-bg hover:bg-button-primary-hover disabled:opacity-70 disabled:cursor-not-allowed text-button-primary-text font-bold py-3 rounded-button flex items-center justify-center gap-2 group mt-2 transition-colors">
                     {isLoading ? t('auth.login.submitting', undefined, 'Đang xử lý...') : t('auth.login.submit', undefined, 'Đăng nhập')}
                     {!isLoading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
                 </button>
